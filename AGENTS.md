@@ -135,3 +135,29 @@
 - **Фоновые детали** — надписи, объявления, формы (описанные текстом)
 - **НЕ в репликах Бога** — Бог не мемит
 - **НЕ в серьёзных сценах** — breakdown, смерть, Лилит-предательство должны оставаться чистыми
+
+## Cursor Cloud specific instructions
+
+### Tech stack
+- **Engine:** Monogatari visual novel engine (bundled in `engine/core/`)
+- **Runtime:** Bun (dev server), vanilla HTML/CSS/JS (no build step for development)
+- **Package manager:** Bun (`bun.lock`)
+
+### Running the dev server
+```
+bun run serve
+```
+Starts a static file server with WebSocket live-reload on **port 5100**. No database or backend services are needed — the game is entirely client-side.
+
+### Web build
+```
+bun build-web.ts
+```
+Outputs a production build to `./build/web` (strips debug script from HTML).
+
+### Key caveats
+- There is no ESLint or TypeScript config — the game JS files are plain vanilla JS. No lint command is available.
+- There are no automated tests in the repository.
+- The `package.json` `scripts.start` uses `yarn electron .` (Electron desktop wrapper) — this is **not** the primary dev workflow. Use `bun run serve` for browser-based development.
+- Python scripts (`generate_art.py`, `generate_music.py`, `generate_scenes_pillow.py`) are offline asset-generation tools requiring `GEMINI_API_KEY`. They are not needed to run or develop the game.
+- Game scripts live in `js/scripts/` (prologue, judgment, hell, endings) and `js/` (characters, assets, options, storage, effects, main, script).
