@@ -94,6 +94,23 @@ monogatari.script ({
 		'demon Атеисты... Ох. Опять. Знаете, вас тут больше всего в последнее время.',
 		'demon Каждый второй — «а я не верил, а вы всё-таки существуете». Одно и то же.',
 		'mc (Демон-бюрократ жалуется на рутину. Это дно мироздания.)',
+		'mc (Хотя... бюрократия в аду? Номерки? Формы?)',
+		'mc (Это слишком... дизайнерски. Как будто кто-то специально создал ад, который максимально раздражает именно МЕНЯ.)',
+
+		{
+			'Function': {
+				'Apply': function () {
+					const s = this.storage ();
+					this.storage ({
+						matrix_suspicion: s.matrix_suspicion + 1,
+						noticed_patterns: s.matrix_suspicion >= 2
+					});
+				},
+				'Revert': function () {
+					this.storage ({ matrix_suspicion: this.storage ().matrix_suspicion - 1 });
+				}
+			}
+		},
 
 		'demon Так, заполните форму 66-А. «Признание факта существования загробной жизни».',
 
@@ -559,6 +576,21 @@ monogatari.script ({
 		'mc (Что, если...)',
 		'mc (Что, если я просто... перестану?)',
 
+		// Проверяем, доступна ли опция "Матрица"
+		{
+			'Conditional': {
+				'Condition': function () {
+					const s = this.storage ();
+					return (s.matrix_suspicion >= 2 || s.noticed_patterns) ? 'matrix_available' : 'normal';
+				},
+				'matrix_available': 'jump Hell_Breakdown_Matrix_Choice',
+				'normal': 'jump Hell_Breakdown_Normal_Choice'
+			}
+		}
+	],
+
+	// --- Breakdown с 4 вариантами (Матрица доступна) ---
+	'Hell_Breakdown_Matrix_Choice': [
 		{
 			'Choice': {
 				'Dialog': 'mc (Что делать?)',
@@ -566,35 +598,244 @@ monogatari.script ({
 					'Text': 'Сдаться. Признать. Поверить.',
 					'Do': 'jump Hell_Submit',
 					'onChosen': function () {
-						const s = this.storage ();
-						this.storage ({
-							acceptance_score: s.acceptance_score + 5
-						});
+						this.storage ({ acceptance_score: this.storage ().acceptance_score + 5 });
 					}
 				},
 				'rebel': {
 					'Text': 'Нет. Если это ад — пора менять правила.',
 					'Do': 'jump Hell_Rebellion',
 					'onChosen': function () {
-						const s = this.storage ();
-						this.storage ({
-							rebellion_score: s.rebellion_score + 5
-						});
+						this.storage ({ rebellion_score: this.storage ().rebellion_score + 5 });
 					}
 				},
 				'bar': {
 					'Text': '...А если нельзя выиграть — можно хотя бы выпить?',
 					'Do': 'jump Hell_Bar_Idea',
 					'onChosen': function () {
-						const s = this.storage ();
-						this.storage ({
-							humor_used: s.humor_used + 1,
-							found_bar_location: true
-						});
+						this.storage ({ humor_used: this.storage ().humor_used + 1, found_bar_location: true });
+					}
+				},
+				'matrix': {
+					'Text': 'Подождите. Я знаю, что здесь происходит. Это не ад. Это СИМУЛЯЦИЯ.',
+					'Do': 'jump Hell_Matrix_Realization',
+					'onChosen': function () {
+						this.storage ({ matrix_suspicion: this.storage ().matrix_suspicion + 5 });
 					}
 				}
 			}
 		}
+	],
+
+	// --- Breakdown с 3 вариантами (стандартный) ---
+	'Hell_Breakdown_Normal_Choice': [
+		{
+			'Choice': {
+				'Dialog': 'mc (Что делать?)',
+				'submit': {
+					'Text': 'Сдаться. Признать. Поверить.',
+					'Do': 'jump Hell_Submit',
+					'onChosen': function () {
+						this.storage ({ acceptance_score: this.storage ().acceptance_score + 5 });
+					}
+				},
+				'rebel': {
+					'Text': 'Нет. Если это ад — пора менять правила.',
+					'Do': 'jump Hell_Rebellion',
+					'onChosen': function () {
+						this.storage ({ rebellion_score: this.storage ().rebellion_score + 5 });
+					}
+				},
+				'bar': {
+					'Text': '...А если нельзя выиграть — можно хотя бы выпить?',
+					'Do': 'jump Hell_Bar_Idea',
+					'onChosen': function () {
+						this.storage ({ humor_used: this.storage ().humor_used + 1, found_bar_location: true });
+					}
+				}
+			}
+		}
+	],
+
+	// ==========================================
+	// АД: Путь Матрицы → Концовка «Симуляция»
+	// ==========================================
+	'Hell_Matrix_Realization': [
+		'show character mc smirk at center',
+
+		{
+			'Function': {
+				'Apply': function () {
+					screenGlitch (800);
+				},
+				'Revert': function () {}
+			}
+		},
+
+		'mc Стоп. СТОП.',
+		'mc Я — программист. Я всю жизнь строил системы. И я ВИЖУ систему.',
+
+		'Алексей встаёт. Глаза горят — впервые за всё время в аду.',
+
+		'mc Бюрократия в загробном мире? Номерки? Формы 66-А?',
+		'mc Бог, который читает Reddit? Демон с бейджиком «специалист по приёму»?',
+		'mc Буддист в христианском аду?',
+
+		'show character mc angry at center',
+
+		'mc Это не рай и не ад. Это СИМУЛЯЦИЯ.',
+		'mc Кто-то — может быть, я сам в будущем, может быть, какой-то ИИ — создал этот сеттинг.',
+		'mc Загрузил моё сознание и запустил: «А что будет, если атеиста засунуть в библейский ад?»',
+		'mc Эксперимент. Тест. Или просто чей-то прикол.',
+
+		{
+			'Function': {
+				'Apply': function () {
+					screenShake (400);
+				},
+				'Revert': function () {}
+			}
+		},
+
+		'mc Я ЗНАЮ это. Я это ЧУВСТВУЮ.',
+		'mc И я могу это доказать.',
+
+		'jump Hell_Matrix_Prove'
+	],
+
+	'Hell_Matrix_Prove': [
+		'show scene hell_debate_room with fadeIn',
+		'show character mc angry at center',
+		'show character demon smile at left with fadeIn',
+
+		'mc Эй! Ты! Демон!',
+		'demon ...Да?',
+		'mc Ответь мне — почему ад выглядит как российский МФЦ?',
+		'demon Потому что для русского человека нет ничего страшнее бюрократии.',
+		'mc Вот! ИМЕННО! Ад «персонализирован» под меня. Как таргетированная реклама!',
+		'mc Потому что это программа. Алгоритм, который подбирает мучения на основе моего профиля.',
+
+		'Демон моргает.',
+
+		'demon Вы... серьёзно?',
+		'mc Абсолютно. И я могу доказать это.',
+		'demon Валяйте.',
+		'mc Первое: здесь все религии смешаны. Буддисты, мусульмане, атеисты — все в одном месте. Ни одна реальная религия этого не предполагает.',
+		'mc Второе: бюрократия. Настоящий ад — если он существует — это не офис. Это хаос. Страдание. Кто-то ДИЗАЙНИЛ этот ад, чтобы он был абсурдным.',
+		'mc Третье: Бог знает про Reddit. Про МОЙ Reddit. Это не всеведение. Это доступ к базе данных.',
+
+		'demon Интересная теория.',
+		'demon Доказательства?',
+
+		'mc ...Что?',
+		'demon Дока-за-тель-ства. Факты. Верифицируемые данные.',
+		'demon Вы же учёный. Вы же всю жизнь требовали доказательств от верующих.',
+
+		'mc Я... но... это же очевидно! Просто посмотрите вокруг!',
+
+		'Пауза.',
+
+		'demon «Просто посмотрите вокруг»?',
+		'demon Знаете, кто ещё так говорил?',
+		'demon Каждый верующий, которого вы когда-либо высмеивали.',
+
+		{
+			'Function': {
+				'Apply': function () {
+					screenShake (300);
+				},
+				'Revert': function () {}
+			}
+		},
+
+		'mc .........',
+
+		'jump Hell_Matrix_Spiral'
+	],
+
+	'Hell_Matrix_Spiral': [
+		'show scene hell_cauldrons with fadeIn',
+		'show character mc angry at center',
+
+		'Алексей идёт по аду. Останавливает каждого встречного.',
+
+		'show character soul sad at left with fadeIn',
+
+		'mc Послушайте! Это не настоящий ад! Мы в симуляции!',
+		'soul ...Ты кто?',
+		'mc Я программист! Я вижу паттерны! Всё вокруг — код!',
+		'soul Бедняга. Сломался.',
+
+		'hide character soul with fadeOut',
+
+		'Другая душа.',
+
+		'show character soul resigned at left with fadeIn',
+
+		'mc Вы не понимаете! Я могу это объяснить! У меня есть аргументы!',
+		'soul2 «У меня есть аргументы». Знаешь, сколько людей мне это говорили при жизни?',
+		'soul2 «У меня есть доказательства существования Бога!» — и дальше какая-нибудь чушь про ощущения.',
+		'soul2 Ты сейчас звучишь точно так же.',
+		'mc Нет! Это другое! Я ЗНАЮ!',
+		'soul2 «Я просто знаю.» Ты себя слышишь?',
+
+		'hide character soul with fadeOut',
+		'hide character mc with fadeOut',
+
+		'Тишина.',
+
+		'jump Hell_Matrix_Mirror'
+	],
+
+	'Hell_Matrix_Mirror': [
+		'show scene hell_debate_room with fadeIn',
+
+		{
+			'Function': {
+				'Apply': function () {
+					screenGlitch (600);
+				},
+				'Revert': function () {}
+			}
+		},
+
+		'Алексей стоит один в пустом зале для дебатов.',
+		'На доске всё ещё написано: «ДОКАЖИТЕ, ЧТО БОГА НЕТ».',
+		'Он берёт мел. Медленно зачёркивает.',
+		'Пишет: «ДОКАЖИТЕ, ЧТО ЭТО НЕ СИМУЛЯЦИЯ».',
+
+		'show character mc despair at center with fadeIn',
+
+		'И замирает.',
+
+		'mc (Подождите.)',
+		'mc («Докажите, что Бога нет» — говорили верующие.)',
+		'mc («Докажите, что это не симуляция» — говорю я.)',
+		'mc (Нефальсифицируемая гипотеза. Невозможно опровергнуть.)',
+		'mc (Именно то, за что я их высмеивал.)',
+
+		{
+			'Function': {
+				'Apply': function () {
+					screenShake (500);
+				},
+				'Revert': function () {}
+			}
+		},
+
+		'mc (Они говорили: «Я просто чувствую присутствие Бога».)',
+		'mc (Я говорю: «Я просто чувствую, что это симуляция».)',
+		'mc (Они говорили: «Посмотри вокруг — мир слишком совершенен для случайности».)',
+		'mc (Я говорю: «Посмотри вокруг — ад слишком абсурден для реальности».)',
+		'mc (Они говорили: «Однажды ты поймёшь».)',
+		'mc (Я говорю: «Однажды вы все поймёте».)',
+
+		'mc (...)',
+
+		'mc (Я стал ими.)',
+		'mc (Я стал тем самым человеком, которого высмеивал.)',
+		'mc (Верующим без доказательств.)',
+
+		'jump Ending_Matrix'
 	],
 
 	// ==========================================

@@ -31,6 +31,10 @@ monogatari.storage ({
 	found_bar_location: false,
 	debate_cycle: 0,
 
+	// --- Флаги: Матрица ---
+	matrix_suspicion: 0,     // подозрение что это симуляция
+	noticed_patterns: false, // заметил паттерны
+
 	// --- Концовки ---
 	ending_reached: '',
 

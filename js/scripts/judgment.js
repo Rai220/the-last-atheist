@@ -150,6 +150,20 @@ monogatari.script ({
 		'soul2 А тут — ЭТО. Какой-то христианский ЗАГС.',
 
 		'mc (Буддист в христианском раю?! Это... это...)',
+		'mc (Подождите. Если христианская версия — правильная, почему тут буддисты?)',
+		'mc (Это как будто кто-то взял ВСЕ религии и смешал в один сеттинг...)',
+		'mc (Как в плохо написанной игре. Или... нет, бред.)',
+
+		{
+			'Function': {
+				'Apply': function () {
+					this.storage ({ matrix_suspicion: this.storage ().matrix_suspicion + 1 });
+				},
+				'Revert': function () {
+					this.storage ({ matrix_suspicion: this.storage ().matrix_suspicion - 1 });
+				}
+			}
+		},
 
 		{
 			'Choice': {
@@ -276,6 +290,19 @@ monogatari.script ({
 
 		'mc ......',
 		'mc (Он... читал мои посты?!)',
+		'mc (Стоп. Откуда Бог знает про Reddit? Это... слишком специфично.)',
+		'mc (Как будто кто-то загрузил мой профиль в систему...)',
+
+		{
+			'Function': {
+				'Apply': function () {
+					this.storage ({ matrix_suspicion: this.storage ().matrix_suspicion + 1 });
+				},
+				'Revert': function () {
+					this.storage ({ matrix_suspicion: this.storage ().matrix_suspicion - 1 });
+				}
+			}
+		},
 
 		{
 			'Choice': {
