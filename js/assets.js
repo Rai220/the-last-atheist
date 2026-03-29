@@ -6,6 +6,7 @@ monogatari.assets ('scenes', {
 	'office': 'prologue/office.jpg',
 	'street': 'prologue/street.jpg',
 	'phone_screen': 'prologue/phone_screen.jpg',
+	'death_street': 'prologue/death_street.jpg',
 	'judgment_hall': 'judgment/hall.jpg',
 	'judgment_queue': 'judgment/queue.jpg',
 	'judgment_throne': 'judgment/throne.jpg',
