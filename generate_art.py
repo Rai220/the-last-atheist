@@ -13,7 +13,11 @@ from google.genai import types
 from PIL import Image
 import io
 
-API_KEY = "AIzaSyCdUBJeZQpdLcZw_dIn2YfEj4eJcQKVS9w"
+API_KEY = os.environ.get("GEMINI_API_KEY", "")
+if not API_KEY:
+    print("ERROR: Set GEMINI_API_KEY environment variable")
+    print("  export GEMINI_API_KEY='your-key-here'")
+    sys.exit(1)
 PROJECT_ROOT = Path(__file__).parent
 
 client = genai.Client(api_key=API_KEY)
