@@ -262,7 +262,7 @@ monogatari.script ({
 	// ==========================================
 	'Judgment_Audience': [
 		'show scene judgment_throne with fadeIn',
-		// 'stop sound crowd_murmur with fade 2',
+		'stop music choir_ethereal with fade 1',
 		'play music judgment_tension with loop fade 2',
 
 		'show character mc shock at center',

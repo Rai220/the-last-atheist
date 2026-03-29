@@ -9,6 +9,7 @@ monogatari.action ('message').messages ({
 			<p>Кликайте или нажимайте пробел, чтобы продвигать текст.</p>
 			<p>Делайте выборы — они влияют на сюжет и концовку.</p>
 			<p>Сохраняйтесь через меню внизу экрана.</p>
+			<p>В игре 24 концовки.</p>
 		`
 	}
 });
@@ -23,34 +24,36 @@ monogatari.action ('notification').notifications ({
 });
 
 // Particles
-monogatari.action ('particles').particles ({
-
-});
+monogatari.action ('particles').particles ({});
 
 // Canvas
-monogatari.action ('canvas').objects ({
-
-});
+monogatari.action ('canvas').objects ({});
 
 // Титры
 monogatari.configuration ('credits', {
-	'Автор': {
-	},
-	'Движок': {
-		'Monogatari': ''
-	}
+	'Автор': {},
+	'Движок': { 'Monogatari': '' }
 });
 
 // Галерея
-monogatari.assets ('gallery', {
+monogatari.assets ('gallery', {});
 
-});
-
-// Точка входа
+// Заставка
 monogatari.script ({
+	'_SplashScreen': [
+		'show scene menu_bg with fadeIn',
+		'wait 1500',
+		'centered ПОСЛЕДНИЙ АТЕИСТ',
+		'wait 1000',
+		'centered Визуальная новелла с чёрным юмором',
+		'wait 1000',
+		'centered Атеист умирает. И это только начало.',
+		'wait 2000',
+		'end'
+	],
+
 	'Start': [
-		'show scene #1a1a2e with fadeIn',
-		'Последний Атеист. Визуальная новелла.',
+		'show scene apartment with fadeIn',
 		'jump Prologue_Apartment'
 	]
 });

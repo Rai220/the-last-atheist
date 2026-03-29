@@ -87,6 +87,7 @@ monogatari.script ({
 	// ==========================================
 	'Prologue_Internet': [
 		'show scene phone_screen with fadeIn',
+		'stop music morning_ambient with fade 1',
 		'play music internet_lo_fi with loop fade 2',
 
 		'Reddit. r/DebateReligion. Алексей заходит сюда чаще, чем в душ.',
@@ -244,6 +245,8 @@ monogatari.script ({
 		'Звуки. Хор — нет, не хор. Что-то за пределами музыки.',
 		'Ладан. Откуда-то пахнет ладаном.',
 
+		'stop music internet_lo_fi',
+		'stop music morning_ambient',
 		'play music choir_ethereal with loop fade 3',
 
 		'mc (Ладан. ЛАДАН. Это клише. Даже моя предсмертная галлюцинация — клише.)',

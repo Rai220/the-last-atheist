@@ -21,8 +21,9 @@ monogatari.script ({
 			}
 		},
 
+		'stop music judgment_tension',
+		'stop music choir_ethereal',
 		'play music hell_drone with loop fade 3',
-		// 'play sound fire_crackle with loop',
 
 		'Жарко. Нет, не жарко — жар. Как будто открыли дверцу доменной печи.',
 		'Но тела всё ещё нет. И всё равно — горит.',
@@ -76,6 +77,7 @@ monogatari.script ({
 	'Hell_Bureaucracy': [
 		'show scene hell_office with fadeIn',
 		// 'stop sound fire_crackle with fade 1',
+		'stop music hell_drone with fade 1',
 		'play music hell_bureaucracy with loop fade 2',
 
 		'Офис. Обычный, серый, с жёлтым светом и запахом серы вместо кофе.',
@@ -153,6 +155,7 @@ monogatari.script ({
 	'Hell_Bureaucracy_Other': [
 		'show scene hell_office with fadeIn',
 		// 'stop sound fire_crackle with fade 1',
+		'stop music hell_drone with fade 1',
 		'play music hell_bureaucracy with loop fade 2',
 
 		'show character demon paperwork at left with fadeIn',
@@ -611,6 +614,8 @@ monogatari.script ({
 
 	'Hell_Debate_Round_1': [
 		'show scene hell_debate_room with fadeIn',
+		'stop music hell_drone',
+		'stop music hell_bureaucracy',
 		'play music hell_debate with loop fade 2',
 		'show character mc angry at center',
 		'show character demon smile at left',
@@ -1050,6 +1055,8 @@ monogatari.script ({
 	'Hell_Rebellion_Recruit': [
 		'show scene hell_cauldrons with fadeIn',
 		'show character mc angry at center',
+		'stop music hell_debate',
+		'stop music hell_bureaucracy',
 		'play music hell_drone with loop fade 2',
 
 		'Алексей находит других. Недовольных. Сломленных, но не до конца.',

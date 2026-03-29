@@ -176,6 +176,11 @@ monogatari.script ({
 	// ==========================================
 	'Ending_Believer': [
 		'show scene judgment_throne with fadeIn',
+		'stop music hell_drone',
+		'stop music hell_bureaucracy',
+		'stop music hell_debate',
+		'stop music hell_bar_jazz',
+		'stop music judgment_tension',
 		'play music choir_ethereal with loop fade 3',
 
 		{
@@ -214,6 +219,11 @@ monogatari.script ({
 	// ==========================================
 	'Ending_Pascal': [
 		'show scene judgment_throne with fadeIn',
+		'stop music hell_drone',
+		'stop music hell_bureaucracy',
+		'stop music hell_debate',
+		'stop music hell_bar_jazz',
+		'stop music judgment_tension',
 		'play music choir_ethereal with loop fade 2',
 		'show character mc smirk at center with fadeIn',
 
@@ -420,6 +430,10 @@ monogatari.script ({
 	// ==========================================
 	'Ending_Bar': [
 		'show scene hell_bar with fadeIn',
+		'stop music hell_drone',
+		'stop music hell_bureaucracy',
+		'stop music hell_debate',
+		'stop music choir_ethereal',
 		'play music hell_bar_jazz with loop fade 2',
 
 		{
@@ -454,6 +468,10 @@ monogatari.script ({
 	// ==========================================
 	'Ending_Franchise': [
 		'show scene hell_bar with fadeIn',
+		'stop music hell_drone',
+		'stop music hell_bureaucracy',
+		'stop music hell_debate',
+		'stop music choir_ethereal',
 		'play music hell_bar_jazz with loop fade 2',
 		'show character mc smirk at center with fadeIn',
 
@@ -493,6 +511,10 @@ monogatari.script ({
 	// ==========================================
 	'Ending_Therapist': [
 		'show scene hell_bar with fadeIn',
+		'stop music hell_drone',
+		'stop music hell_bureaucracy',
+		'stop music hell_debate',
+		'stop music choir_ethereal',
 		'play music hell_bar_jazz with loop fade 2',
 		'show character mc normal at center with fadeIn',
 
@@ -534,6 +556,11 @@ monogatari.script ({
 	// ==========================================
 	'Ending_Matrix': [
 		'show scene judgment_throne with fadeIn',
+		'stop music hell_drone',
+		'stop music hell_bureaucracy',
+		'stop music hell_debate',
+		'stop music hell_bar_jazz',
+		'stop music judgment_tension',
 		'play music choir_ethereal with loop fade 3',
 
 		{
@@ -663,6 +690,11 @@ monogatari.script ({
 	// ==========================================
 	'Ending_FullCircle': [
 		'show scene #FFFFFF with fadeIn',
+		'stop music hell_drone',
+		'stop music hell_bureaucracy',
+		'stop music hell_debate',
+		'stop music hell_bar_jazz',
+		'stop music judgment_tension',
 		'play music choir_ethereal with loop fade 3',
 
 		{
@@ -801,6 +833,11 @@ monogatari.script ({
 	// ==========================================
 	'Ending_Prophet': [
 		'show scene judgment_throne with fadeIn',
+		'stop music hell_drone',
+		'stop music hell_bureaucracy',
+		'stop music hell_debate',
+		'stop music hell_bar_jazz',
+		'stop music judgment_tension',
 		'play music choir_ethereal with loop fade 2',
 
 		{
@@ -851,6 +888,10 @@ monogatari.script ({
 	// ==========================================
 	'Ending_HellRomance': [
 		'show scene hell_bar with fadeIn',
+		'stop music hell_drone',
+		'stop music hell_bureaucracy',
+		'stop music hell_debate',
+		'stop music choir_ethereal',
 		'play music hell_bar_jazz with loop fade 2',
 
 		{
