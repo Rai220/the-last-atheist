@@ -171,7 +171,7 @@ monogatari.script ({
 	// ПРОЛОГ: Смерть
 	// ==========================================
 	'Prologue_Death': [
-		'show scene street with fadeIn',
+		'show scene night_city with fadeIn',
 		'stop music internet_lo_fi with fade 1',
 		'stop music morning_ambient with fade 1',
 

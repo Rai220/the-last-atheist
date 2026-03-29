@@ -347,7 +347,7 @@ monogatari.script ({
 	// ВСТРЕЧА С ВИКТОРОМ (серверная ада)
 	// ==========================================
 	'Hell_Viktor_Intro': [
-		'show scene hell_office with fadeIn',
+		'show scene hell_server_room with fadeIn',
 		'show character mc normal at center',
 
 		'По пути к зоне мук Алексей замечает дверь с табличкой: «Серверная. Не входить. Серьёзно. Там 45°C».',
@@ -786,7 +786,7 @@ monogatari.script ({
 	// АД: Исследование между раундами дебатов
 	// ==========================================
 	'Hell_Exploration': [
-		'show scene hell_cauldrons with fadeIn',
+		'show scene hell_corridor with fadeIn',
 		'stop music hell_debate with fade 1',
 		'play music hell_drone with loop fade 2',
 		'show character mc normal at center with fadeIn',

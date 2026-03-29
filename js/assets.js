@@ -16,6 +16,10 @@ monogatari.assets ('scenes', {
 	'hell_cauldrons': 'hell/cauldrons.jpg',
 	'hell_debate_room': 'hell/debate_room.jpg',
 	'hell_bar': 'hell/bar.jpg',
+	'hell_corridor': 'hell/corridor.jpg',
+	'hell_server_room': 'hell/server_room.jpg',
+	'night_city': 'prologue/night_city.jpg',
+	'judgment_waiting': 'judgment/waiting.jpg',
 	'menu_bg': 'transitions/menu_bg.jpg'
 });
 
