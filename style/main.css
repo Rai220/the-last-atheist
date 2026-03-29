@@ -221,6 +221,22 @@ button {
 	color: #ff4444;
 }
 
+/* --- Журнал диалогов --- */
+
+dialog-log .modal__content {
+	display: flex;
+	flex-direction: column;
+	max-height: 70vh;
+}
+
+dialog-log [data-content="log"] {
+	flex: 1 1 auto;
+	min-height: 0;
+	overflow-y: auto;
+	overflow-x: hidden;
+	padding-right: 8px;
+}
+
 /* --- Адаптивность --- */
 
 @media screen and (min-width: 37.56255em) {
