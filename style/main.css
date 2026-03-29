@@ -85,8 +85,19 @@ button {
 	font-family: 'PT Serif', Georgia, serif;
 	font-size: 1.5em;
 	font-weight: 700;
-	text-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+	color: #ffffff;
+	text-shadow: 0 0 10px rgba(0, 0, 0, 1), 0 0 30px rgba(0, 0, 0, 0.9), 2px 2px 4px rgba(0, 0, 0, 0.8);
 	letter-spacing: 0.05em;
+}
+
+/* Текст диалога — белый */
+[data-ui="say"] {
+	color: #f0f0f0 !important;
+}
+
+/* Текст рассказчика — белый */
+[data-component="text-box"] [data-ui="say"] {
+	color: #f0f0f0 !important;
 }
 
 /* Спрайты персонажей */
