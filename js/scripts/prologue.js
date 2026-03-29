@@ -235,6 +235,7 @@ monogatari.script ({
 
 		'mc (Так вот как это.)',
 		'mc (Ни тоннеля. Ни бабушки с пирожками.)',
+		'mc (F in the chat... for me, I guess.)',
 		'mc (Просто... segfault.)',
 
 		'wait 500',

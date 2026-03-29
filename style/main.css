@@ -20,7 +20,7 @@ button {
 /* --- Главное меню --- */
 
 [data-screen="main"] {
-	background: linear-gradient(135deg, #0a0a0a 0%, #1a0000 50%, #0a0a0a 100%);
+	background: url('../assets/scenes/transitions/menu_bg.jpg') center center / cover no-repeat, linear-gradient(135deg, #0a0a0a 0%, #1a0000 50%, #0a0a0a 100%);
 }
 
 [data-screen="main"] button {
