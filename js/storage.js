@@ -8,7 +8,8 @@ monogatari.storage ({
 	// --- Ключевые счётчики ---
 	wtf_level: 0,            // 0-100, «уровень охреневания»
 	denial_count: 0,         // кол-во отрицаний
-	argument_quality: 0,     // качество аргументов на суде (-10 .. +10)
+	cruelty_score: 0,        // жестокость/унижение верующих
+	argument_quality: 0,     // качество аргументов (-10 .. +10)
 	empathy_shown: 0,        // проявленная эмпатия
 	humor_used: 0,           // сарказм
 	rebellion_score: 0,      // бунтарство в аду
@@ -23,22 +24,22 @@ monogatari.storage ({
 	judgment_tried_vr: false,
 	judgment_argued_stats: false,
 	judgment_begged: false,
-	judgment_verdict: 'standard',  // 'standard' | 'personalized' | 'light'
+	judgment_verdict: 'standard',
 
 	// --- Флаги: Ад ---
 	met_other_atheists: false,
 	started_rebellion: false,
 	found_bar_location: false,
 	debate_cycle: 0,
-	demon_friendship: 0,     // дружба с демоном-бюрократом
-	lilith_interest: 0,      // романтический интерес Лилит
-	lilith_met: false,       // встретил Лилит
-	viktor_friendship: 0,    // отношения с Виктором (-3..+3, отрицательные = буллинг)
-	viktor_met: false,       // встретил Виктора
+	demon_friendship: 0,
+	lilith_interest: 0,
+	lilith_met: false,
+	viktor_friendship: 0,
+	viktor_met: false,
 
 	// --- Флаги: Матрица ---
-	matrix_suspicion: 0,     // подозрение что это симуляция
-	noticed_patterns: false, // заметил паттерны
+	matrix_suspicion: 0,
+	noticed_patterns: false,
 
 	// --- Концовки ---
 	ending_reached: '',

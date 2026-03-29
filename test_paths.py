@@ -48,9 +48,8 @@ EXPECTED_ENDINGS = [
     'Ending_EscapeTogether',
     'Ending_LilithBetrayal',
     'Ending_LilithConflicted',
+    'Escape_Caught',
 ]
-
-# Note: total is 24, not 22, but we also check these exist as labels
 
 
 def parse_labels_and_jumps(js_files):

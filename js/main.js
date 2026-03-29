@@ -5,14 +5,20 @@ const { $_ready, $_ } = Monogatari;
 
 // 1. Outside $_ready:
 
-monogatari.debug.level(5);
+// monogatari.debug.level(5);
 
 // Все 24 концовки для трекера
 const ALL_ENDINGS = {
-	'loophole': 'Лазейка',
-	'demon_friend': 'Коллега',
-	'glitch': 'Глитч',
-	'debate_win': 'Аргумент',
+	// ★ Major endings
+	'matrix': '★ Контакт',
+	'prophet': '★ Пророк',
+	'full_circle': '★ Полный круг',
+	'lilith_betrayal': '★ Персональный пакет',
+	'lilith_conflicted': '★ Перевод',
+	'hell_romance': '★ Ад вдвоём',
+	'escape_together': '★ Служебный выход',
+	'therapist': '★ Терапевт',
+	// Regular endings
 	'believer': 'Обращённый',
 	'pascal': 'Пари Паскаля',
 	'theologian': 'Теолог',
@@ -21,18 +27,16 @@ const ALL_ENDINGS = {
 	'democracy': 'Демократия',
 	'bar': 'Последний бар',
 	'franchise': 'Франшиза',
-	'therapist': 'Терапевт',
-	'matrix': 'Контакт',
-	'speedrun': 'Спидран',
 	'awakening': 'Пробуждение',
-	'full_circle': 'Полный круг',
 	'dev_commentary': 'README.md',
 	'nihilist': 'Ничто',
-	'prophet': 'Пророк',
-	'hell_romance': 'Ад вдвоём',
-	'escape_together': 'Служебный выход',
-	'lilith_betrayal': 'Персональный пакет',
-	'lilith_conflicted': 'Перевод'
+	// Quick endings
+	'loophole': 'Лазейка',
+	'demon_friend': 'Коллега',
+	'glitch': 'Глитч',
+	'debate_win': 'Аргумент',
+	'speedrun': 'Спидран',
+	'escape_caught': 'Пойманы'
 };
 
 $_ready (() => {
