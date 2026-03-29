@@ -946,7 +946,7 @@ monogatari.script ({
 		},
 
 		'show character mc smirk at center with fadeIn',
-		'show character lilith tender at left with fadeIn',
+		'show character lilith tender at right with fadeIn',
 
 		'Ад — не место для любви. Но любовь никогда не спрашивала разрешения.',
 
@@ -1004,7 +1004,7 @@ monogatari.script ({
 		},
 
 		'show character mc normal at center with fadeIn',
-		'show character lilith serious at left with fadeIn',
+		'show character lilith serious at right with fadeIn',
 
 		'lilith Ты серьёзно? Сбежать?',
 		'mc Ты была ангелом. Ты знаешь архитектуру.',

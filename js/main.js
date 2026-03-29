@@ -112,44 +112,56 @@ function showEndingGallery () {
 	monogatari.run ('show message EndingGallery', false);
 }
 
+var _skipInterval = null;
+
 function addSkipButton () {
 	const quickMenu = document.querySelector ('[data-component="quick-menu"]');
 	if (!quickMenu) return;
 
-	// Кнопка Skip
 	const skipBtn = document.createElement ('span');
 	skipBtn.textContent = '⏩';
-	skipBtn.title = 'Перемотка (Skip)';
-	skipBtn.style.cssText = 'cursor:pointer;font-size:1.2em;padding:0 8px;';
-	skipBtn.dataset.skipActive = 'false';
+	skipBtn.title = 'Быстрая перемотка';
+	skipBtn.style.cssText = 'cursor:pointer;font-size:1.2em;padding:0 8px;opacity:0.6;';
+	skipBtn.id = 'skip-btn';
 
 	skipBtn.addEventListener ('click', function () {
-		const isActive = skipBtn.dataset.skipActive === 'true';
-		if (isActive) {
-			// Остановить skip
-			monogatari.global ('_skip', false);
+		if (_skipInterval) {
+			// Остановить
+			clearInterval (_skipInterval);
+			_skipInterval = null;
 			skipBtn.style.opacity = '0.6';
-			skipBtn.dataset.skipActive = 'false';
+			skipBtn.style.color = '';
 		} else {
-			// Включить skip
-			monogatari.global ('_skip', true);
+			// Запустить — кликаем по game screen каждые 80ms
 			skipBtn.style.opacity = '1';
-			skipBtn.dataset.skipActive = 'true';
-			// Автоматически продвигать текст
-			const skipInterval = setInterval (function () {
-				if (monogatari.global ('_skip') === false) {
-					clearInterval (skipInterval);
-					return;
-				}
+			skipBtn.style.color = '#ff6666';
+			_skipInterval = setInterval (function () {
 				try {
-					monogatari.proceed ({ userInitiated: true, skip: true });
-				} catch (e) {
-					// Ignore errors during skip
-				}
-			}, 50);
+					// Находим game screen и эмулируем клик
+					var gameScreen = document.querySelector ('[data-screen="game"]');
+					if (!gameScreen || gameScreen.style.display === 'none') {
+						// Игра не на экране — остановить
+						clearInterval (_skipInterval);
+						_skipInterval = null;
+						skipBtn.style.opacity = '0.6';
+						skipBtn.style.color = '';
+						return;
+					}
+					// Проверяем, нет ли выбора на экране — если есть, остановиться
+					var choices = document.querySelector ('[data-component="choice-container"]');
+					if (choices && choices.childElementCount > 0) {
+						clearInterval (_skipInterval);
+						_skipInterval = null;
+						skipBtn.style.opacity = '0.6';
+						skipBtn.style.color = '';
+						return;
+					}
+					// Клик для продвижения
+					gameScreen.click ();
+				} catch (e) {}
+			}, 80);
 		}
 	});
 
-	skipBtn.style.opacity = '0.6';
 	quickMenu.appendChild (skipBtn);
 }

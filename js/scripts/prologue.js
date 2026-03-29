@@ -13,7 +13,7 @@ monogatari.script ({
 		'Понедельник. 7:42 утра. Москва.',
 		'Будильник молчит — Алексей проснулся за минуту до него. Как всегда. Как будто по расписанию, которое написал не он.',
 
-		'show character mc normal at center with fadeIn',
+		'show character mc normal at right with fadeIn',
 
 		'mc Кофе. Новости. Работа. Sleep. Repeat.',
 

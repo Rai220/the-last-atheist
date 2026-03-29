@@ -40,7 +40,7 @@ monogatari.script ({
 
 		'mc ...Талон?',
 
-		'Справа от ворот — аппарат, как в МФЦ. Красный, с рожками.',
+		'Справа от ворот — аппарат для талонов. Красный, с рожками.',
 		'На экране: «Выберите категорию».',
 		'Варианты: «Грешник», «Еретик», «Атеист», «Прочее».',
 		'Внизу экрана мелким шрифтом: «Нажимая кнопку, вы соглашаетесь с условиями вечного пребывания (вы всё равно не читаете это)».',
@@ -268,7 +268,7 @@ monogatari.script ({
 		'Алексей идёт по коридору к своей «зоне мук». Серые стены, запах серы.',
 		'И вдруг — стук каблуков. Уверенный, ритмичный.',
 
-		'show character lilith flirt at left with fadeIn',
+		'show character lilith flirt at right with fadeIn',
 
 		'Демонесса. Высокая, в идеально сидящем чёрном платье. Рожки — маленькие, аккуратные. Хвост — как у кошки, нервно подёргивается.',
 		'На бейджике: «Лилит — отдел кадров».',
@@ -316,7 +316,7 @@ monogatari.script ({
 		'lilith Ого. Обычно новенькие тут рыдают или кричат.',
 		'lilith А ты... флиртуешь.',
 
-		'show character lilith laugh at left',
+		'show character lilith laugh at right',
 		'lilith Мне нравится.',
 
 		'mc (У неё клыки. И они ей ТОЖЕ идут. Что со мной не так?)',
@@ -1035,8 +1035,8 @@ monogatari.script ({
 
 		'mc Эй! Ты! Демон!',
 		'demon ...Да?',
-		'mc Ответь мне — почему ад выглядит как российский МФЦ?',
-		'demon Потому что для русского человека нет ничего страшнее бюрократии.',
+		'mc Ответь мне — почему ад выглядит как худший офис на свете?',
+		'demon Потому что для человека нет ничего страшнее бесконечной бюрократии.',
 		'mc Вот! ИМЕННО! Ад «персонализирован» под меня. Как таргетированная реклама!',
 		'mc Потому что это программа. Алгоритм, который подбирает мучения на основе моего профиля.',
 
@@ -1574,7 +1574,7 @@ monogatari.script ({
 	'Hell_Lilith_Coffee': [
 		'show scene hell_office with fadeIn',
 		'show character mc normal at center',
-		'show character lilith flirt at left with fadeIn',
+		'show character lilith flirt at right with fadeIn',
 
 		'Перерыв между раундами дебатов. Алексей сидит в коридоре.',
 		'Стук каблуков. Знакомый стук.',
@@ -1625,7 +1625,7 @@ monogatari.script ({
 	'Hell_Lilith_Coffee_Flirt': [
 		'lilith В аду — да. У нас все нормальные — это плохой знак.',
 
-		'show character lilith laugh at left',
+		'show character lilith laugh at right',
 
 		'lilith Ты знаешь, я работаю тут шесть тысяч лет. И впервые кто-то меня флиртует, а не молит о пощаде.',
 		'mc Ну, пощада — это скучно.',
@@ -1643,7 +1643,7 @@ monogatari.script ({
 	],
 
 	'Hell_Lilith_Coffee_Deep': [
-		'show character lilith serious at left',
+		'show character lilith serious at right',
 
 		'lilith По-настоящему?',
 		'lilith ...Ладно.',
@@ -1678,7 +1678,7 @@ monogatari.script ({
 
 		'Стучит дважды.',
 
-		'show character lilith serious at left with fadeIn',
+		'show character lilith serious at right with fadeIn',
 
 		'lilith Алексей? Ты... пришёл.',
 		'mc Ты говорила — если станет плохо, найти тебя.',
@@ -1702,7 +1702,7 @@ monogatari.script ({
 
 	// --- Лилит: искренний рут (не-персональный вердикт) ---
 	'Hell_Lilith_Genuine': [
-		'show character lilith tender at left',
+		'show character lilith tender at right',
 
 		'lilith Ты понимаешь, что я — демон? Буквально?',
 		'mc А я — мёртвый атеист в аду. Мы оба не в позиции привередничать.',
@@ -1725,14 +1725,14 @@ monogatari.script ({
 
 	// --- Лилит: ловушка (персональный вердикт) ---
 	'Hell_Lilith_Trap_Reveal': [
-		'show character lilith tender at left',
+		'show character lilith tender at right',
 
 		'lilith Алексей... Я должна тебе кое-что сказать.',
 		'lilith Пока ещё могу.',
 
 		'Её голос меняется. Не холоднее — тяжелее.',
 
-		'show character lilith serious at left',
+		'show character lilith serious at right',
 
 		'lilith Ты когда-нибудь задумывался, почему именно я подошла к тебе?',
 		'mc ...Случайность?',
@@ -1752,7 +1752,7 @@ monogatari.script ({
 		'lilith Я прочитала твой профиль. Интернет-тролль, который никого не подпускает. Одинокий. Ироничный.',
 		'lilith Я знаю, что ломает таких людей. Не огонь. Не котлы.',
 
-		'show character lilith flirt at left',
+		'show character lilith flirt at right',
 
 		'lilith Надежда. Привязанность. А потом...',
 		'lilith Я думала, что справлюсь. Что это будет как всегда — подойти, улыбнуться, сломать.',
@@ -1797,7 +1797,7 @@ monogatari.script ({
 		'mc Ты использовала меня. Как инструмент. Как форму 66-А.',
 		'mc Я думал... впервые за всё время здесь я думал, что кто-то...',
 
-		'show character lilith serious at left',
+		'show character lilith serious at right',
 
 		'lilith Я делала свою работу, Алексей.',
 		'mc РАБОТУ?!',
@@ -1830,14 +1830,14 @@ monogatari.script ({
 
 		'Пауза. Долгая.',
 
-		'show character lilith serious at left',
+		'show character lilith serious at right',
 
 		'lilith ...',
 		'lilith Нет.',
 
 		'mc Нет — что?',
 
-		'show character lilith tender at left',
+		'show character lilith tender at right',
 
 		'lilith Задание было настоящим. Папка — настоящая. Мне поручили тебя сломать.',
 		'lilith Но...',
@@ -1862,7 +1862,7 @@ monogatari.script ({
 		'mc Хаха.',
 		'mc ХАХАХА.',
 
-		'show character lilith serious at left',
+		'show character lilith serious at right',
 
 		'lilith ...Ты смеёшься?',
 		'mc Конечно! Это же ГЕНИАЛЬНО!',

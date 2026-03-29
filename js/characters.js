@@ -65,6 +65,14 @@ monogatari.characters ({
 			tender: 'tender.png'
 		}
 	},
+	'panchin': {
+		name: 'Учёный',
+		color: '#66ccff',
+		directory: 'panchin',
+		sprites: {
+			shocked: 'shocked.png'
+		}
+	},
 	'viktor': {
 		name: 'Виктор',
 		color: '#66ff66',
