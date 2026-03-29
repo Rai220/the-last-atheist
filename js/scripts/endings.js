@@ -176,6 +176,7 @@ monogatari.script ({
 	// ==========================================
 	'Ending_Believer': [
 		'show scene judgment_throne with fadeIn',
+		'play music choir_ethereal with loop fade 3',
 
 		{
 			'Function': {
@@ -213,6 +214,7 @@ monogatari.script ({
 	// ==========================================
 	'Ending_Pascal': [
 		'show scene judgment_throne with fadeIn',
+		'play music choir_ethereal with loop fade 2',
 		'show character mc smirk at center with fadeIn',
 
 		{
@@ -418,6 +420,7 @@ monogatari.script ({
 	// ==========================================
 	'Ending_Bar': [
 		'show scene hell_bar with fadeIn',
+		'play music hell_bar_jazz with loop fade 2',
 
 		{
 			'Function': {
@@ -451,6 +454,7 @@ monogatari.script ({
 	// ==========================================
 	'Ending_Franchise': [
 		'show scene hell_bar with fadeIn',
+		'play music hell_bar_jazz with loop fade 2',
 		'show character mc smirk at center with fadeIn',
 
 		{
@@ -489,6 +493,7 @@ monogatari.script ({
 	// ==========================================
 	'Ending_Therapist': [
 		'show scene hell_bar with fadeIn',
+		'play music hell_bar_jazz with loop fade 2',
 		'show character mc normal at center with fadeIn',
 
 		{
@@ -529,6 +534,7 @@ monogatari.script ({
 	// ==========================================
 	'Ending_Matrix': [
 		'show scene judgment_throne with fadeIn',
+		'play music choir_ethereal with loop fade 3',
 
 		{
 			'Function': {
@@ -657,6 +663,7 @@ monogatari.script ({
 	// ==========================================
 	'Ending_FullCircle': [
 		'show scene #FFFFFF with fadeIn',
+		'play music choir_ethereal with loop fade 3',
 
 		{
 			'Function': {
@@ -794,6 +801,7 @@ monogatari.script ({
 	// ==========================================
 	'Ending_Prophet': [
 		'show scene judgment_throne with fadeIn',
+		'play music choir_ethereal with loop fade 2',
 
 		{
 			'Function': {
@@ -843,6 +851,7 @@ monogatari.script ({
 	// ==========================================
 	'Ending_HellRomance': [
 		'show scene hell_bar with fadeIn',
+		'play music hell_bar_jazz with loop fade 2',
 
 		{
 			'Function': {
@@ -1131,6 +1140,17 @@ monogatari.script ({
 				'Revert': function () {}
 			}
 		},
+
+		// Остановить всю музыку
+		'stop music choir_ethereal with fade 2',
+		'stop music hell_bar_jazz with fade 2',
+		'stop music hell_drone with fade 2',
+		'stop music hell_bureaucracy with fade 2',
+		'stop music hell_debate with fade 2',
+		'stop music judgment_tension with fade 2',
+		'stop music morning_ambient with fade 2',
+		'stop music internet_lo_fi with fade 2',
+		'stop music death_heartbeat with fade 2',
 
 		'show scene #000000 with fadeIn',
 		'wait 1000',

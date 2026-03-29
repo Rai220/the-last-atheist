@@ -611,6 +611,7 @@ monogatari.script ({
 
 	'Hell_Debate_Round_1': [
 		'show scene hell_debate_room with fadeIn',
+		'play music hell_debate with loop fade 2',
 		'show character mc angry at center',
 		'show character demon smile at left',
 
@@ -775,6 +776,7 @@ monogatari.script ({
 
 		'stop music hell_drone with fade 2',
 		'stop music hell_bureaucracy with fade 2',
+		'stop music hell_debate with fade 2',
 
 		'Алексей сидит на полу. Один.',
 		'Демоны ушли. Или их не было. Или они всегда здесь.',
