@@ -7,7 +7,7 @@ const { $_ready, $_ } = Monogatari;
 
 // monogatari.debug.level(5);
 
-// Все 24 концовки для трекера
+// Все 25 концовок для трекера
 const ALL_ENDINGS = {
 	// ★ Major endings
 	'matrix': '★ Контакт',
@@ -113,6 +113,24 @@ function showEndingGallery () {
 }
 
 var _skipInterval = null;
+var _seenTextKeys = JSON.parse (localStorage.getItem ('tla_seen_text') || '{}');
+var _skipMode = 'seen'; // 'seen' = skip only read text, 'all' = skip everything
+
+function markTextSeen (label, index) {
+	var key = label + ':' + index;
+	_seenTextKeys[key] = 1;
+	if (Object.keys (_seenTextKeys).length % 20 === 0) {
+		localStorage.setItem ('tla_seen_text', JSON.stringify (_seenTextKeys));
+	}
+}
+
+function isTextSeen (label, index) {
+	return !!_seenTextKeys[label + ':' + index];
+}
+
+function saveSeenText () {
+	localStorage.setItem ('tla_seen_text', JSON.stringify (_seenTextKeys));
+}
 
 function addSkipButton () {
 	const quickMenu = document.querySelector ('[data-component="quick-menu"]');
@@ -120,48 +138,85 @@ function addSkipButton () {
 
 	const skipBtn = document.createElement ('span');
 	skipBtn.textContent = '⏩';
-	skipBtn.title = 'Быстрая перемотка';
-	skipBtn.style.cssText = 'cursor:pointer;font-size:1.2em;padding:0 8px;opacity:0.6;';
+	skipBtn.title = 'Перемотка прочитанного (клик: вкл/выкл, двойной клик: пропускать всё)';
+	skipBtn.style.cssText = 'cursor:pointer;font-size:1.2em;padding:0 8px;opacity:0.6;transition:all 0.2s;';
 	skipBtn.id = 'skip-btn';
 
+	var _lastClick = 0;
 	skipBtn.addEventListener ('click', function () {
+		var now = Date.now ();
+		if (now - _lastClick < 400) {
+			_skipMode = _skipMode === 'all' ? 'seen' : 'all';
+			skipBtn.style.color = _skipMode === 'all' ? '#ffaa00' : '#ff6666';
+			skipBtn.title = _skipMode === 'all' ? 'Перемотка ВСЕГО текста (двойной клик: только прочитанного)' : 'Перемотка прочитанного (двойной клик: пропускать всё)';
+			_lastClick = 0;
+			return;
+		}
+		_lastClick = now;
+
 		if (_skipInterval) {
-			// Остановить
 			clearInterval (_skipInterval);
 			_skipInterval = null;
 			skipBtn.style.opacity = '0.6';
 			skipBtn.style.color = '';
+			saveSeenText ();
 		} else {
-			// Запустить — кликаем по game screen каждые 80ms
 			skipBtn.style.opacity = '1';
-			skipBtn.style.color = '#ff6666';
+			skipBtn.style.color = _skipMode === 'all' ? '#ffaa00' : '#ff6666';
 			_skipInterval = setInterval (function () {
 				try {
-					// Находим game screen и эмулируем клик
 					var gameScreen = document.querySelector ('[data-screen="game"]');
 					if (!gameScreen || gameScreen.style.display === 'none') {
-						// Игра не на экране — остановить
 						clearInterval (_skipInterval);
 						_skipInterval = null;
 						skipBtn.style.opacity = '0.6';
 						skipBtn.style.color = '';
+						saveSeenText ();
 						return;
 					}
-					// Проверяем, нет ли выбора на экране — если есть, остановиться
 					var choices = document.querySelector ('[data-component="choice-container"]');
 					if (choices && choices.childElementCount > 0) {
 						clearInterval (_skipInterval);
 						_skipInterval = null;
 						skipBtn.style.opacity = '0.6';
 						skipBtn.style.color = '';
+						saveSeenText ();
 						return;
 					}
-					// Клик для продвижения
+					if (_skipMode === 'seen') {
+						var state = monogatari.state ('step');
+						var label = monogatari.state ('label');
+						if (!isTextSeen (label, state)) {
+							clearInterval (_skipInterval);
+							_skipInterval = null;
+							skipBtn.style.opacity = '0.6';
+							skipBtn.style.color = '';
+							saveSeenText ();
+							return;
+						}
+					}
 					gameScreen.click ();
 				} catch (e) {}
-			}, 80);
+			}, 60);
 		}
 	});
 
 	quickMenu.appendChild (skipBtn);
+
+	// Track seen text on each step
+	var _observer = new MutationObserver (function () {
+		try {
+			var label = monogatari.state ('label');
+			var step = monogatari.state ('step');
+			if (label && typeof step === 'number') {
+				markTextSeen (label, step);
+			}
+		} catch (e) {}
+	});
+	var sayEl = document.querySelector ('[data-ui="say"]');
+	if (sayEl) {
+		_observer.observe (sayEl, { childList: true, characterData: true, subtree: true });
+	}
+
+	window.addEventListener ('beforeunload', saveSeenText);
 }

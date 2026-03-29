@@ -1,7 +1,7 @@
 /* global monogatari */
 
 /**
- * Вспомогательные функции для визуальных эффектов
+ * Визуальные эффекты для «Последний Атеист»
  */
 
 // Тряска экрана
@@ -42,24 +42,79 @@ function panicText (enable = true) {
 	}
 }
 
+// Эффект сердцебиения (для сцены смерти)
+function heartbeatEffect (enable = true) {
+	const el = document.querySelector ('[data-screen="game"]');
+	if (!el) return;
+	if (enable) {
+		el.classList.add ('heartbeat');
+	} else {
+		el.classList.remove ('heartbeat');
+	}
+}
+
+// Медленное затухание (для сцены смерти)
+function slowBurnEffect (enable = true) {
+	const el = document.querySelector ('[data-screen="game"]');
+	if (!el) return;
+	if (enable) {
+		el.classList.add ('slow-burn');
+	} else {
+		el.classList.remove ('slow-burn');
+	}
+}
+
+// Статический шум (для глитч-моментов)
+function staticNoiseEffect (enable = true) {
+	const el = document.querySelector ('[data-screen="game"]');
+	if (!el) return;
+	if (enable) {
+		el.classList.add ('static-noise');
+	} else {
+		el.classList.remove ('static-noise');
+	}
+}
+
+// Божественный свет
+function divineGlow (enable = true) {
+	const el = document.querySelector ('[data-screen="game"]');
+	if (!el) return;
+	if (enable) {
+		el.classList.add ('divine-glow');
+	} else {
+		el.classList.remove ('divine-glow');
+	}
+}
+
 // Обновление WTF-метра
 function updateWtfMeter (value) {
 	const fill = document.getElementById ('wtf-fill');
 	const meter = document.getElementById ('wtf-meter');
 	if (!fill || !meter) return;
 
-	fill.style.width = value + '%';
+	fill.style.width = Math.min (100, value) + '%';
 
-	// Кратко показать метр
+	if (value >= 80) {
+		fill.style.background = 'linear-gradient(90deg, #ff3333, #ff0000, #880000)';
+		fill.style.boxShadow = '0 0 12px rgba(255, 0, 0, 0.8)';
+	} else if (value >= 50) {
+		fill.style.background = 'linear-gradient(90deg, #ff6644, #ff3333, #cc0000)';
+		fill.style.boxShadow = '0 0 8px rgba(255, 50, 50, 0.5)';
+	}
+
 	meter.classList.add ('wtf-flash');
-	setTimeout (() => meter.classList.remove ('wtf-flash'), 1500);
+	setTimeout (() => meter.classList.remove ('wtf-flash'), 2000);
 }
 
 // Применить визуальные эффекты в зависимости от уровня WTF
 function applyWtfEffects (wtfLevel) {
-	if (wtfLevel >= 70) {
+	if (wtfLevel >= 80) {
+		screenGlitch (600);
+		staticNoiseEffect (true);
+		setTimeout (() => staticNoiseEffect (false), 2000);
+	} else if (wtfLevel >= 60) {
 		screenGlitch (400);
-	} else if (wtfLevel >= 50) {
+	} else if (wtfLevel >= 40) {
 		screenShake (300);
 	}
 	updateWtfMeter (wtfLevel);
