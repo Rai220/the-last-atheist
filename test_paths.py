@@ -43,6 +43,9 @@ EXPECTED_ENDINGS = [
     'Ending_DevCommentary',
     'Ending_Nihilist',
     'Ending_Prophet',
+    # G: Романтика
+    'Ending_HellRomance',
+    'Ending_EscapeTogether',
 ]
 
 

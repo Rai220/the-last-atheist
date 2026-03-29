@@ -31,6 +31,8 @@ monogatari.storage ({
 	found_bar_location: false,
 	debate_cycle: 0,
 	demon_friendship: 0,     // дружба с демоном-бюрократом
+	lilith_interest: 0,      // романтический интерес Лилит
+	lilith_met: false,       // встретил Лилит
 
 	// --- Флаги: Матрица ---
 	matrix_suspicion: 0,     // подозрение что это симуляция

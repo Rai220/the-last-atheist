@@ -244,6 +244,110 @@ monogatari.script ({
 	'Hell_Assignment': [
 		'hide character demon with fadeOut',
 
+		// Встреча с Лилит перед назначением мук
+		'jump Hell_Lilith_Intro'
+	],
+
+	// ==========================================
+	// ВСТРЕЧА С ЛИЛИТ
+	// ==========================================
+	'Hell_Lilith_Intro': [
+		'show scene hell_office with fadeIn',
+		'show character mc normal at center',
+
+		'Алексей идёт по коридору к своей «зоне мук». Серые стены, запах серы.',
+		'И вдруг — стук каблуков. Уверенный, ритмичный.',
+
+		// 'show character lilith flirt at left with fadeIn',
+
+		'Демонесса. Высокая, в идеально сидящем чёрном платье. Рожки — маленькие, аккуратные. Хвост — как у кошки, нервно подёргивается.',
+		'На бейджике: «Лилит — отдел кадров».',
+
+		'lilith О, новенький! Атеист, да?',
+		'mc ...Да. А вы...?',
+		'lilith Лилит. HR-менеджер ада. И да, я знаю — «каждую демонессу зовут Лилит». Не оригинально.',
+		'lilith Но родители не спрашивали.',
+
+		'mc (Она... красивая. Нет, стоп. Она ДЕМОН. У неё рожки и хвост.)',
+		'mc (Хотя рожки ей идут... НЕТ. Хватит.)',
+
+		'lilith Я провожу ориентацию для новоприбывших. Давай покажу тебе зону.',
+
+		{
+			'Choice': {
+				'Dialog': 'mc (Как реагировать?)',
+				'flirt': {
+					'Text': '«Ориентация с таким гидом? Ад уже не кажется таким ужасным.»',
+					'Do': 'jump Hell_Lilith_Flirt_Response',
+					'onChosen': function () {
+						const s = this.storage ();
+						this.storage ({ lilith_interest: s.lilith_interest + 2, lilith_met: true });
+					}
+				},
+				'professional': {
+					'Text': '«Спасибо, Лилит. Показывайте.»',
+					'Do': 'jump Hell_Lilith_Pro_Response',
+					'onChosen': function () {
+						this.storage ({ lilith_met: true, lilith_interest: this.storage ().lilith_interest + 1 });
+					}
+				},
+				'reject': {
+					'Text': '«Я не собираюсь флиртовать с демоном.»',
+					'Do': 'jump Hell_Lilith_Reject_Response',
+					'onChosen': function () {
+						this.storage ({ lilith_met: true });
+					}
+				}
+			}
+		}
+	],
+
+	'Hell_Lilith_Flirt_Response': [
+		'lilith Ого. Обычно новенькие тут рыдают или кричат.',
+		'lilith А ты... флиртуешь.',
+
+		// 'show character lilith laugh at left',
+		'lilith Мне нравится.',
+
+		'mc (У неё клыки. И они ей ТОЖЕ идут. Что со мной не так?)',
+
+		'lilith Знаешь, Алексей, ты забавный. Я загляну к тебе позже. На котлы.',
+		'lilith Или на кофе. В аду есть кофе. Ужасный, но есть.',
+		'mc ...Это свидание?',
+		'lilith Это ориентация с потенциалом.',
+
+		// 'hide character lilith with fadeOut',
+		'jump Hell_Assignment_Route'
+	],
+
+	'Hell_Lilith_Pro_Response': [
+		'lilith Какой вежливый! Последний вежливый грешник был... хм... в 1847-м.',
+		'lilith Ладно, пойдём. Покажу тебе, где котлы, где туалеты — шутка, туалетов нет — и где не стоит ходить одному.',
+
+		'mc (Она профессионал. Демонический профессионал. Это сюрреально.)',
+
+		'lilith И, Алексей?',
+		'mc Да?',
+		'lilith Если тебе станет совсем плохо — найди меня. Отдел кадров, третий круг, кабинет 6.',
+		'lilith Я серьёзно. Тут бывает... тяжело.',
+
+		// 'hide character lilith with fadeOut',
+		'jump Hell_Assignment_Route'
+	],
+
+	'Hell_Lilith_Reject_Response': [
+		'lilith О, расслабься, смертный. Я HR-менеджер, а не суккуб.',
+		'lilith Хотя суккубы — в соседнем отделе. Могу дать контакт.',
+		'mc ...Нет, спасибо.',
+		'lilith Как хочешь. Но знай: тут все сначала гордые, а потом одинокие.',
+		'lilith Если передумаешь — третий круг, кабинет 6.',
+
+		// 'hide character lilith with fadeOut',
+		'jump Hell_Assignment_Route'
+	],
+
+	// Маршрутизация по вердикту (после Лилит)
+	'Hell_Assignment_Route': [
 		{
 			'Conditional': {
 				'Condition': function () {
@@ -381,7 +485,7 @@ monogatari.script ({
 					return 'first';
 				},
 				'first': 'jump Hell_Debate_Round_1',
-				'second': 'jump Hell_Debate_Round_2',
+				'second': 'jump Hell_Lilith_Visit_Check',
 				'breakdown': 'jump Hell_Breakdown'
 			}
 		}
@@ -1156,10 +1260,213 @@ monogatari.script ({
 			'Conditional': {
 				'Condition': function () {
 					const s = this.storage ();
-					return (s.matrix_suspicion >= 2 || s.noticed_patterns) ? 'matrix_available' : 'normal';
+					// Романтическая концовка доступна при высоком интересе
+					if (s.lilith_interest >= 3) return 'lilith_available';
+					if (s.matrix_suspicion >= 2 || s.noticed_patterns) return 'matrix_available';
+					return 'normal';
 				},
+				'lilith_available': 'jump Hell_Breakdown_Lilith_Choice',
 				'matrix_available': 'jump Hell_Breakdown_Matrix_Choice',
 				'normal': 'jump Hell_Breakdown_Normal_Choice'
+			}
+		}
+	],
+
+	// --- Breakdown с 5 вариантами (Лилит доступна) ---
+	'Hell_Breakdown_Lilith_Choice': [
+		{
+			'Choice': {
+				'Dialog': 'mc (Что делать?)',
+				'submit': {
+					'Text': 'Сдаться. Признать. Поверить.',
+					'Do': 'jump Hell_Submit',
+					'onChosen': function () {
+						this.storage ({ acceptance_score: this.storage ().acceptance_score + 5 });
+					}
+				},
+				'rebel': {
+					'Text': 'Нет. Пора менять правила.',
+					'Do': 'jump Hell_Rebellion',
+					'onChosen': function () {
+						this.storage ({ rebellion_score: this.storage ().rebellion_score + 5 });
+					}
+				},
+				'bar': {
+					'Text': '...Выпить бы.',
+					'Do': 'jump Hell_Bar_Idea',
+					'onChosen': function () {
+						this.storage ({ humor_used: this.storage ().humor_used + 1, found_bar_location: true });
+					}
+				},
+				'matrix': {
+					'Text': 'Это симуляция. Я знаю.',
+					'Do': 'jump Hell_Matrix_Realization',
+					'onChosen': function () {
+						this.storage ({ matrix_suspicion: this.storage ().matrix_suspicion + 5 });
+					}
+				},
+				'lilith_romance': {
+					'Text': '...Позвонить Лилит.',
+					'Do': 'jump Hell_Lilith_Romance',
+					'onChosen': function () {
+						this.storage ({ lilith_interest: this.storage ().lilith_interest + 2 });
+					}
+				}
+			}
+		}
+	],
+
+	// ==========================================
+	// ВИЗИТ ЛИЛИТ (между раундами дебатов)
+	// ==========================================
+	'Hell_Lilith_Visit_Check': [
+		{
+			'Conditional': {
+				'Condition': function () {
+					const s = this.storage ();
+					return (s.lilith_met && s.lilith_interest >= 1) ? 'visit' : 'skip';
+				},
+				'visit': 'jump Hell_Lilith_Coffee',
+				'skip': 'jump Hell_Debate_Round_2'
+			}
+		}
+	],
+
+	'Hell_Lilith_Coffee': [
+		'show scene hell_office with fadeIn',
+		'show character mc normal at center',
+		// 'show character lilith flirt at left with fadeIn',
+
+		'Перерыв между раундами дебатов. Алексей сидит в коридоре.',
+		'Стук каблуков. Знакомый стук.',
+
+		'lilith Ну что, философ? Как дебаты?',
+		'mc Три из десяти. Потом пять. Прогресс.',
+		'lilith Принесла кофе. Ну, то, что тут называют кофе.',
+
+		'Алексей берёт чашку. Жидкость внутри слегка светится.',
+
+		'mc Это безопасно?',
+		'lilith Для мёртвого человека в аду? Абсолютно.',
+		'mc ...Справедливо.',
+
+		'Пауза. Кофе на вкус как... кофе. Удивительно.',
+
+		'lilith Алексей, можно вопрос?',
+		'mc Валяй.',
+		'lilith Зачем ты споришь с ними? Демоны не меняют мнение. Это буквально невозможно.',
+		'mc А зачем ты работаешь в HR ада?',
+		'lilith ...Touché.',
+
+		{
+			'Choice': {
+				'Dialog': 'lilith Ты странный, знаешь?',
+				'flirt_more': {
+					'Text': '«Странный — это комплимент от демонессы?»',
+					'Do': 'jump Hell_Lilith_Coffee_Flirt',
+					'onChosen': function () {
+						this.storage ({ lilith_interest: this.storage ().lilith_interest + 2 });
+					}
+				},
+				'deep_talk': {
+					'Text': '«Расскажи о себе. По-настоящему.»',
+					'Do': 'jump Hell_Lilith_Coffee_Deep',
+					'onChosen': function () {
+						this.storage ({ lilith_interest: this.storage ().lilith_interest + 1, empathy_shown: this.storage ().empathy_shown + 1 });
+					}
+				},
+				'back_to_work': {
+					'Text': '«Спасибо за кофе. Мне пора на пытки.»',
+					'Do': 'jump Hell_Debate_Round_2'
+				}
+			}
+		}
+	],
+
+	'Hell_Lilith_Coffee_Flirt': [
+		'lilith В аду — да. У нас все нормальные — это плохой знак.',
+
+		// 'show character lilith laugh at left',
+
+		'lilith Ты знаешь, я работаю тут шесть тысяч лет. И впервые кто-то меня флиртует, а не молит о пощаде.',
+		'mc Ну, пощада — это скучно.',
+		'lilith Мне определённо нравится ход твоих мыслей.',
+
+		'Она оставляет на чашке отпечаток тёмной помады.',
+
+		'lilith Увидимся, Алексей. И... удачи на дебатах. Хотя удача тут не работает.',
+		// 'hide character lilith with fadeOut',
+
+		'mc (Я только что флиртовал с демонессой. В аду. За чашкой светящегося кофе.)',
+		'mc (Мой терапевт бы... а, ладно. У меня больше нет терапевта.)',
+
+		'jump Hell_Debate_Round_2'
+	],
+
+	'Hell_Lilith_Coffee_Deep': [
+		// 'show character lilith serious at left',
+
+		'lilith По-настоящему?',
+		'lilith ...Ладно.',
+		'lilith Я не всегда была демоном. Ну, точнее, не всегда была ЗДЕСЬ.',
+		'lilith Раньше я была... кем-то другим. Давно. Ещё до того, как ад стал бюрократией.',
+		'lilith Я помню небо. Настоящее небо, не облачный потолок зала суда.',
+
+		'mc Ты была ангелом?',
+
+		'lilith ...Была. Давно. Выбрала не ту сторону.',
+		'lilith Или правильную. Зависит от перспективы.',
+
+		'mc (Падший ангел. Она — падший ангел, который работает в HR.)',
+		'mc (Это самая грустная карьерная траектория, которую я могу представить.)',
+
+		'lilith Не надо меня жалеть. Я не жалею.',
+		'lilith Ну, почти.',
+		// 'hide character lilith with fadeOut',
+
+		'jump Hell_Debate_Round_2'
+	],
+
+	// ==========================================
+	// РОМАНТИЧЕСКАЯ ВЕТКА ЛИЛИТ
+	// ==========================================
+	'Hell_Lilith_Romance': [
+		'show scene hell_office with fadeIn',
+		'show character mc normal at center',
+
+		'Алексей находит кабинет 6, третий круг.',
+		'Дверь с табличкой: «Отдел кадров. Лилит. Стучите дважды (один — невежливо, три — паранойя)».',
+
+		'Стучит дважды.',
+
+		// 'show character lilith serious at left with fadeIn',
+
+		'lilith Алексей? Ты... пришёл.',
+		'mc Ты говорила — если станет плохо, найти тебя.',
+		'lilith И стало плохо?',
+		'mc Стало... непонятно. Я больше не знаю, зачем я тут и чего хочу.',
+		'mc Но я знаю, что хочу быть здесь. С тобой.',
+
+		'Пауза. Лилит впервые выглядит растерянной.',
+
+		// 'show character lilith tender at left',
+
+		'lilith Ты понимаешь, что я — демон? Буквально?',
+		'mc А я — мёртвый атеист в аду. Мы оба не в позиции привередничать.',
+		'lilith ...Ты невозможный человек.',
+		'mc Я знаю.',
+
+		{
+			'Choice': {
+				'Dialog': 'lilith Что ты предлагаешь?',
+				'stay_together': {
+					'Text': '«Остаться. Здесь. С тобой. В аду, но вместе.»',
+					'Do': 'jump Ending_HellRomance'
+				},
+				'escape_together': {
+					'Text': '«Уйти. Вместе. Ты же знаешь выход — ты была ангелом.»',
+					'Do': 'jump Ending_EscapeTogether'
+				}
 			}
 		}
 	]
