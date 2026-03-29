@@ -41,6 +41,9 @@ $_ready (() => {
 	monogatari.init ('#monogatari').then (() => {
 		// 3. After init:
 
+		// Добавляем кнопку Skip в quick menu
+		addSkipButton ();
+
 		// Добавляем счётчик концовок на главный экран
 		updateEndingCounter ();
 
@@ -103,4 +106,46 @@ function showEndingGallery () {
 	});
 
 	monogatari.run ('show message EndingGallery', false);
+}
+
+function addSkipButton () {
+	const quickMenu = document.querySelector ('[data-component="quick-menu"]');
+	if (!quickMenu) return;
+
+	// Кнопка Skip
+	const skipBtn = document.createElement ('span');
+	skipBtn.textContent = '⏩';
+	skipBtn.title = 'Перемотка (Skip)';
+	skipBtn.style.cssText = 'cursor:pointer;font-size:1.2em;padding:0 8px;';
+	skipBtn.dataset.skipActive = 'false';
+
+	skipBtn.addEventListener ('click', function () {
+		const isActive = skipBtn.dataset.skipActive === 'true';
+		if (isActive) {
+			// Остановить skip
+			monogatari.global ('_skip', false);
+			skipBtn.style.opacity = '0.6';
+			skipBtn.dataset.skipActive = 'false';
+		} else {
+			// Включить skip
+			monogatari.global ('_skip', true);
+			skipBtn.style.opacity = '1';
+			skipBtn.dataset.skipActive = 'true';
+			// Автоматически продвигать текст
+			const skipInterval = setInterval (function () {
+				if (monogatari.global ('_skip') === false) {
+					clearInterval (skipInterval);
+					return;
+				}
+				try {
+					monogatari.proceed ({ userInitiated: true, skip: true });
+				} catch (e) {
+					// Ignore errors during skip
+				}
+			}, 50);
+		}
+	});
+
+	skipBtn.style.opacity = '0.6';
+	quickMenu.appendChild (skipBtn);
 }
