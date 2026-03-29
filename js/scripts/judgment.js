@@ -509,6 +509,23 @@ monogatari.script ({
 		'show scene judgment_throne with fadeIn',
 		'show character mc despair at center',
 
+		// Проверяем ранний выход: Лазейка
+		{
+			'Conditional': {
+				'Condition': function () {
+					const s = this.storage ();
+					return (s.humor_used >= 3 && s.argument_quality >= 4) ? 'loophole' : 'normal';
+				},
+				'loophole': 'jump Ending_Loophole',
+				'normal': 'jump Judgment_Verdict_Calc'
+			}
+		}
+	],
+
+	'Judgment_Verdict_Calc': [
+		'show scene judgment_throne with fadeIn',
+		'show character mc despair at center',
+
 		// Вычисляем вердикт
 		{
 			'Function': {

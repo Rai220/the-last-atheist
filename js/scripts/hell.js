@@ -121,10 +121,7 @@ monogatari.script ({
 					'Text': 'Заполнить форму',
 					'Do': 'jump Hell_Form_Fill',
 					'onChosen': function () {
-						const s = this.storage ();
-						this.storage ({
-							acceptance_score: s.acceptance_score + 1
-						});
+						this.storage ({ acceptance_score: this.storage ().acceptance_score + 1 });
 					}
 				},
 				'refuse': {
@@ -132,21 +129,21 @@ monogatari.script ({
 					'Do': 'jump Hell_Form_Refuse',
 					'onChosen': function () {
 						const s = this.storage ();
-						this.storage ({
-							rebellion_score: s.rebellion_score + 1,
-							wtf_level: Math.min (100, s.wtf_level + 5)
-						});
+						this.storage ({ rebellion_score: s.rebellion_score + 1, wtf_level: Math.min (100, s.wtf_level + 5) });
 					}
 				},
 				'joke': {
 					'Text': '«А можно форму на апелляцию?»',
 					'Do': 'jump Hell_Form_Appeal',
 					'onChosen': function () {
-						const s = this.storage ();
-						this.storage ({
-							humor_used: s.humor_used + 1,
-							argument_quality: s.argument_quality + 1
-						});
+						this.storage ({ humor_used: this.storage ().humor_used + 1, argument_quality: this.storage ().argument_quality + 1 });
+					}
+				},
+				'befriend': {
+					'Text': '«Тяжёлый день, да? Расскажи, как ты сюда попал?»',
+					'Do': 'jump Hell_Befriend_Demon',
+					'onChosen': function () {
+						this.storage ({ demon_friendship: this.storage ().demon_friendship + 2, empathy_shown: this.storage ().empathy_shown + 1 });
 					}
 				}
 			}
@@ -459,7 +456,7 @@ monogatari.script ({
 				'Dialog': 'mc (Ещё раз?)',
 				'again': {
 					'Text': 'Продолжить дебаты (упрямство!)',
-					'Do': 'jump Hell_Debate_Loop',
+					'Do': 'jump Hell_DebateWin_Check',
 					'onChosen': function () {
 						const s = this.storage ();
 						this.storage ({
@@ -470,12 +467,9 @@ monogatari.script ({
 				},
 				'give_up': {
 					'Text': 'Замолчать',
-					'Do': 'jump Hell_Debate_Loop',
+					'Do': 'jump Hell_DebateWin_Check',
 					'onChosen': function () {
-						const s = this.storage ();
-						this.storage ({
-							acceptance_score: s.acceptance_score + 1
-						});
+						this.storage ({ acceptance_score: this.storage ().acceptance_score + 1 });
 					}
 				}
 			}
@@ -576,17 +570,8 @@ monogatari.script ({
 		'mc (Что, если...)',
 		'mc (Что, если я просто... перестану?)',
 
-		// Проверяем, доступна ли опция "Матрица"
-		{
-			'Conditional': {
-				'Condition': function () {
-					const s = this.storage ();
-					return (s.matrix_suspicion >= 2 || s.noticed_patterns) ? 'matrix_available' : 'normal';
-				},
-				'matrix_available': 'jump Hell_Breakdown_Matrix_Choice',
-				'normal': 'jump Hell_Breakdown_Normal_Choice'
-			}
-		}
+		// Сначала проверяем секретные концовки, потом обычные
+		'jump Hell_Secret_Check'
 	],
 
 	// --- Breakdown с 4 вариантами (Матрица доступна) ---
@@ -838,52 +823,6 @@ monogatari.script ({
 		'jump Ending_Matrix'
 	],
 
-	// ==========================================
-	// АД: Путь подчинения → Концовка «Верующий»
-	// ==========================================
-	'Hell_Submit': [
-		'mc ...Ладно.',
-		'mc Ладно. Вы победили. ОН победил.',
-		'mc Я... верю.',
-
-		'Слова выходят тяжело. Как камни.',
-
-		'mc Я верю, что это реально. Что Бог существует. Что я был неправ.',
-		'mc 38 лет я считал себя умнее всех. И вот я — в аду. Доказывая то, что опровергнуто самим моим местоположением.',
-
-		'Тишина.',
-		'А потом — голос. Тот самый.',
-
-		'g Ты не веришь, Алексей.',
-		'g Ты просто устал.',
-		'g Но это — начало.',
-
-		'jump Ending_Believer'
-	],
-
-	// ==========================================
-	// АД: Путь бунта → Концовка «Революция»
-	// ==========================================
-	'Hell_Rebellion': [
-		'show character mc angry at center',
-
-		'mc Нет.',
-		'mc НЕТ.',
-		'mc Я не буду сдаваться. Не перед богом, не перед демонами, не перед абсурдной бюрократией загробного мира.',
-
-		'mc Если это ад — значит, ад можно ИЗМЕНИТЬ.',
-		'mc Я программист. Я решаю проблемы. Это просто... очень большой баг.',
-
-		'Алексей встаёт. Впервые за... долгое время.',
-
-		'mc Демоны устали. Души сломлены. Система работает на инерции.',
-		'mc Знаете, что разрушает любую систему? Люди, которые отказываются играть по правилам.',
-
-		'mc Мне нужны союзники.',
-
-		'jump Hell_Rebellion_Recruit'
-	],
-
 	'Hell_Rebellion_Recruit': [
 		'show scene hell_cauldrons with fadeIn',
 		'show character mc angry at center',
@@ -908,47 +847,17 @@ monogatari.script ({
 		'jump Ending_Rebellion'
 	],
 
-	// ==========================================
-	// АД: Путь бара → Концовка «Бар»
-	// ==========================================
-	'Hell_Bar_Idea': [
-		'mc (А если нельзя выиграть — можно хотя бы выпить?)',
-
-		'Странная мысль. Но... почему нет?',
-		'Ад — это место. Место можно обустроить. Даже плохое место.',
-
-		'mc (В аду есть бюрократия. Значит, есть и лазейки.)',
-		'mc (А где лазейки — там бизнес.)',
-
-		'Алексей поднимается. Усмехается.',
-
-		'mc Где-то в этом аду есть место, которое никто не использует.',
-		'mc Потому что оно бесполезно. Потому что там нечего мучить.',
-		'mc И именно там я открою бар.',
-
-		'jump Hell_Bar_Search'
-	],
+	// Hell_Bar_Idea и Hell_Bar_Search перемещены в секцию роутеров ниже
 
 	'Hell_Bar_Search': [
 		'show scene hell_cauldrons with fadeIn',
 		'show character mc smirk at center',
-		// 'play music hell_drone with loop fade 2',
 
-		'Алексей ищет. Шатается по аду, как турист по незнакомому городу.',
-		'Мимо котлов (кивок соседям-политикам), мимо зоны дебатов, мимо бесконечного кроссфита...',
-
-		'И находит.',
-		'Пустое помещение. Бывший склад адского инвентаря, судя по ржавым вилам в углу.',
-		'Никому не нужное, забытое, неприметное.',
-
+		'Алексей ищет. Шатается по аду, как турист.',
+		'И находит. Пустое помещение. Бывший склад адского инвентаря.',
 		'mc Идеально.',
-
-		'Дальше — дело техники. И связей.',
-		'Борис (бывший военный) добывает мебель — оказывается, в аду есть свалка ненужных вещей.',
-		'Ли (философ) находит рецепт напитка из адской серы, который «почти не отвратителен».',
-
+		'Борис добывает мебель. Ли находит рецепт напитка из адской серы.',
 		'mc (Это не рай. Но это — моё.)',
-
 		'jump Ending_Bar'
 	],
 
@@ -1016,5 +925,242 @@ monogatari.script ({
 		'demon Вернитесь в свою зону мук. Форма на выход — 666-ВЫХ. Срок рассмотрения — вечность.',
 		'hide character demon with fadeOut',
 		'end'
+	],
+
+	// ==========================================
+	// ВЕТКА: Подружиться с демоном
+	// ==========================================
+	'Hell_Befriend_Demon': [
+		'show scene hell_office with fadeIn',
+		'show character demon smile at left',
+		'show character mc normal at center',
+
+		'mc Слушай... тяжёлый день?',
+		'demon ...Что?',
+		'mc Ну, ты же тоже тут работаешь. Каждый день. Вечно. Это же ужасно.',
+
+		'Демон впервые выглядит растерянным.',
+
+		'demon Никто раньше не спрашивал.',
+		'mc Серьёзно?',
+		'demon За шесть тысяч лет — ни один грешник. Все только о себе.',
+		'mc Ну вот я спрашиваю. Как дела, Асмодей?',
+
+		'demon ...Паршиво. Если честно.',
+		'demon Я мечтал быть архитектором. Проектировать мосты. А вместо этого — формы. Бесконечные формы.',
+
+		'mc (Демон, который мечтал строить мосты. Это... грустно.)',
+
+		{
+			'Conditional': {
+				'Condition': function () {
+					return this.storage ().demon_friendship >= 2 ? 'offer' : 'continue';
+				},
+				'offer': 'jump Hell_Demon_Job_Offer',
+				'continue': 'jump Hell_Form_Fill'
+			}
+		}
+	],
+
+	'Hell_Demon_Job_Offer': [
+		'demon Знаешь что, Алексей? У нас тут вакансия.',
+		'demon «Специалист по приёму атеистов». Ты идеален.',
+
+		{
+			'Choice': {
+				'Dialog': 'mc (Стать демоном-бюрократом?)',
+				'accept_job': {
+					'Text': 'Принять предложение',
+					'Do': 'jump Ending_DemonFriend'
+				},
+				'decline_job': {
+					'Text': 'Вежливо отказаться',
+					'Do': 'jump Hell_Form_Fill'
+				}
+			}
+		}
+	],
+
+	// ==========================================
+	// РАННИЙ ВЫХОД: Глитч (wtf >= 80)
+	// Проверяется после второго раунда дебатов
+	// ==========================================
+	'Hell_Glitch_Check': [
+		{
+			'Conditional': {
+				'Condition': function () {
+					return this.storage ().wtf_level >= 80 ? 'glitch' : 'normal';
+				},
+				'glitch': 'jump Ending_Glitch',
+				'normal': 'jump Hell_Debate_Loop'
+			}
+		}
+	],
+
+	// ==========================================
+	// РАННИЙ ВЫХОД: Победа в дебатах
+	// Проверяется после второго раунда
+	// ==========================================
+	'Hell_DebateWin_Check': [
+		{
+			'Conditional': {
+				'Condition': function () {
+					return this.storage ().argument_quality >= 6 ? 'win' : 'normal';
+				},
+				'win': 'jump Ending_DebateWin',
+				'normal': 'jump Hell_Glitch_Check'
+			}
+		}
+	],
+
+	// ==========================================
+	// РОУТЕР: Суб-концовки верующего
+	// ==========================================
+	'Hell_Submit': [
+		'mc ...Ладно. Вы победили. ОН победил.',
+		'mc Я... верю.',
+
+		{
+			'Conditional': {
+				'Condition': function () {
+					const s = this.storage ();
+					if (s.humor_used >= 3) return 'pascal';
+					if (s.argument_quality >= 4) return 'theologian';
+					return 'believer';
+				},
+				'pascal': 'jump Ending_Pascal',
+				'theologian': 'jump Ending_Theologian',
+				'believer': 'jump Ending_Believer'
+			}
+		}
+	],
+
+	// ==========================================
+	// РОУТЕР: Суб-концовки бунта
+	// ==========================================
+	'Hell_Rebellion': [
+		'show character mc angry at center',
+		'mc Нет. НЕТ. Я не буду сдаваться.',
+
+		{
+			'Conditional': {
+				'Condition': function () {
+					const s = this.storage ();
+					if (s.prologue_debate_won && s.noticed_patterns) return 'hacker';
+					if (s.empathy_shown >= 3) return 'democracy';
+					return 'rebellion';
+				},
+				'hacker': 'jump Hell_Rebellion_Hacker',
+				'democracy': 'jump Hell_Rebellion_Democracy',
+				'rebellion': 'jump Hell_Rebellion_Recruit'
+			}
+		}
+	],
+
+	'Hell_Rebellion_Hacker': [
+		'mc Я программист. Бюрократия — это код. Код можно эксплоитить.',
+		'mc Форма 66-А и форма 666-АП. Одновременно. Парадокс.',
+		'jump Ending_Hacker'
+	],
+
+	'Hell_Rebellion_Democracy': [
+		'mc Забастовка — временно. Нужна система. Выборы.',
+		'jump Ending_Democracy'
+	],
+
+	// ==========================================
+	// РОУТЕР: Суб-концовки бара
+	// ==========================================
+	'Hell_Bar_Idea': [
+		'mc (Если нельзя выиграть — можно хотя бы выпить?)',
+		'Алексей поднимается. Усмехается.',
+
+		{
+			'Conditional': {
+				'Condition': function () {
+					const s = this.storage ();
+					if (s.humor_used >= 4) return 'franchise';
+					if (s.empathy_shown >= 3) return 'therapist';
+					return 'bar';
+				},
+				'franchise': 'jump Ending_Franchise',
+				'therapist': 'jump Ending_Therapist',
+				'bar': 'jump Hell_Bar_Search'
+			}
+		}
+	],
+
+	// ==========================================
+	// РОУТЕР: Суб-концовки матрицы
+	// ==========================================
+	'Hell_Matrix_Mirror': [
+		'show scene hell_debate_room with fadeIn',
+
+		{
+			'Function': {
+				'Apply': function () { screenGlitch (600); },
+				'Revert': function () {}
+			}
+		},
+
+		'Алексей стоит один. На доске: «ДОКАЖИТЕ, ЧТО ЭТО НЕ СИМУЛЯЦИЯ».',
+		'show character mc despair at center with fadeIn',
+		'mc (Нефальсифицируемая гипотеза. Невозможно опровергнуть.)',
+		'mc (Именно то, за что я их высмеивал.)',
+		'mc (Я стал ими. Верующим без доказательств.)',
+
+		{
+			'Conditional': {
+				'Condition': function () {
+					const s = this.storage ();
+					if (s.humor_used >= 3) return 'speedrun';
+					if (s.acceptance_score >= 3) return 'awakening';
+					if (s.wtf_level >= 70 && s.noticed_patterns) return 'dev';
+					return 'matrix';
+				},
+				'speedrun': 'jump Ending_Speedrun',
+				'awakening': 'jump Ending_Awakening',
+				'dev': 'jump Ending_DevCommentary',
+				'matrix': 'jump Ending_Matrix'
+			}
+		}
+	],
+
+	// ==========================================
+	// СЕКРЕТНЫЕ ПРОВЕРКИ (в breakdown)
+	// ==========================================
+	'Hell_Secret_Check': [
+		{
+			'Conditional': {
+				'Condition': function () {
+					const s = this.storage ();
+					// Пророк: молил + принял + эмпатия
+					if (s.judgment_begged && s.acceptance_score >= 3 && s.empathy_shown >= 3) return 'prophet';
+					// Полный круг: добрый + эмпатичный
+					if (s.prologue_was_kind && s.empathy_shown >= 3 && s.acceptance_score >= 3) return 'full_circle';
+					// Нигилист: полное отрицание без бунта и принятия
+					if (s.denial_count >= 5 && s.acceptance_score === 0 && s.rebellion_score === 0) return 'nihilist';
+					return 'normal';
+				},
+				'prophet': 'jump Ending_Prophet',
+				'full_circle': 'jump Ending_FullCircle',
+				'nihilist': 'jump Ending_Nihilist',
+				'normal': 'jump Hell_Breakdown_Route'
+			}
+		}
+	],
+
+	// Маршрутизация breakdown после секретных проверок
+	'Hell_Breakdown_Route': [
+		{
+			'Conditional': {
+				'Condition': function () {
+					const s = this.storage ();
+					return (s.matrix_suspicion >= 2 || s.noticed_patterns) ? 'matrix_available' : 'normal';
+				},
+				'matrix_available': 'jump Hell_Breakdown_Matrix_Choice',
+				'normal': 'jump Hell_Breakdown_Normal_Choice'
+			}
+		}
 	]
 });

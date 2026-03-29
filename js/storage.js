@@ -30,6 +30,7 @@ monogatari.storage ({
 	started_rebellion: false,
 	found_bar_location: false,
 	debate_cycle: 0,
+	demon_friendship: 0,     // дружба с демоном-бюрократом
 
 	// --- Флаги: Матрица ---
 	matrix_suspicion: 0,     // подозрение что это симуляция
