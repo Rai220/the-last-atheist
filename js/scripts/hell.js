@@ -258,7 +258,7 @@ monogatari.script ({
 		'Алексей идёт по коридору к своей «зоне мук». Серые стены, запах серы.',
 		'И вдруг — стук каблуков. Уверенный, ритмичный.',
 
-		// 'show character lilith flirt at left with fadeIn',
+		'show character lilith flirt at left with fadeIn',
 
 		'Демонесса. Высокая, в идеально сидящем чёрном платье. Рожки — маленькие, аккуратные. Хвост — как у кошки, нервно подёргивается.',
 		'На бейджике: «Лилит — отдел кадров».',
@@ -306,7 +306,7 @@ monogatari.script ({
 		'lilith Ого. Обычно новенькие тут рыдают или кричат.',
 		'lilith А ты... флиртуешь.',
 
-		// 'show character lilith laugh at left',
+		'show character lilith laugh at left',
 		'lilith Мне нравится.',
 
 		'mc (У неё клыки. И они ей ТОЖЕ идут. Что со мной не так?)',
@@ -316,7 +316,7 @@ monogatari.script ({
 		'mc ...Это свидание?',
 		'lilith Это ориентация с потенциалом.',
 
-		// 'hide character lilith with fadeOut',
+		'hide character lilith with fadeOut',
 		'jump Hell_Assignment_Route'
 	],
 
@@ -331,7 +331,7 @@ monogatari.script ({
 		'lilith Если тебе станет совсем плохо — найди меня. Отдел кадров, третий круг, кабинет 6.',
 		'lilith Я серьёзно. Тут бывает... тяжело.',
 
-		// 'hide character lilith with fadeOut',
+		'hide character lilith with fadeOut',
 		'jump Hell_Assignment_Route'
 	],
 
@@ -342,7 +342,7 @@ monogatari.script ({
 		'lilith Как хочешь. Но знай: тут все сначала гордые, а потом одинокие.',
 		'lilith Если передумаешь — третий круг, кабинет 6.',
 
-		// 'hide character lilith with fadeOut',
+		'hide character lilith with fadeOut',
 		'jump Hell_Assignment_Route'
 	],
 
@@ -1335,7 +1335,7 @@ monogatari.script ({
 	'Hell_Lilith_Coffee': [
 		'show scene hell_office with fadeIn',
 		'show character mc normal at center',
-		// 'show character lilith flirt at left with fadeIn',
+		'show character lilith flirt at left with fadeIn',
 
 		'Перерыв между раундами дебатов. Алексей сидит в коридоре.',
 		'Стук каблуков. Знакомый стук.',
@@ -1386,7 +1386,7 @@ monogatari.script ({
 	'Hell_Lilith_Coffee_Flirt': [
 		'lilith В аду — да. У нас все нормальные — это плохой знак.',
 
-		// 'show character lilith laugh at left',
+		'show character lilith laugh at left',
 
 		'lilith Ты знаешь, я работаю тут шесть тысяч лет. И впервые кто-то меня флиртует, а не молит о пощаде.',
 		'mc Ну, пощада — это скучно.',
@@ -1395,7 +1395,7 @@ monogatari.script ({
 		'Она оставляет на чашке отпечаток тёмной помады.',
 
 		'lilith Увидимся, Алексей. И... удачи на дебатах. Хотя удача тут не работает.',
-		// 'hide character lilith with fadeOut',
+		'hide character lilith with fadeOut',
 
 		'mc (Я только что флиртовал с демонессой. В аду. За чашкой светящегося кофе.)',
 		'mc (Мой терапевт бы... а, ладно. У меня больше нет терапевта.)',
@@ -1404,7 +1404,7 @@ monogatari.script ({
 	],
 
 	'Hell_Lilith_Coffee_Deep': [
-		// 'show character lilith serious at left',
+		'show character lilith serious at left',
 
 		'lilith По-настоящему?',
 		'lilith ...Ладно.',
@@ -1422,7 +1422,7 @@ monogatari.script ({
 
 		'lilith Не надо меня жалеть. Я не жалею.',
 		'lilith Ну, почти.',
-		// 'hide character lilith with fadeOut',
+		'hide character lilith with fadeOut',
 
 		'jump Hell_Debate_Round_2'
 	],
@@ -1439,7 +1439,7 @@ monogatari.script ({
 
 		'Стучит дважды.',
 
-		// 'show character lilith serious at left with fadeIn',
+		'show character lilith serious at left with fadeIn',
 
 		'lilith Алексей? Ты... пришёл.',
 		'mc Ты говорила — если станет плохо, найти тебя.',
@@ -1449,7 +1449,7 @@ monogatari.script ({
 
 		'Пауза. Лилит впервые выглядит растерянной.',
 
-		// 'show character lilith tender at left',
+		'show character lilith tender at left',
 
 		'lilith Ты понимаешь, что я — демон? Буквально?',
 		'mc А я — мёртвый атеист в аду. Мы оба не в позиции привередничать.',

@@ -855,7 +855,7 @@ monogatari.script ({
 		},
 
 		'show character mc smirk at center with fadeIn',
-		// 'show character lilith tender at left with fadeIn',
+		'show character lilith tender at left with fadeIn',
 
 		'Ад — не место для любви. Но любовь никогда не спрашивала разрешения.',
 
@@ -913,7 +913,7 @@ monogatari.script ({
 		},
 
 		'show character mc normal at center with fadeIn',
-		// 'show character lilith serious at left with fadeIn',
+		'show character lilith serious at left with fadeIn',
 
 		'lilith Ты серьёзно? Ты хочешь, чтобы я... сбежала?',
 		'mc Ты была ангелом. Ты знаешь дорогу.',
@@ -924,7 +924,7 @@ monogatari.script ({
 		'lilith ...Ты понимаешь, что будет, если нас поймают?',
 		'mc Что, отправят в ад? Мы уже здесь.',
 
-		// 'show character lilith laugh at left',
+		'show character lilith laugh at left',
 		'lilith Ха. Ладно. Ладно!',
 		'lilith Есть одно место. Между третьим и четвёртым кругом. Служебный коридор.',
 		'lilith Там раньше был проход. До реструктуризации 1347 года.',
@@ -952,7 +952,7 @@ monogatari.script ({
 		'Просто... рассвет. Обычный. Земной.',
 
 		'show scene #FFFFFF with fadeIn',
-		// 'hide character lilith with fadeOut',
+		'hide character lilith with fadeOut',
 		'hide character mc with fadeOut',
 
 		'mc (Свет. Тёплый. Настоящий.)',
