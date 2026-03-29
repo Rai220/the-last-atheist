@@ -50,6 +50,8 @@ EXPECTED_ENDINGS = [
     'Ending_LilithConflicted',
 ]
 
+# Note: total is 24, not 22, but we also check these exist as labels
+
 
 def parse_labels_and_jumps(js_files):
     """Parse all JS files, extract labels and jump targets."""

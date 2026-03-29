@@ -64,5 +64,16 @@ monogatari.characters ({
 			serious: 'serious.png',
 			tender: 'tender.png'
 		}
+	},
+	'viktor': {
+		name: 'Виктор',
+		color: '#66ff66',
+		directory: 'viktor',
+		sprites: {
+			friendly: 'friendly.png',
+			nervous: 'nervous.png',
+			excited: 'excited.png',
+			hurt: 'hurt.png'
+		}
 	}
 });

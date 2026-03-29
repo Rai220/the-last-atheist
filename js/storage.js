@@ -33,6 +33,8 @@ monogatari.storage ({
 	demon_friendship: 0,     // дружба с демоном-бюрократом
 	lilith_interest: 0,      // романтический интерес Лилит
 	lilith_met: false,       // встретил Лилит
+	viktor_friendship: 0,    // отношения с Виктором (-3..+3, отрицательные = буллинг)
+	viktor_met: false,       // встретил Виктора
 
 	// --- Флаги: Матрица ---
 	matrix_suspicion: 0,     // подозрение что это симуляция

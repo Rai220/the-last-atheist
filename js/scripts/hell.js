@@ -317,36 +317,154 @@ monogatari.script ({
 		'lilith Это ориентация с потенциалом.',
 
 		'hide character lilith with fadeOut',
-		'jump Hell_Assignment_Route'
+		'jump Hell_Viktor_Intro'
 	],
 
 	'Hell_Lilith_Pro_Response': [
 		'lilith Какой вежливый! Последний вежливый грешник был... хм... в 1847-м.',
-		'lilith Ладно, пойдём. Покажу тебе, где котлы, где туалеты — шутка, туалетов нет — и где не стоит ходить одному.',
+		'lilith Покажу где котлы, где не ходить одному, и где WiFi ловит лучше.',
 
-		'mc (Она профессионал. Демонический профессионал. Это сюрреально.)',
-
-		'lilith И, Алексей?',
-		'mc Да?',
-		'lilith Если тебе станет совсем плохо — найди меня. Отдел кадров, третий круг, кабинет 6.',
-		'lilith Я серьёзно. Тут бывает... тяжело.',
+		'lilith И, Алексей? Если совсем плохо — кабинет 6, третий круг.',
 
 		'hide character lilith with fadeOut',
-		'jump Hell_Assignment_Route'
+		'jump Hell_Viktor_Intro'
 	],
 
 	'Hell_Lilith_Reject_Response': [
-		'lilith О, расслабься, смертный. Я HR-менеджер, а не суккуб.',
-		'lilith Хотя суккубы — в соседнем отделе. Могу дать контакт.',
-		'mc ...Нет, спасибо.',
-		'lilith Как хочешь. Но знай: тут все сначала гордые, а потом одинокие.',
-		'lilith Если передумаешь — третий круг, кабинет 6.',
+		'lilith Расслабься, смертный. Я HR-менеджер, а не суккуб.',
+		'lilith Хотя суккубы — в соседнем отделе. Могу дать контакт. У них KPI на соблазнение.',
+		'mc ...Нет.',
+		'lilith Все сначала гордые. Кабинет 6, если передумаешь.',
 
 		'hide character lilith with fadeOut',
+		'jump Hell_Viktor_Intro'
+	],
+
+	// ==========================================
+	// ВСТРЕЧА С ВИКТОРОМ (серверная ада)
+	// ==========================================
+	'Hell_Viktor_Intro': [
+		'show scene hell_office with fadeIn',
+		'show character mc normal at center',
+
+		'По пути к зоне мук Алексей замечает дверь с табличкой: «Серверная. Не входить. Серьёзно. Там 45°C».',
+		'Дверь приоткрыта. Внутри — гудение серверных стоек и запах пыли. И... шелест клавиатуры?',
+
+		'show character viktor friendly at left with fadeIn',
+
+		'За столом — призрак. Толстый, в очках, в свитере с пингвином Linux.',
+		'На мониторе — терминал с зелёным текстом. Рядом — энергетик (тоже призрачный).',
+
+		'viktor О! Живой! В смысле — мёртвый, но свежий! Привет!',
+		'mc ...Ты кто?',
+		'viktor Виктор. Сисадмин. Ну, в прошлой жизни — сисадмин. В этой — тоже сисадмин.',
+		'viktor Умер на работе. Буквально. Сервак упал в два ночи, я поехал чинить, инфаркт в серверной.',
+		'viktor Ирония в том, что сервак потом починился сам. Перезагрузка помогла.',
+		'mc (Он умер чиня сервер. Это самая IT-шная смерть из возможных.)',
+
+		'viktor Ну вот. Попал сюда, они посмотрели мой LinkedIn, и... наняли.',
+		'viktor У них тут инфраструктура на Fortran. FORTRAN, чувак. Семидесятых годов.',
+		'mc ...Ад работает на Fortran?',
+		'viktor Ну а на чём ещё? Думаешь, Сатана знает Docker?',
+
+		{
+			'Choice': {
+				'Dialog': 'mc (Этот чувак работает сисадмином в аду...)',
+				'befriend_vik': {
+					'Text': '«Ты же коллега! Я тоже IT. Расскажи, что тут за стек?»',
+					'Do': 'jump Hell_Viktor_Befriend',
+					'onChosen': function () {
+						this.storage ({ viktor_friendship: this.storage ().viktor_friendship + 2, viktor_met: true });
+					}
+				},
+				'mock_vik': {
+					'Text': '«Свитер с пингвином? Серьёзно? Ты и на том свете — стереотип.»',
+					'Do': 'jump Hell_Viktor_Mock',
+					'onChosen': function () {
+						this.storage ({ viktor_friendship: this.storage ().viktor_friendship - 2, viktor_met: true, humor_used: this.storage ().humor_used + 1 });
+					}
+				},
+				'skip_vik': {
+					'Text': 'Пройти мимо',
+					'Do': 'jump Hell_Assignment_Route',
+					'onChosen': function () {
+						this.storage ({ viktor_met: false });
+					}
+				}
+			}
+		}
+	],
+
+	'Hell_Viktor_Befriend': [
+		'show character mc smirk at center',
+
+		'mc Я фронтенд плюс немного бэка. React, Node. А тут что?',
+
+		'show character viktor excited at left',
+
+		'viktor О, наконец-то кто-то понимает! Смотри.',
+
+		'Виктор разворачивает монитор. На экране — список процессов.',
+		'viktor Ад — это по сути большой кластер. Распределённая система мучений.',
+		'viktor Каждый грешник — отдельный поток. Мучения — cron-задачи. Демоны — воркеры.',
+		'mc А Бог?',
+
+		'show character viktor nervous at left',
+
+		'viktor ...Root. Но он давно не заходил. Uptime — две тысячи лет без перезагрузки.',
+		'mc Две тысячи лет?! И ничего не падает?',
+		'viktor О, падает. Постоянно. Просто никто не замечает.',
+		'viktor Знаешь тот момент, когда ты идёшь куда-то и вдруг забываешь зачем?',
+		'mc Ну да?',
+		'viktor Это не мозг. Это race condition. Два потока пишут в одну ячейку памяти.',
+
+		{
+			'Function': {
+				'Apply': function () {
+					this.storage ({ matrix_suspicion: this.storage ().matrix_suspicion + 2 });
+				},
+				'Revert': function () {
+					this.storage ({ matrix_suspicion: this.storage ().matrix_suspicion - 2 });
+				}
+			}
+		},
+
+		'mc (Он серьёзно? Или это часть наказания — безумный сисадмин с теориями заговора?)',
+		'mc (Хотя... race condition объясняет дежавю лучше, чем нейронаука.)',
+
+		'viktor Ладно, иди, тебе пора на мучения. Но если что — я тут. Серверная никогда не закрывается.',
+		'viktor Пароль от WiFi — AbandonAllHope. Заглавные буквы.',
+
+		'hide character viktor with fadeOut',
 		'jump Hell_Assignment_Route'
 	],
 
-	// Маршрутизация по вердикту (после Лилит)
+	'Hell_Viktor_Mock': [
+		'show character mc smirk at center',
+
+		'mc Свитер с пингвином. Очки на пол-лица. Энергетик в загробной жизни.',
+		'mc Ты даже после смерти не вышел из образа ботана.',
+
+		'show character viktor hurt at left',
+
+		'viktor ...Этот свитер был на мне, когда я умер. Тут нет магазинов.',
+		'mc А пингвин? Тоже был на тебе?',
+		'viktor Пингвин — это Tux. Символ Linux. Я... ты IT-шник? Ты должен знать.',
+		'mc Я IT-шник, который ходит в зал и имеет социальные навыки.',
+
+		'Виктор замолкает. Возвращается к монитору.',
+
+		'viktor Ладно. Удачи на мучениях.',
+		'viktor Только не проси потом помощи с побегом.',
+
+		'mc (Побегом? Он знает про какой-то побег?)',
+		'mc (Ладно, неважно. Сисадмин-призрак в свитере мне не союзник.)',
+
+		'hide character viktor with fadeOut',
+		'jump Hell_Assignment_Route'
+	],
+
+	// Маршрутизация по вердикту (после Лилит и Виктора)
 	'Hell_Assignment_Route': [
 		{
 			'Conditional': {
