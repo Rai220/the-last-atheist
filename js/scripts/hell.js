@@ -1449,25 +1449,190 @@ monogatari.script ({
 
 		'Пауза. Лилит впервые выглядит растерянной.',
 
+		// Если приговор был «персональный» — Лилит может быть ловушкой
+		{
+			'Conditional': {
+				'Condition': function () {
+					return this.storage ().judgment_verdict === 'personalized' ? 'trap_route' : 'genuine_route';
+				},
+				'trap_route': 'jump Hell_Lilith_Trap_Reveal',
+				'genuine_route': 'jump Hell_Lilith_Genuine'
+			}
+		}
+	],
+
+	// --- Лилит: искренний рут (не-персональный вердикт) ---
+	'Hell_Lilith_Genuine': [
 		'show character lilith tender at left',
 
 		'lilith Ты понимаешь, что я — демон? Буквально?',
 		'mc А я — мёртвый атеист в аду. Мы оба не в позиции привередничать.',
 		'lilith ...Ты невозможный человек.',
-		'mc Я знаю.',
 
 		{
 			'Choice': {
 				'Dialog': 'lilith Что ты предлагаешь?',
 				'stay_together': {
-					'Text': '«Остаться. Здесь. С тобой. В аду, но вместе.»',
+					'Text': '«Остаться. Здесь. С тобой.»',
 					'Do': 'jump Ending_HellRomance'
 				},
 				'escape_together': {
-					'Text': '«Уйти. Вместе. Ты же знаешь выход — ты была ангелом.»',
+					'Text': '«Уйти. Вместе. Ты знаешь выход.»',
 					'Do': 'jump Ending_EscapeTogether'
 				}
 			}
 		}
+	],
+
+	// --- Лилит: ловушка (персональный вердикт) ---
+	'Hell_Lilith_Trap_Reveal': [
+		'show character lilith tender at left',
+
+		'lilith Алексей... я должна тебе кое-что сказать.',
+
+		'Её голос меняется. Становится холоднее. Профессиональнее.',
+
+		'show character lilith serious at left',
+
+		'lilith Ты когда-нибудь задумывался, почему именно я подошла к тебе в коридоре?',
+		'mc ...Случайность?',
+		'lilith В аду нет случайностей, Алексей.',
+
+		'Она достаёт папку. На ней: «ДЕЛО №7394028417. МЕРА ВОЗДЕЙСТВИЯ: ЭМОЦИОНАЛЬНАЯ ПРИВЯЗАННОСТЬ».',
+
+		{
+			'Function': {
+				'Apply': function () { screenShake (500); },
+				'Revert': function () {}
+			}
+		},
+
+		'mc ...Что?',
+		'lilith Персональный пакет. Помнишь? Демоны изучили твой профиль.',
+		'lilith Интернет-тролль, который никого не подпускает близко. Одинокий. Ироничный.',
+		'lilith Знаешь, что ломает таких людей? Не огонь. Не котлы.',
+
+		'show character lilith flirt at left',
+
+		'lilith Надежда. Привязанность. А потом — отнять.',
+
+		'show character mc shock at center',
+
+		'mc Кофе... разговоры... всё было... спланировано?',
+
+		{
+			'Choice': {
+				'Dialog': 'mc (Она играла со мной...)',
+				'rage': {
+					'Text': '«Ты... использовала меня.»',
+					'Do': 'jump Hell_Lilith_Rage',
+					'onChosen': function () {
+						this.storage ({ rebellion_score: this.storage ().rebellion_score + 2 });
+					}
+				},
+				'question': {
+					'Text': '«И... всё было ложью? Всё?»',
+					'Do': 'jump Hell_Lilith_Question',
+					'onChosen': function () {
+						this.storage ({ empathy_shown: this.storage ().empathy_shown + 1 });
+					}
+				},
+				'laugh': {
+					'Text': '(Рассмеяться)',
+					'Do': 'jump Hell_Lilith_Laugh_It_Off',
+					'onChosen': function () {
+						this.storage ({ humor_used: this.storage ().humor_used + 1 });
+					}
+				}
+			}
+		}
+	],
+
+	// --- Ярость → Концовка «Предательство» ---
+	'Hell_Lilith_Rage': [
+		'show character mc angry at center',
+
+		'mc Ты использовала меня. Как инструмент. Как форму 66-А.',
+		'mc Я думал... впервые за всё время здесь я думал, что кто-то...',
+
+		'show character lilith serious at left',
+
+		'lilith Я делала свою работу, Алексей.',
+		'mc РАБОТУ?!',
+		'lilith Я — демон. Мы мучаем людей. Это буквально...',
+		'mc ...должностная инструкция. Да. Слышал.',
+
+		{
+			'Function': {
+				'Apply': function () { screenShake (400); },
+				'Revert': function () {}
+			}
+		},
+
+		'mc Знаешь что? Спасибо.',
+		'lilith ...Спасибо?',
+		'mc Ты только что доказала мне, что ад — это не огонь и не формы.',
+		'mc Ад — это когда тебе дают надежду и забирают.',
+		'mc И теперь мне нечего терять.',
+
+		'hide character lilith with fadeOut',
+		'jump Ending_LilithBetrayal'
+	],
+
+	// --- Вопрос → Концовка «Конфликт» ---
+	'Hell_Lilith_Question': [
+		'show character mc despair at center',
+
+		'mc И... всё было ложью? Кофе, разговоры, то как ты смеялась...',
+		'mc То как ты рассказала про небо? Что ты скучаешь по нему?',
+
+		'Пауза. Долгая.',
+
+		'show character lilith serious at left',
+
+		'lilith ...',
+		'lilith Нет.',
+
+		'mc Нет — что?',
+
+		'show character lilith tender at left',
+
+		'lilith Задание было настоящим. Папка — настоящая. Мне поручили тебя сломать.',
+		'lilith Но...',
+		'lilith Я не должна была рассказывать тебе про небо. Это не было в плане.',
+		'lilith И кофе... я приносила его, потому что хотела. Не потому что должна.',
+
+		'mc (Она... говорит правду? Или это следующий уровень манипуляции?)',
+		'mc (Я не знаю. Я никогда не узнаю.)',
+
+		'lilith Алексей, я не могу перестать быть демоном. Это не выбор.',
+		'lilith Но то, что я чувствую... это тоже не выбор.',
+
+		'hide character lilith with fadeOut',
+		'jump Ending_LilithConflicted'
+	],
+
+	// --- Смех → Концовка «Предательство» (но с юмором) ---
+	'Hell_Lilith_Laugh_It_Off': [
+		'show character mc smirk at center',
+
+		'mc Ха.',
+		'mc Хаха.',
+		'mc ХАХАХА.',
+
+		'show character lilith serious at left',
+
+		'lilith ...Ты смеёшься?',
+		'mc Конечно! Это же ГЕНИАЛЬНО!',
+		'mc Персонализированная пытка через романтическую привязанность! Это как Netflix-алгоритм, только для страданий!',
+		'mc Вы изучили мой профиль, нашли уязвимость — одиночество — и подослали красивую демонессу с кофе и грустной предысторией!',
+		'mc Это уровень таргетинга, до которого Google не дорос!',
+
+		'lilith Ты... хвалишь систему, которая тебя сломала?',
+		'mc Она меня не сломала. Она меня впечатлила.',
+		'mc И знаешь что? Кофе всё равно был хороший.',
+
+		'hide character lilith with fadeOut',
+		'jump Ending_LilithBetrayal'
 	]
 });

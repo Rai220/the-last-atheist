@@ -976,9 +976,97 @@ monogatari.script ({
 	],
 
 	// ==========================================
-	// ТИТРЫ
+	// G3. РОМАНТИКА: Предательство
+	// ==========================================
+	'Ending_LilithBetrayal': [
+		'show scene #000000 with fadeIn',
+
+		{
+			'Function': {
+				'Apply': function () {
+					this.storage ({ ending_reached: 'lilith_betrayal' });
+				},
+				'Revert': function () {}
+			}
+		},
+
+		'Алексей стоит в пустом коридоре ада. Один.',
+		'Там, где раньше пахло кофе, теперь — только сера.',
+
+		'mc (Она была заданием. Пунктом в плане. Строчкой в папке.)',
+		'mc (А я — идиот, который повёлся на демонессу с бейджиком.)',
+		'mc (Хотя... если подумать... это самое человеческое, что со мной случилось после смерти.)',
+		'mc (Попасться. Поверить. Быть обманутым.)',
+		'mc (Совсем как живой.)',
+
+		'centered Алексей Волков. Первая жертва HR-отдела ада.',
+		'wait 1000',
+		'centered КОНЦОВКА: «ПЕРСОНАЛЬНЫЙ ПАКЕТ»',
+		'centered Самая жестокая пытка — дать надежду.',
+		'wait 2000',
+		'jump Ending_Credits'
+	],
+
+	// ==========================================
+	// G4. РОМАНТИКА: Конфликт
+	// ==========================================
+	'Ending_LilithConflicted': [
+		'show scene hell_office with fadeIn',
+
+		{
+			'Function': {
+				'Apply': function () {
+					this.storage ({ ending_reached: 'lilith_conflicted' });
+				},
+				'Revert': function () {}
+			}
+		},
+
+		'Кабинет 6. Пусто. На столе — чашка с остывшим светящимся кофе.',
+		'И записка.',
+
+		'«Алексей. Мне поручили тебя сломать. Я не справилась.',
+		'Не потому что ты сильный. А потому что я слабая.',
+		'Я не могу быть с тобой. Я демон. Это не метафора.',
+		'Но я не могу тебя мучить. Тоже не метафора.',
+		'Попросила перевод. Седьмой круг. Документы. Без контакта.',
+		'Прости. Или не прощай. Тебе виднее.',
+		'Л.»',
+
+		'show character mc despair at center with fadeIn',
+
+		'mc (Она ушла. Не потому что не хотела остаться.)',
+		'mc (А потому что хотела — и не могла.)',
+
+		'Алексей берёт чашку. Кофе холодный, но всё ещё светится.',
+
+		'centered Алексей Волков и Лилит. Не вместе. Но и не порознь.',
+		'wait 1000',
+		'centered КОНЦОВКА: «ПЕРЕВОД»',
+		'centered Любовь демона — как светящийся кофе. Остывает, но не гаснет.',
+		'wait 2000',
+		'jump Ending_Credits'
+	],
+
+	// ==========================================
+	// ТИТРЫ (с трекером концовок)
 	// ==========================================
 	'Ending_Credits': [
+		// Сохраняем концовку в трекер
+		{
+			'Function': {
+				'Apply': function () {
+					var endings = JSON.parse (localStorage.getItem ('tla_endings') || '{}');
+					var reached = this.storage ().ending_reached;
+					if (reached) {
+						endings[reached] = true;
+						localStorage.setItem ('tla_endings', JSON.stringify (endings));
+					}
+				},
+				'Revert': function () {}
+			}
+		},
+
 		'show scene #000000 with fadeIn',
 		'wait 1000',
 
@@ -987,9 +1075,22 @@ monogatari.script ({
 		'centered Визуальная новелла',
 		'wait 500',
 
-		'centered Спасибо за игру.',
-		'wait 500',
-		'centered В игре 22 концовки. Сколько вы нашли?',
+		// Показываем счётчик концовок
+		{
+			'Function': {
+				'Apply': function () {
+					var endings = JSON.parse (localStorage.getItem ('tla_endings') || '{}');
+					var count = Object.keys (endings).length;
+					var el = document.querySelector ('[data-component="centered-dialog"] [data-content="wrapper"]');
+					if (el) {
+						el.innerHTML = '<p>Концовки найдены: ' + count + ' из 24</p>';
+					}
+				},
+				'Revert': function () {}
+			}
+		},
+
+		'centered Спасибо за игру!',
 		'wait 1000',
 
 		'centered Создано на движке Monogatari',

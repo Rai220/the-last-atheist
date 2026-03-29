@@ -46,6 +46,8 @@ EXPECTED_ENDINGS = [
     # G: Романтика
     'Ending_HellRomance',
     'Ending_EscapeTogether',
+    'Ending_LilithBetrayal',
+    'Ending_LilithConflicted',
 ]
 
 
