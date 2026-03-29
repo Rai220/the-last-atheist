@@ -21,7 +21,7 @@ monogatari.script ({
 			}
 		},
 
-		// 'play music hell_drone with loop fade 3',
+		'play music hell_drone with loop fade 3',
 		// 'play sound fire_crackle with loop',
 
 		'Жарко. Нет, не жарко — жар. Как будто открыли дверцу доменной печи.',
@@ -76,7 +76,7 @@ monogatari.script ({
 	'Hell_Bureaucracy': [
 		'show scene hell_office with fadeIn',
 		// 'stop sound fire_crackle with fade 1',
-		// 'play music hell_bureaucracy with loop fade 2',
+		'play music hell_bureaucracy with loop fade 2',
 
 		'Офис. Обычный, серый, с жёлтым светом и запахом серы вместо кофе.',
 		'Очередь. Опять очередь.',
@@ -153,7 +153,7 @@ monogatari.script ({
 	'Hell_Bureaucracy_Other': [
 		'show scene hell_office with fadeIn',
 		// 'stop sound fire_crackle with fade 1',
-		// 'play music hell_bureaucracy with loop fade 2',
+		'play music hell_bureaucracy with loop fade 2',
 
 		'show character demon paperwork at left with fadeIn',
 
@@ -773,8 +773,8 @@ monogatari.script ({
 			}
 		},
 
-		// 'stop music hell_drone with fade 2',
-		// 'stop music hell_bureaucracy with fade 2',
+		'stop music hell_drone with fade 2',
+		'stop music hell_bureaucracy with fade 2',
 
 		'Алексей сидит на полу. Один.',
 		'Демоны ушли. Или их не было. Или они всегда здесь.',
@@ -1048,7 +1048,7 @@ monogatari.script ({
 	'Hell_Rebellion_Recruit': [
 		'show scene hell_cauldrons with fadeIn',
 		'show character mc angry at center',
-		// 'play music hell_drone with loop fade 2',
+		'play music hell_drone with loop fade 2',
 
 		'Алексей находит других. Недовольных. Сломленных, но не до конца.',
 

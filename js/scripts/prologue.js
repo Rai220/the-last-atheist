@@ -7,7 +7,7 @@ monogatari.script ({
 	// ==========================================
 	'Prologue_Apartment': [
 		'show scene apartment with fadeIn',
-		// 'play music morning_ambient with loop fade 2',
+		'play music morning_ambient with loop fade 2',
 		'wait 1000',
 
 		'Понедельник. 7:42 утра. Москва.',
@@ -87,7 +87,7 @@ monogatari.script ({
 	// ==========================================
 	'Prologue_Internet': [
 		'show scene phone_screen with fadeIn',
-		// 'play music internet_lo_fi with loop fade 2',
+		'play music internet_lo_fi with loop fade 2',
 
 		'Reddit. r/DebateReligion. Алексей заходит сюда чаще, чем в душ.',
 		'Тема дня: «Обновлённый список доказательств Бога».',
@@ -171,8 +171,8 @@ monogatari.script ({
 	// ==========================================
 	'Prologue_Death': [
 		'show scene street with fadeIn',
-		// 'stop music internet_lo_fi with fade 1',
-		// 'stop music morning_ambient with fade 1',
+		'stop music internet_lo_fi with fade 1',
+		'stop music morning_ambient with fade 1',
 
 		'Выход из офиса. Вечер.',
 		'mc (Надо бы начать бегать. С понедельника.)',
@@ -244,7 +244,7 @@ monogatari.script ({
 		'Звуки. Хор — нет, не хор. Что-то за пределами музыки.',
 		'Ладан. Откуда-то пахнет ладаном.',
 
-		// 'play music choir_ethereal with loop fade 3',
+		'play music choir_ethereal with loop fade 3',
 
 		'mc (Ладан. ЛАДАН. Это клише. Даже моя предсмертная галлюцинация — клише.)',
 

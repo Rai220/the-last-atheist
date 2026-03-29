@@ -263,7 +263,7 @@ monogatari.script ({
 	'Judgment_Audience': [
 		'show scene judgment_throne with fadeIn',
 		// 'stop sound crowd_murmur with fade 2',
-		// 'play music judgment_tension with loop fade 2',
+		'play music judgment_tension with loop fade 2',
 
 		'show character mc shock at center',
 
@@ -582,7 +582,7 @@ monogatari.script ({
 		'mc Ад?! Облегчённый?! Это как — ад-лайт?! Без сахара?!',
 		'g Именно. Без сахара.',
 
-		// 'stop music judgment_tension with fade 2',
+		'stop music judgment_tension with fade 2',
 		'hide character mc with fadeOut',
 		'show scene #000000 with fadeIn',
 		'wait 1000',
@@ -599,7 +599,7 @@ monogatari.script ({
 
 		'mc (Он серьёзно использовал слово «пакет»?!)',
 
-		// 'stop music judgment_tension with fade 2',
+		'stop music judgment_tension with fade 2',
 		'hide character mc with fadeOut',
 		'show scene #000000 with fadeIn',
 		'wait 1000',
@@ -628,7 +628,7 @@ monogatari.script ({
 
 		'Свет гаснет. Мгновенно. Тишина.',
 
-		// 'stop music judgment_tension with fade 1',
+		'stop music judgment_tension with fade 1',
 		'hide character mc with fadeOut',
 		'show scene #000000 with fadeIn',
 		'wait 1500',
