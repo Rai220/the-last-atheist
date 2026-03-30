@@ -453,16 +453,149 @@ dialog-log [data-content="log"] {
 	}
 }
 
-@media screen and (max-width: 600px) {
-	[data-component="choice-container"] button {
-		font-size: 0.75em;
-		padding: 6px 12px;
-		max-width: 95%;
+@media screen and (max-width: 768px) {
+	/* Текстовый бокс — больше места, мельче текст */
+	[data-component="text-box"] {
+		font-size: 0.85em !important;
+		padding: 8px 10px !important;
+		max-height: 45vh !important;
+		overflow-y: auto !important;
 	}
 
+	[data-component="text-box"] [data-ui="say"] {
+		line-height: 1.4 !important;
+		font-size: 0.9em !important;
+	}
+
+	[data-ui="who"] {
+		font-size: 0.85em !important;
+	}
+
+	/* Центрированный текст */
+	[data-component="centered-dialog"] {
+		font-size: 1.1em !important;
+		padding: 0 10px !important;
+	}
+
+	/* Кнопки выбора — компактнее */
+	[data-component="choice-container"] {
+		bottom: 15% !important;
+		max-height: 70vh !important;
+		padding: 0 8px !important;
+	}
+
+	[data-component="choice-container"] button {
+		font-size: 0.72em;
+		padding: 6px 10px;
+		max-width: 95%;
+		margin: 2px auto;
+	}
+
+	/* Спрайты — мельче на мобиле */
+	[data-screen="game"] character-sprite {
+		height: 50svh !important;
+		max-height: 50svh !important;
+	}
+
+	/* Quick menu — компактнее */
+	[data-component="quick-menu"] {
+		padding: 4px 6px !important;
+		font-size: 0.75em !important;
+	}
+
+	[data-component="quick-menu"] span {
+		padding: 0 4px !important;
+	}
+
+	/* Кнопка skip */
+	#skip-btn {
+		font-size: 1.2em !important;
+		padding: 4px 8px !important;
+		bottom: 4px !important;
+		right: 4px !important;
+	}
+
+	/* WTF meter */
 	#wtf-meter {
-		width: 100px;
-		height: 6px;
+		width: 80px;
+		height: 5px;
+		top: 5px !important;
+		right: 5px !important;
+	}
+
+	/* Главное меню */
+	[data-screen="main"] h1 {
+		font-size: 1.3em !important;
+	}
+
+	[data-screen="main"] button {
+		font-size: 0.8em !important;
+		padding: 8px 16px !important;
+	}
+}
+
+/* Портретная ориентация — ещё компактнее */
+@media screen and (max-width: 480px) and (orientation: portrait) {
+	[data-component="text-box"] {
+		font-size: 0.78em !important;
+		max-height: 40vh !important;
+	}
+
+	[data-component="text-box"] [data-ui="say"] {
+		font-size: 0.82em !important;
+		line-height: 1.35 !important;
+	}
+
+	[data-component="centered-dialog"] {
+		font-size: 0.95em !important;
+	}
+
+	[data-component="choice-container"] {
+		bottom: 5% !important;
+		max-height: 80vh !important;
+		gap: 3px !important;
+	}
+
+	[data-component="choice-container"] button {
+		font-size: 0.65em;
+		padding: 5px 8px;
+	}
+
+	[data-screen="game"] character-sprite {
+		height: 35svh !important;
+		max-height: 35svh !important;
+	}
+
+	[data-component="quick-menu"] {
+		font-size: 0.65em !important;
+	}
+}
+
+/* Ландшафтная ориентация на маленьком экране */
+@media screen and (max-height: 450px) and (orientation: landscape) {
+	[data-component="text-box"] {
+		font-size: 0.75em !important;
+		max-height: 50vh !important;
+		padding: 5px 8px !important;
+	}
+
+	[data-component="text-box"] [data-ui="say"] {
+		font-size: 0.85em !important;
+		line-height: 1.3 !important;
+	}
+
+	[data-screen="game"] character-sprite {
+		height: 60svh !important;
+		max-height: 60svh !important;
+	}
+
+	[data-component="choice-container"] button {
+		font-size: 0.7em;
+		padding: 4px 10px;
+	}
+
+	[data-component="quick-menu"] {
+		padding: 2px 6px !important;
 	}
 }
 
