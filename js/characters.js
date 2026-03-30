@@ -54,6 +54,17 @@ monogatari.characters ({
 			resigned: 'resigned.png'
 		}
 	},
+	'inna': {
+		name: 'Инна',
+		color: '#FF69B4',
+		directory: 'inna',
+		sprites: {
+			flirt: 'flirt.png',
+			laugh: 'laugh.png',
+			serious: 'serious.png',
+			tender: 'tender.png'
+		}
+	},
 	'lilith': {
 		name: 'Лилит',
 		color: '#FF69B4',

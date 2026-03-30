@@ -55,7 +55,6 @@ monogatari.script ({
 	],
 
 	'Start': [
-		'show scene apartment with fadeIn',
-		'jump Prologue_Apartment'
+		'jump Prologue_Morning_Choice'
 	]
 });

@@ -46,15 +46,21 @@ const ROUTE_MAP = {
 		{ id: 'endings', title: 'Концовки', color: '#44bb44' }
 	],
 	nodes: [
-		{ id: 'Prologue_Apartment', label: 'Утро', group: 'prologue' },
+		{ id: 'Prologue_Morning_Choice', label: 'Утро', group: 'prologue' },
+		{ id: 'Prologue_Apartment_Phone', label: 'Телефон', group: 'prologue' },
 		{ id: 'Prologue_Mock', label: 'Высмеять', group: 'prologue' },
 		{ id: 'Prologue_Ignore', label: 'Промолчать', group: 'prologue' },
 		{ id: 'Prologue_Kind', label: 'Поддержать', group: 'prologue' },
 		{ id: 'Prologue_Internet', label: 'Reddit', group: 'prologue' },
 		{ id: 'Prologue_Debate_Engage', label: 'Дебаты', group: 'prologue' },
 		{ id: 'Prologue_Skip_Debate', label: 'Пропустить', group: 'prologue' },
-		{ id: 'Prologue_Work', label: 'Работа', group: 'prologue' },
-		{ id: 'Prologue_Death', label: 'Смерть', group: 'prologue' },
+		{ id: 'Prologue_Oversleep', label: 'Проспал', group: 'prologue' },
+		{ id: 'Prologue_Jogging', label: 'Пробежка', group: 'prologue' },
+		{ id: 'Prologue_Work_Inna', label: 'Офис + Инна', group: 'prologue' },
+		{ id: 'Prologue_Work_Inna_Late', label: 'Опоздал + Инна', group: 'prologue' },
+		{ id: 'Prologue_Death', label: 'Инфаркт', group: 'prologue' },
+		{ id: 'Prologue_Death_Car', label: 'ДТП', group: 'prologue' },
+		{ id: 'Prologue_Death_Overwork', label: 'Переработка', group: 'prologue' },
 		{ id: 'Prologue_Transition', label: 'Переход', group: 'prologue' },
 
 		{ id: 'Judgment_Arrival', label: 'Прибытие', group: 'judgment' },
@@ -106,21 +112,34 @@ const ROUTE_MAP = {
 		{ id: 'Ending_EscapeTogether', label: 'Побег', group: 'endings', ending: 'escape_together' },
 		{ id: 'Ending_LilithBetrayal', label: 'Предательство', group: 'endings', ending: 'lilith_betrayal' },
 		{ id: 'Ending_LilithConflicted', label: 'Перевод', group: 'endings', ending: 'lilith_conflicted' },
-		{ id: 'Ending_EscapeCaught', label: 'Пойманы', group: 'endings', ending: 'escape_caught' }
+		{ id: 'Ending_EscapeCaught', label: 'Пойманы', group: 'endings', ending: 'escape_caught' },
+		{ id: 'Ending_Sisyphus', label: 'Сизиф', group: 'endings', ending: 'sisyphus' },
+		{ id: 'Ending_ViktorHack', label: 'sudo rm pain', group: 'endings', ending: 'viktor_hack' },
+		{ id: 'Ending_ViktorFreedom', label: 'DROP TABLE', group: 'endings', ending: 'viktor_freedom' }
 	],
 	edges: [
-		['Prologue_Apartment', 'Prologue_Mock'],
-		['Prologue_Apartment', 'Prologue_Ignore'],
-		['Prologue_Apartment', 'Prologue_Kind'],
+		['Prologue_Morning_Choice', 'Prologue_Apartment_Phone'],
+		['Prologue_Morning_Choice', 'Prologue_Oversleep'],
+		['Prologue_Morning_Choice', 'Prologue_Jogging'],
+		['Prologue_Apartment_Phone', 'Prologue_Mock'],
+		['Prologue_Apartment_Phone', 'Prologue_Ignore'],
+		['Prologue_Apartment_Phone', 'Prologue_Kind'],
 		['Prologue_Mock', 'Prologue_Internet'],
 		['Prologue_Ignore', 'Prologue_Internet'],
 		['Prologue_Kind', 'Prologue_Internet'],
 		['Prologue_Internet', 'Prologue_Debate_Engage'],
 		['Prologue_Internet', 'Prologue_Skip_Debate'],
-		['Prologue_Debate_Engage', 'Prologue_Work'],
-		['Prologue_Skip_Debate', 'Prologue_Work'],
-		['Prologue_Work', 'Prologue_Death'],
+		['Prologue_Debate_Engage', 'Prologue_Work_Inna'],
+		['Prologue_Skip_Debate', 'Prologue_Work_Inna'],
+		['Prologue_Oversleep', 'Prologue_Work_Inna_Late'],
+		['Prologue_Jogging', 'Prologue_Death_Car'],
+		['Prologue_Jogging', 'Prologue_Work_Inna'],
+		['Prologue_Work_Inna', 'Prologue_Death'],
+		['Prologue_Work_Inna_Late', 'Prologue_Death_Overwork'],
+		['Prologue_Work_Inna_Late', 'Prologue_Death'],
 		['Prologue_Death', 'Prologue_Transition'],
+		['Prologue_Death_Car', 'Prologue_Transition'],
+		['Prologue_Death_Overwork', 'Prologue_Transition'],
 		['Prologue_Transition', 'Judgment_Arrival'],
 		['Judgment_Arrival', 'Judgment_VR_Denial'],
 		['Judgment_Arrival', 'Judgment_Queue'],
@@ -287,41 +306,149 @@ function showEndingGallery () {
 // Skip / Fast-forward button
 // Uses label-level tracking: a label is "seen" if it was ever
 // entered during ANY playthrough (persisted in localStorage).
+//
+// Strategy: place the button as a fixed-position overlay near
+// the bottom bar (Shadow DOM makes appendChild unreliable),
+// and use the engine's own monogatari.skip() API to advance.
+// A watchdog interval handles "seen" mode stops and acceleration.
 // ============================================================
-var _skipInterval = null;
+var _skipWatchdog = null;
 var _skipMode = 'seen';
+var _skipActive = false;
+
+// --- Skip acceleration: bypass wait() and CSS animations ---
+var _skipStyleEl = null;
+var _origSetTimeout = window.setTimeout.bind (window);
+
+function _enableSkipAcceleration () {
+	_skipActive = true;
+
+	// Inject CSS that kills all animations and transitions instantly
+	if (!_skipStyleEl) {
+		_skipStyleEl = document.createElement ('style');
+		_skipStyleEl.id = 'skip-acceleration-css';
+		_skipStyleEl.textContent =
+			'*, *::before, *::after {' +
+			'  animation-duration: 0s !important;' +
+			'  animation-delay: 0s !important;' +
+			'  transition-duration: 0s !important;' +
+			'  transition-delay: 0s !important;' +
+			'}';
+		document.head.appendChild (_skipStyleEl);
+	}
+
+	// Monkey-patch setTimeout: timers ≤ 10s (wait commands,
+	// engine transition delays) fire near-instantly during skip
+	window.setTimeout = function (fn, delay) {
+		if (_skipActive && typeof fn === 'function' && typeof delay === 'number' && delay > 5 && delay <= 10000) {
+			return _origSetTimeout (fn, 1);
+		}
+		return _origSetTimeout.apply (window, arguments);
+	};
+}
+
+function _disableSkipAcceleration () {
+	_skipActive = false;
+
+	if (_skipStyleEl && _skipStyleEl.parentNode) {
+		_skipStyleEl.parentNode.removeChild (_skipStyleEl);
+		_skipStyleEl = null;
+	}
+
+	window.setTimeout = _origSetTimeout;
+}
 
 function stopSkip () {
-	if (_skipInterval) {
-		clearInterval (_skipInterval);
-		_skipInterval = null;
+	// Stop engine skip
+	try { monogatari.skip (false); } catch (e) {}
+
+	if (_skipWatchdog) {
+		clearInterval (_skipWatchdog);
+		_skipWatchdog = null;
 	}
+	_disableSkipAcceleration ();
+
 	var btn = document.getElementById ('skip-btn');
 	if (btn) {
-		btn.style.opacity = '0.6';
+		btn.style.opacity = '0.7';
 		btn.style.color = '';
 		btn.textContent = '⏩';
 	}
 }
 
-function addSkipButton () {
-	const quickMenu = document.querySelector ('[data-component="quick-menu"]');
-	if (!quickMenu) return;
+function startSkip () {
+	var btn = document.getElementById ('skip-btn');
+	if (btn) {
+		btn.style.opacity = '1';
+		btn.style.color = _skipMode === 'all' ? '#ffaa00' : '#ff6666';
+		btn.textContent = _skipMode === 'all' ? '⏭' : '⏩';
+	}
 
-	const skipBtn = document.createElement ('span');
-	skipBtn.textContent = '⏩';
-	skipBtn.title = 'Перемотка прочитанного';
-	skipBtn.style.cssText = 'cursor:pointer;font-size:1.2em;padding:0 8px;opacity:0.6;transition:all 0.2s;user-select:none;';
+	_enableSkipAcceleration ();
+
+	// Use the engine's built-in skip (calls proceed in a loop)
+	try { monogatari.skip (true); } catch (e) {}
+
+	// Watchdog: stop at choices, modals, or unseen labels
+	_skipWatchdog = setInterval (function () {
+		try {
+			// Stop at choices
+			var choices = document.querySelector ('choice-container');
+			if (!choices) choices = document.querySelector ('[data-component="choice-container"]');
+			if (choices && choices.children.length > 0) {
+				stopSkip ();
+				return;
+			}
+			// Stop at messages (modals)
+			var msg = document.querySelector ('[data-component="message-modal"]');
+			if (msg && msg.classList.contains ('active')) {
+				stopSkip ();
+				return;
+			}
+			// In "seen" mode, stop if current label was never visited
+			if (_skipMode === 'seen') {
+				var label = monogatari.state ('label');
+				if (label && !isLabelVisited (label)) {
+					stopSkip ();
+					return;
+				}
+			}
+		} catch (e) {
+			stopSkip ();
+		}
+	}, 100);
+}
+
+function addSkipButton () {
+	// Create button as a fixed overlay — avoids Shadow DOM issues
+	var skipBtn = document.createElement ('div');
 	skipBtn.id = 'skip-btn';
+	skipBtn.textContent = '⏩';
+	skipBtn.title = 'Перемотка (двойной клик — переключить режим)';
+	skipBtn.style.cssText =
+		'position:fixed; bottom:8px; right:8px; z-index:99999;' +
+		'cursor:pointer; font-size:1.5em; padding:6px 10px;' +
+		'opacity:0.7; user-select:none;' +
+		'background:rgba(0,0,0,0.5); border-radius:8px;' +
+		'transition:all 0.2s; line-height:1;';
+	skipBtn.addEventListener ('mouseenter', function () {
+		if (!_skipWatchdog) skipBtn.style.opacity = '1';
+	});
+	skipBtn.addEventListener ('mouseleave', function () {
+		if (!_skipWatchdog) skipBtn.style.opacity = '0.7';
+	});
 
 	var _lastClick = 0;
 	skipBtn.addEventListener ('click', function (e) {
 		e.stopPropagation ();
+		e.preventDefault ();
 		var now = Date.now ();
-		if (now - _lastClick < 350) {
+
+		// Double-click: toggle mode
+		if (now - _lastClick < 400) {
 			_skipMode = _skipMode === 'all' ? 'seen' : 'all';
 			_lastClick = 0;
-			if (_skipInterval) {
+			if (_skipWatchdog) {
 				skipBtn.textContent = _skipMode === 'all' ? '⏭' : '⏩';
 				skipBtn.style.color = _skipMode === 'all' ? '#ffaa00' : '#ff6666';
 			}
@@ -329,50 +456,22 @@ function addSkipButton () {
 		}
 		_lastClick = now;
 
-		if (_skipInterval) {
+		if (_skipWatchdog) {
 			stopSkip ();
 		} else {
-			skipBtn.style.opacity = '1';
-			skipBtn.style.color = _skipMode === 'all' ? '#ffaa00' : '#ff6666';
-			skipBtn.textContent = _skipMode === 'all' ? '⏭' : '⏩';
-
-			_skipInterval = setInterval (function () {
-				try {
-					var gameScreen = document.querySelector ('[data-screen="game"]');
-					if (!gameScreen || !gameScreen.classList.contains ('active') && gameScreen.style.display === 'none') {
-						stopSkip ();
-						return;
-					}
-					// Stop at choices
-					var choices = document.querySelector ('[data-component="choice-container"]');
-					if (choices && choices.children.length > 0) {
-						stopSkip ();
-						return;
-					}
-					// Stop at messages (modals)
-					var msg = document.querySelector ('[data-component="message-modal"]');
-					if (msg && msg.classList.contains ('active')) {
-						stopSkip ();
-						return;
-					}
-					// In "seen" mode, stop if current label was never visited
-					if (_skipMode === 'seen') {
-						var label = monogatari.state ('label');
-						if (label && !isLabelVisited (label)) {
-							stopSkip ();
-							return;
-						}
-					}
-					// Advance the game by clicking on game screen
-					gameScreen.click ();
-				} catch (e) {
-					stopSkip ();
-				}
-			}, 50);
+			startSkip ();
 		}
 	});
 
-	quickMenu.appendChild (skipBtn);
+	document.body.appendChild (skipBtn);
+
+	// Hide button when not on game screen
+	setInterval (function () {
+		var gameScreen = document.querySelector ('[data-screen="game"]');
+		var isVisible = gameScreen && (gameScreen.classList.contains ('active') ||
+			getComputedStyle (gameScreen).display !== 'none');
+		skipBtn.style.display = isVisible ? '' : 'none';
+	}, 500);
 }
 
 // ============================================================

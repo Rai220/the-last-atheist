@@ -104,6 +104,27 @@ CHARACTERS = {
             "resigned": "RESIGNED calm - tired half-smile of acceptance, arms at sides, peaceful but weary expression.",
         }
     },
+    "inna": {
+        "dir": "assets/characters/inna",
+        "ref_prompt": (
+            CHAR_STYLE +
+            "A beautiful 30-year-old Russian woman, HR manager at an IT office. "
+            "Long flowing dark hair, sharp clever dark eyes, confident charming smile. "
+            "Wearing a stylish fitted black blazer over a dark red silk blouse, "
+            "black pencil skirt, black high heels. Name badge on blazer. "
+            "Normal human woman - NO horns, NO tail, NO demonic features. "
+            "Pale smooth skin, natural human appearance. Slim tall figure. "
+            "Confident professional stance, one hand on hip. "
+            "She looks strikingly similar to a classic femme fatale but in a corporate setting. "
+            "Full body view, facing viewer."
+        ),
+        "expressions": {
+            "flirt": "FLIRTY expression - playful half-smile, one eyebrow raised, head slightly tilted, hand on hip, confident seductive stance. Charming and inviting.",
+            "laugh": "LAUGHING expression - genuine warm laugh, eyes crinkled with amusement, hand near mouth, relaxed joyful posture. Beautiful genuine smile.",
+            "serious": "SERIOUS PROFESSIONAL expression - clipboard in hand, stern focused look, glasses pushed up, straight posture. Corporate authority.",
+            "tender": "TENDER SOFT expression - gentle warm smile, soft eyes, head slightly tilted, arms relaxed. Vulnerable and genuine warmth.",
+        }
+    },
 }
 
 # ========================

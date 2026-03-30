@@ -19,6 +19,9 @@ monogatari.storage ({
 	prologue_debate_won: false,
 	prologue_was_kind: false,
 	death_type: 'heart_attack',
+	morning_choice: '',
+	inna_met: false,
+	inna_interest: 0,
 
 	// --- Флаги: Страшный Суд ---
 	judgment_tried_vr: false,

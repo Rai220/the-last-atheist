@@ -185,7 +185,16 @@ monogatari.script ({
 
 	// --- Заполнение формы ---
 	'Hell_Form_Fill': [
-		'demon Так... ФИО загробное... Причина смерти... Количество грехов...',
+		'demon Так... ФИО загробное...',
+		{
+			'Conditional': {
+				'Condition': function () { return this.storage ().death_type; },
+				'heart_attack': 'demon Причина смерти: инфаркт миокарда. Улица. Классика.',
+				'car_accident': 'demon Причина смерти: ДТП. Наушники, красный свет. Ну вы и гений.',
+				'overwork': 'demon Причина смерти: инфаркт на рабочем месте. Переработка. У нас таких — целая очередь.'
+			}
+		},
+		'demon Количество грехов...',
 		'demon «Считаете ли вы, что заслуживаете ада?»',
 
 		{
@@ -278,6 +287,48 @@ monogatari.script ({
 		'lilith Лилит. HR-менеджер ада. И да, я знаю — «каждую демонессу зовут Лилит». Не оригинально.',
 		'lilith Но родители не спрашивали.',
 
+		{
+			'Conditional': {
+				'Condition': function () { return this.storage ().inna_met ? 'inna_echo' : 'no_inna'; },
+				'inna_echo': 'jump Hell_Lilith_Inna_Echo',
+				'no_inna': 'jump Hell_Lilith_Intro_Continue'
+			}
+		}
+	],
+
+	'Hell_Lilith_Inna_Echo': [
+		'show scene hell_office with fadeIn',
+		'show character mc shock at center',
+		'show character lilith flirt at right',
+
+		'mc (...)',
+		'mc (Стоп.)',
+		'mc (HR-менеджер. Чёрное платье. Каблуки. Улыбка. Бейджик «отдел кадров».)',
+		'mc (Инна?!)',
+		'mc (Нет. Не Инна. Рожки. Хвост. Определённо не Инна.)',
+		'mc (Но... голос. Манера. Даже бейджик.)',
+		'mc (Совпадение? Я — рационалист. Это просто... паттерн-матчинг. Мозг ищет знакомое.)',
+		'mc (У меня нет мозга. Я мёртв. ЧТО ИЩЕТ ЗНАКОМОЕ?!)',
+
+		{
+			'Function': {
+				'Apply': function () {
+					this.storage ({ matrix_suspicion: this.storage ().matrix_suspicion + 2 });
+				},
+				'Revert': function () {
+					this.storage ({ matrix_suspicion: this.storage ().matrix_suspicion - 2 });
+				}
+			}
+		},
+
+		'jump Hell_Lilith_Intro_Continue'
+	],
+
+	'Hell_Lilith_Intro_Continue': [
+		'show scene hell_office with fadeIn',
+		'show character mc normal at center',
+		'show character lilith flirt at right',
+
 		'mc (Она... красивая. Нет, стоп. Она ДЕМОН. У неё рожки и хвост.)',
 		'mc (Хотя рожки ей идут... НЕТ. Хватит.)',
 
@@ -354,7 +405,7 @@ monogatari.script ({
 	// ВСТРЕЧА С ВИКТОРОМ (серверная ада)
 	// ==========================================
 	'Hell_Viktor_Intro': [
-		'show scene hell_server_room with fadeIn',
+		'show scene hell_server_room_room with fadeIn',
 		'show character mc normal at center',
 
 		'По пути к зоне мук Алексей замечает дверь с табличкой: «Серверная. Не входить. Серьёзно. Там 45°C».',
@@ -869,6 +920,37 @@ monogatari.script ({
 
 		'hide character soul with fadeOut',
 
+		'jump Hell_Exploration_Souls'
+	],
+
+	// --- Знакомство с Борисом, Ли и Марией ---
+	'Hell_Exploration_Souls': [
+		'show scene hell_corridor with fadeIn',
+		'show character mc normal at center',
+
+		'Дальше по коридору — что-то вроде курилки. Три души.',
+
+		'show character soul resigned at left with fadeIn',
+
+		'Борис — крепкий мужик, бывший военный. Алексей помнит его по очереди на суде.',
+		'soul Эй, парень. Инфаркт, да? Помню тебя.',
+		'mc Борис? Ты тоже тут.',
+		'soul А куда мне деваться? Атеист с 1987 года. Партия научила.',
+
+		'Рядом — пожилой китаец с длинной бородой. Философ Ли. Тут с 1842 года.',
+		'soul2 Юноша, не расстраивайтесь. Первые сто лет — самые трудные.',
+		'mc ...ПЕРВЫЕ сто?',
+		'soul2 Потом привыкаешь. Или сходишь с ума. Оба варианта приемлемы.',
+
+		'И ещё — женщина. Маленькая, с яростными глазами. Мария. Испанская учёная XVII века.',
+		'soul Сожгли как ведьму. За то, что я сказала, что Земля не плоская.',
+		'mc ...Серьёзно?',
+		'soul За науку. В буквальном смысле.',
+
+		'mc (Военный-атеист, древний философ и сожжённая учёная. Моя компания в аду.)',
+
+		'hide character soul with fadeOut',
+
 		'jump Hell_Lilith_Visit_Check'
 	],
 
@@ -941,10 +1023,17 @@ monogatari.script ({
 					}
 				},
 				'matrix': {
-					'Text': 'Подождите. Я знаю, что здесь происходит. Это не ад. Это СИМУЛЯЦИЯ.',
+					'Text': 'Это не ад. Это СИМУЛЯЦИЯ.',
 					'Do': 'jump Hell_Matrix_Realization',
 					'onChosen': function () {
 						this.storage ({ matrix_suspicion: this.storage ().matrix_suspicion + 5 });
+					}
+				},
+				'sisyphus': {
+					'Text': '...Принять абсурд. Как Сизиф.',
+					'Do': 'jump Ending_Sisyphus',
+					'onChosen': function () {
+						this.storage ({ acceptance_score: this.storage ().acceptance_score + 3 });
 					}
 				}
 			}
@@ -975,6 +1064,23 @@ monogatari.script ({
 					'Do': 'jump Hell_Bar_Idea',
 					'onChosen': function () {
 						this.storage ({ humor_used: this.storage ().humor_used + 1, found_bar_location: true });
+					}
+				},
+				'viktor_hack': {
+					'Text': 'Найти Виктора. У него есть доступ к серверам.',
+					'Do': 'jump Hell_Viktor_Hack',
+					'onChosen': function () {
+						this.storage ({ rebellion_score: this.storage ().rebellion_score + 3 });
+					},
+					'Condition': function () {
+						return this.storage ().viktor_met;
+					}
+				},
+				'sisyphus': {
+					'Text': '...Принять абсурд. Камю был прав.',
+					'Do': 'jump Ending_Sisyphus',
+					'onChosen': function () {
+						this.storage ({ acceptance_score: this.storage ().acceptance_score + 3 });
 					}
 				}
 			}
@@ -1498,11 +1604,18 @@ monogatari.script ({
 		}
 	],
 
-	// --- Breakdown с 5 вариантами (Лилит доступна) ---
+	// --- Breakdown с вариантами (Лилит доступна) ---
 	'Hell_Breakdown_Lilith_Choice': [
 		{
 			'Choice': {
 				'Dialog': 'mc (Что делать?)',
+				'lilith_romance': {
+					'Text': '...Позвонить Лилит.',
+					'Do': 'jump Hell_Lilith_Romance',
+					'onChosen': function () {
+						this.storage ({ lilith_interest: this.storage ().lilith_interest + 2 });
+					}
+				},
 				'submit': {
 					'Text': 'Сдаться. Признать. Поверить.',
 					'Do': 'jump Hell_Submit',
@@ -1531,11 +1644,11 @@ monogatari.script ({
 						this.storage ({ matrix_suspicion: this.storage ().matrix_suspicion + 5 });
 					}
 				},
-				'lilith_romance': {
-					'Text': '...Позвонить Лилит.',
-					'Do': 'jump Hell_Lilith_Romance',
+				'sisyphus': {
+					'Text': '...Принять абсурд. Как Сизиф.',
+					'Do': 'jump Ending_Sisyphus',
 					'onChosen': function () {
-						this.storage ({ lilith_interest: this.storage ().lilith_interest + 2 });
+						this.storage ({ acceptance_score: this.storage ().acceptance_score + 3 });
 					}
 				}
 			}
@@ -1648,6 +1761,65 @@ monogatari.script ({
 
 		'lilith Не надо меня жалеть. Я не жалею.',
 		'lilith Ну, почти.',
+
+		{
+			'Conditional': {
+				'Condition': function () {
+					var s = this.storage ();
+					return (s.inna_met && s.inna_interest >= 2) ? 'inna_ask' : 'no_ask';
+				},
+				'inna_ask': 'jump Hell_Lilith_Inna_Reveal',
+				'no_ask': 'jump Hell_Lilith_Coffee_Deep_End'
+			}
+		}
+	],
+
+	'Hell_Lilith_Inna_Reveal': [
+		'show scene hell_office with fadeIn',
+		'show character mc normal at center',
+		'show character lilith serious at right',
+
+		'mc Лилит... Можно странный вопрос?',
+		'lilith Странных вопросов в аду не бывает.',
+		'mc На работе у меня была HR-менеджер. Инна. Она... говорила как ты. Улыбалась как ты.',
+		'mc Те же слова. «Ужасный, но есть». «Кабинет 6». Даже бейджик одинаковый.',
+
+		'Долгая пауза. Лилит отводит взгляд.',
+
+		'show character lilith tender at right',
+		'lilith Алексей...',
+		'lilith Ты когда-нибудь задумывался, откуда мы знаем, какой ад подобрать для каждого?',
+		'mc ...Анкета? Профиль?',
+		'lilith Мы наблюдаем. Заранее. Иногда — годами.',
+		'mc ...Ты хочешь сказать...',
+		'lilith Иногда HR-менеджер в офисе — это не просто HR-менеджер.',
+
+		{
+			'Function': {
+				'Apply': function () {
+					screenShake (500);
+					this.storage ({ matrix_suspicion: this.storage ().matrix_suspicion + 3 });
+				},
+				'Revert': function () {}
+			}
+		},
+
+		'mc (Инна... была... Лилит?! Лилит наблюдала за мной ещё при жизни?!)',
+		'mc (Каблуки. Улыбка. Кабинет 6. Кофе. Всё это было... подготовкой?!)',
+
+		'lilith Не злись. Я не выбирала задание. Но...',
+		'lilith Кофе я приносила по своей инициативе. Тогда — и сейчас.',
+
+		'mc (Весь мир — сцена. А демоны — актёры. Шекспир бы оценил.)',
+		'hide character lilith with fadeOut',
+
+		'jump Hell_Debate_Round_2'
+	],
+
+	'Hell_Lilith_Coffee_Deep_End': [
+		'show scene hell_office with fadeIn',
+		'show character mc normal at center',
+
 		'hide character lilith with fadeOut',
 
 		'jump Hell_Debate_Round_2'
@@ -1863,5 +2035,61 @@ monogatari.script ({
 
 		'hide character lilith with fadeOut',
 		'jump Ending_LilithBetrayal'
+	],
+
+	// ==========================================
+	// ВЕТКА: Виктор — хак серверов ада
+	// ==========================================
+	'Hell_Viktor_Hack': [
+		'show scene hell_server_room with fadeIn',
+		'show character mc angry at center',
+		'show character viktor nervous at right with fadeIn',
+
+		'mc Виктор! Мне нужна твоя помощь.',
+		'viktor Ох. Я уже знаю этот взгляд. Плохая идея, да?',
+		'mc Ты говорил, что ад — распределённая система. Что ROOT не логинился две тысячи лет.',
+		'mc Если ROOT не логинится — значит, никто не обновляет пароли.',
+
+		'show character viktor excited at right',
+		'viktor ...Ты хочешь sudo в адской инфраструктуре?',
+		'mc Я хочу прочитать конфиг. Понять, как работает система. Найти баг.',
+
+		'viktor Я пытался. Много раз. Система автовосстанавливается.',
+		'mc А если не удалять, а перезаписывать? Не rm, а sed. Не ломать — переписывать правила.',
+
+		'Пауза. Виктор впервые улыбается — не нервно, а по-настоящему.',
+
+		'viktor Ты знаешь... это может сработать.',
+		'viktor Есть один dev-эндпоинт. Отладочный. Забыли закрыть при деплое.',
+		'viktor Через него можно отредактировать файл правил. /etc/damnation/rules.conf.',
+
+		'mc (rules.conf. Конечно. Даже ад работает на конфигах.)',
+
+		{
+			'Choice': {
+				'Dialog': 'viktor Что будем делать?',
+				'rewrite_rules': {
+					'Text': 'Переписать правила ада',
+					'Do': 'jump Ending_ViktorHack',
+					'onChosen': function () {
+						this.storage ({ viktor_friendship: this.storage ().viktor_friendship + 3 });
+					}
+				},
+				'free_everyone': {
+					'Text': 'Удалить все записи о грешниках',
+					'Do': 'jump Ending_ViktorFreedom',
+					'onChosen': function () {
+						this.storage ({ empathy_shown: this.storage ().empathy_shown + 3 });
+					}
+				},
+				'chicken_out': {
+					'Text': '...Нет. Слишком рискованно.',
+					'Do': 'jump Hell_Breakdown_Normal_Choice',
+					'onChosen': function () {
+						this.storage ({ acceptance_score: this.storage ().acceptance_score + 1 });
+					}
+				}
+			}
+		}
 	]
 });

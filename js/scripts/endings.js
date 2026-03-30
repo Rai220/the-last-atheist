@@ -1065,7 +1065,7 @@ monogatari.script ({
 
 		// Другой путь — через серверную, не через старую дверь
 		'Виктор ведёт их в серверную. Мимо мигающих стоек, через путаницу кабелей.',
-		'show scene hell_server_room with fadeIn',
+		'show scene hell_server_room_room with fadeIn',
 		'В углу — неприметная панель. За ней — лестница вниз. Или вверх. Направление неясно.',
 
 		'viktor Тестовый выход. Его оставили в development-фазе. Никто не закрыл.',
@@ -1286,6 +1286,169 @@ monogatari.script ({
 	],
 
 	// ==========================================
+	// H1. СИЗИФ: Принять абсурд
+	// ==========================================
+	'Ending_Sisyphus': [
+		'show scene hell_cauldrons with fadeIn',
+		'stop music hell_drone',
+		'stop music hell_bureaucracy',
+		'stop music hell_debate',
+		'play music choir_ethereal with loop fade 2',
+		'show character mc smirk at center with fadeIn',
+
+		{
+			'Function': {
+				'Apply': function () {
+					hellVignette (false);
+					this.storage ({ ending_reached: 'sisyphus' });
+				},
+				'Revert': function () {}
+			}
+		},
+
+		'mc (Камю писал: «Надо представить Сизифа счастливым».)',
+		'mc (Сизиф катит камень в гору. Камень скатывается. Он катит снова.)',
+		'mc (Это бессмысленно. И он это знает. Но он ВЫБИРАЕТ продолжать.)',
+
+		'mc (Я — атеист в аду. Бессмысленно. Абсурдно.)',
+		'mc (Бог существует, но я отказываюсь принимать это как ответ.)',
+		'mc (Ад вечен, но я отказываюсь считать это приговором.)',
+		'mc (Я буду спорить. Буду дебатировать. Буду проигрывать.)',
+		'mc (И завтра — снова. И послезавтра. И через тысячу лет.)',
+
+		'mc (Не потому что надеюсь победить.)',
+		'mc (Потому что это — моё.)',
+
+		'Алексей встаёт. Расправляет плечи. Идёт к лекционному залу.',
+		'Демон у двери удивлённо моргает.',
+
+		'mc Ну что? Поехали. Раунд... какой? Четыре? Пять? Тысяча?',
+		'mc Неважно. Я готов.',
+
+		'demon ...Вы улыбаетесь?',
+		'mc Представь Сизифа счастливым.',
+		'demon ...Кого?',
+		'mc Неважно. Давай форму.',
+
+		'centered Алексей Волков. Счастливый Сизиф.',
+		'wait 1000',
+		'centered КОНЦОВКА: «НАДО ПРЕДСТАВИТЬ СИЗИФА СЧАСТЛИВЫМ»',
+		'centered Нет смысла. Есть выбор. Этого достаточно.',
+		'wait 2000',
+		'jump Ending_Credits'
+	],
+
+	// ==========================================
+	// H2. ВИКТОР: Перезапись правил ада
+	// ==========================================
+	'Ending_ViktorHack': [
+		'show scene hell_server_room with fadeIn',
+		'stop music hell_drone',
+		'stop music hell_bureaucracy',
+		'stop music hell_debate',
+		'show character mc smirk at center',
+		'show character viktor excited at right with fadeIn',
+
+		{
+			'Function': {
+				'Apply': function () {
+					hellVignette (false);
+					this.storage ({ ending_reached: 'viktor_hack' });
+				},
+				'Revert': function () {}
+			}
+		},
+
+		'mc sudo vim /etc/damnation/rules.conf',
+		'viktor Тебе серьёзно нужен vim?',
+		'mc Я знаю, как выйти из vim. Это уже само по себе чудо.',
+
+		'Экран мигает. Файл открывается.',
+		'mc (Боже мой. Правила ада написаны на YAML. На YAML!)',
+		'viktor Что?',
+		'mc YAML. Ад настроен через YAML. Один лишний пробел — и всё рухнет.',
+		'viktor ...Это объясняет баги.',
+
+		'mc Ладно. Меняем.',
+		'mc punishment_duration: eternal → punishment_duration: 0',
+		'mc pain_level: maximum → pain_level: 0',
+		'mc coffee_quality: terrible → coffee_quality: excellent',
+
+		'viktor Ты серьёзно поставил coffee_quality в excellent?',
+		'mc Приоритеты, Виктор.',
+
+		'mc :wq',
+
+		'Гул. Вибрация. Свет мигает. Демоны по всему аду одновременно замирают.',
+		'Пауза. И потом — тишина.',
+		'Абсолютная тишина. Первая за тысячелетия.',
+
+		'viktor Оно... работает?',
+		'mc Я не знаю. Но котлы остыли.',
+
+		'centered Алексей Волков и Виктор. Первые сисадмины ада.',
+		'wait 1000',
+		'centered КОНЦОВКА: «sudo rm -rf /pain»',
+		'centered Каждая система имеет уязвимость. Даже вечная.',
+		'wait 2000',
+		'jump Ending_Credits'
+	],
+
+	// ==========================================
+	// H3. ВИКТОР: Освобождение всех душ
+	// ==========================================
+	'Ending_ViktorFreedom': [
+		'show scene hell_server_room with fadeIn',
+		'stop music hell_drone',
+		'stop music hell_bureaucracy',
+		'stop music hell_debate',
+		'show character mc normal at center',
+		'show character viktor nervous at right with fadeIn',
+
+		{
+			'Function': {
+				'Apply': function () {
+					hellVignette (false);
+					this.storage ({ ending_reached: 'viktor_freedom' });
+				},
+				'Revert': function () {}
+			}
+		},
+
+		'mc Виктор. Не правила. Записи. Все записи о грешниках.',
+		'viktor Ты хочешь... удалить всех?',
+		'mc Не удалить. Освободить. Если нет записи — нет грешника. Нет грешника — нет наказания.',
+
+		'viktor Это... миллиарды строк. Шесть тысяч лет данных.',
+		'mc DROP TABLE sinners;',
+		'viktor ...Без бэкапа?',
+		'mc Без бэкапа.',
+
+		'show character viktor excited at right',
+		'viktor Ты сумасшедший.',
+		'mc Я мёртвый атеист в аду, который разговаривает с призраком сисадмина.',
+		'mc «Сумасшедший» — это давно пройденная станция.',
+
+		'viktor ...Enter.',
+		'mc Enter.',
+
+		'Свет. Не белый — золотой. Как при переходе. Но теплее.',
+		'Стены ада становятся прозрачными. Сквозь них — небо. Настоящее небо.',
+		'Души поднимаются. Медленно, как мыльные пузыри. Тысячи. Миллионы.',
+
+		'mc (Я не знаю, куда они уходят.)',
+		'mc (Может, в рай. Может, в никуда. Может, в новую симуляцию.)',
+		'mc (Но они уходят. И это — достаточно.)',
+
+		'centered Алексей Волков. Тот, кто открыл двери.',
+		'wait 1000',
+		'centered КОНЦОВКА: «DROP TABLE sinners»',
+		'centered Иногда лучший аргумент — не слова. А один SQL-запрос.',
+		'wait 2000',
+		'jump Ending_Credits'
+	],
+
+	// ==========================================
 	// ТИТРЫ (с трекером концовок)
 	// ==========================================
 	'Ending_Credits': [
@@ -1331,7 +1494,7 @@ monogatari.script ({
 					var count = Object.keys (endings).length;
 					var el = document.querySelector ('[data-component="centered-dialog"] [data-content="wrapper"]');
 					if (el) {
-						el.innerHTML = '<p>Концовки найдены: ' + count + ' из 25</p>';
+						el.innerHTML = '<p>Концовки найдены: ' + count + ' из 28</p>';
 					}
 				},
 				'Revert': function () {}
