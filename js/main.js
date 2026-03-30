@@ -32,7 +32,10 @@ const ALL_ENDINGS = {
 	'glitch': 'Глитч',
 	'debate_win': 'Аргумент',
 	'speedrun': 'Спидран',
-	'escape_caught': 'Пойманы'
+	'escape_caught': 'Пойманы',
+	'sisyphus': 'Сизиф',
+	'viktor_hack': 'sudo rm pain',
+	'viktor_freedom': 'DROP TABLE sinners'
 };
 
 // ============================================================
@@ -222,6 +225,9 @@ $_ready (() => {
 		addRouteMapButton ();
 		updateEndingCounter ();
 		startLabelTracker ();
+		initJustLilithEasterEgg ();
+		initPostGlitchEffects ();
+		initDevMode ();
 
 		const observer = new MutationObserver (() => {
 			updateEndingCounter ();
@@ -646,4 +652,134 @@ function renderRouteMapSVG (endings) {
 
 	svg += '</svg>';
 	return svg;
+}
+
+// ============================================================
+// Post-Glitch ending: UI glitches persist on main menu (DDLC-style)
+// ============================================================
+function initPostGlitchEffects () {
+	var endings = JSON.parse (localStorage.getItem ('tla_endings') || '{}');
+	if (!endings['glitch']) return;
+
+	setInterval (function () {
+		var mainScreen = document.querySelector ('[data-screen="main"]');
+		if (!mainScreen || !mainScreen.classList.contains ('active')) return;
+		if (Math.random () > 0.05) return;
+
+		mainScreen.style.filter = 'hue-rotate(' + (Math.random () * 30 - 15) + 'deg) saturate(' + (0.8 + Math.random () * 0.4) + ')';
+		mainScreen.style.transform = 'translateX(' + (Math.random () * 4 - 2) + 'px)';
+		setTimeout (function () {
+			mainScreen.style.filter = '';
+			mainScreen.style.transform = '';
+		}, 150);
+	}, 3000);
+}
+
+// ============================================================
+// Easter egg: "Just Lilith" flashes on main menu
+// Triggers if wtf_level was ever maxed (stored across sessions)
+// ============================================================
+function initJustLilithEasterEgg () {
+	// Check if any ending with high lilith_interest was reached
+	var endings = JSON.parse (localStorage.getItem ('tla_endings') || '{}');
+	var lilithEndings = ['hell_romance', 'escape_together', 'lilith_betrayal', 'lilith_conflicted'];
+	var hasLilith = lilithEndings.some (function (e) { return endings[e]; });
+	if (!hasLilith) return;
+
+	// Periodically flash "Just Lilith" on main screen
+	setInterval (function () {
+		var mainScreen = document.querySelector ('[data-screen="main"]');
+		if (!mainScreen || !mainScreen.classList.contains ('active')) return;
+		if (Math.random () > 0.08) return; // ~8% chance each tick
+
+		var flash = document.createElement ('div');
+		flash.textContent = 'Just Lilith';
+		flash.style.cssText =
+			'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);' +
+			'color:#ff4444;font-family:"PT Serif",serif;font-size:2.5em;font-weight:700;' +
+			'text-shadow:0 0 20px rgba(255,0,0,0.8);z-index:999;pointer-events:none;' +
+			'opacity:0.9;';
+		mainScreen.appendChild (flash);
+
+		setTimeout (function () {
+			flash.style.opacity = '0';
+			flash.style.transition = 'opacity 0.15s';
+			setTimeout (function () { flash.remove (); }, 200);
+		}, 300);
+	}, 5000);
+}
+
+// ============================================================
+// Dev mode: show live stats overlay during gameplay
+// Toggle with Ctrl+Shift+D (or Cmd+Shift+D on Mac)
+// ============================================================
+var _devOverlay = null;
+var _devInterval = null;
+
+function initDevMode () {
+	document.addEventListener ('keydown', function (e) {
+		if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'D') {
+			e.preventDefault ();
+			toggleDevMode ();
+		}
+	});
+}
+
+function toggleDevMode () {
+	if (_devOverlay) {
+		_devOverlay.remove ();
+		_devOverlay = null;
+		if (_devInterval) { clearInterval (_devInterval); _devInterval = null; }
+		return;
+	}
+
+	_devOverlay = document.createElement ('div');
+	_devOverlay.id = 'dev-stats-overlay';
+	_devOverlay.style.cssText =
+		'position:fixed;top:10px;left:10px;z-index:99999;' +
+		'background:rgba(0,0,0,0.85);color:#0f0;font-family:monospace;font-size:11px;' +
+		'padding:10px 14px;border-radius:6px;border:1px solid #333;' +
+		'pointer-events:none;max-width:280px;line-height:1.5;';
+	document.body.appendChild (_devOverlay);
+
+	function updateStats () {
+		if (!_devOverlay) return;
+		try {
+			var s = monogatari.storage ();
+			var label = monogatari.state ('label') || '—';
+			var step = monogatari.state ('step') || 0;
+
+			_devOverlay.innerHTML =
+				'<div style="color:#ff6;margin-bottom:4px;font-weight:bold;">DEV MODE</div>' +
+				'<div style="color:#888;">Label: <span style="color:#fff;">' + label + '</span> [' + step + ']</div>' +
+				'<div style="margin-top:6px;">' +
+				stat ('wtf', s.wtf_level) +
+				stat ('denial', s.denial_count) +
+				stat ('cruelty', s.cruelty_score) +
+				stat ('argument', s.argument_quality) +
+				stat ('empathy', s.empathy_shown) +
+				stat ('humor', s.humor_used) +
+				stat ('rebellion', s.rebellion_score) +
+				stat ('acceptance', s.acceptance_score) +
+				'</div>' +
+				'<div style="margin-top:6px;border-top:1px solid #333;padding-top:4px;">' +
+				stat ('lilith', s.lilith_interest) +
+				stat ('viktor', s.viktor_friendship) +
+				stat ('matrix', s.matrix_suspicion) +
+				stat ('demon', s.demon_friendship) +
+				stat ('inna', s.inna_interest) +
+				'</div>' +
+				'<div style="margin-top:4px;color:#666;">verdict: ' + (s.judgment_verdict || '—') + '</div>';
+		} catch (e) {
+			_devOverlay.innerHTML = '<div style="color:#f66;">No active game</div>';
+		}
+	}
+
+	function stat (name, val) {
+		var color = val > 0 ? '#0f0' : val < 0 ? '#f44' : '#666';
+		return '<div>' + name + ': <span style="color:' + color + ';">' + val + '</span></div>';
+	}
+
+	updateStats ();
+	_devInterval = setInterval (updateStats, 500);
 }

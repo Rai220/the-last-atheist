@@ -26,6 +26,7 @@ STYLE = (
     "Dark stylized 2D digital painting, semi-realistic visual novel style, "
     "dramatic cinematic lighting, slightly grotesque and expressive, "
     "black humor aesthetic, Disco Elysium art style influence. "
+    "Surreal liminal space atmosphere, Soviet brutalism meets biblical horror. "
 )
 
 CHAR_STYLE = (
@@ -154,10 +155,12 @@ SCENES = {
     ),
     "prologue/phone_screen.jpg": (
         STYLE +
-        "Extreme close-up of smartphone screen showing an internet forum in dark mode. "
-        "Thread title about proving God exists. Reddit-like interface. "
-        "Username 'GodIsReal777' visible. Reply box at bottom with blinking cursor. "
-        "Notification badges. Moody dark blue light. "
+        "First-person POV looking down at a smartphone held in one hand in a dark room at night. "
+        "Phone screen shows Reddit app in dark mode: orange Reddit logo at top, "
+        "subreddit header 'r/DebateReligion', a post with upvote/downvote arrows, "
+        "username 'GodIsReal777', comment section with reply threads. "
+        "Phone is in the LOWER part of the frame, small. "
+        "Room is dimly lit by the phone glow, messy desk in background. "
         "Wide 16:9 composition, visual novel background."
     ),
     "judgment/hall.jpg": (

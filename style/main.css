@@ -326,6 +326,20 @@ button {
 	text-shadow: 0 0 4px rgba(255, 0, 0, 0.3);
 }
 
+/* --- Сцена смерти: текст сверху, чтобы не перекрывать лежащего героя --- */
+
+.death-text-top [data-component="text-box"] {
+	top: 0 !important;
+	bottom: auto !important;
+	border-top: none;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.death-text-top [data-component="centered-dialog"] {
+	top: 10% !important;
+	bottom: auto !important;
+}
+
 /* --- Эффект: Сердцебиение (для сцены смерти) --- */
 
 @keyframes heartbeat {

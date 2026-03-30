@@ -106,6 +106,17 @@ function updateWtfMeter (value) {
 	setTimeout (() => meter.classList.remove ('wtf-flash'), 2000);
 }
 
+// Текст сверху (для сцены смерти, чтобы не перекрывать лежащего героя)
+function deathTextTop (enable = true) {
+	const el = document.querySelector ('[data-screen="game"]');
+	if (!el) return;
+	if (enable) {
+		el.classList.add ('death-text-top');
+	} else {
+		el.classList.remove ('death-text-top');
+	}
+}
+
 // Применить визуальные эффекты в зависимости от уровня WTF
 function applyWtfEffects (wtfLevel) {
 	if (wtfLevel >= 80) {

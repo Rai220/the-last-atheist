@@ -1,5 +1,19 @@
 /* global monogatari */
 
+// ==========================================
+// Chapter: КОНЦОВКИ (28+)
+// Groups:
+//   Early exits (4): Loophole, DemonFriend, Glitch, DebateWin
+//   Belief (3): Believer, Pascal, Theologian
+//   Rebellion (3): Rebellion, Hacker, Democracy
+//   Bar (3): Bar, Franchise, Therapist
+//   Matrix (4): Matrix, Speedrun, Awakening, DevCommentary
+//   Romance (5): HellRomance, EscapeTogether, EscapeCaught, LilithBetrayal, LilithConflicted
+//   Secret (3): Prophet, FullCircle, Nihilist
+//   Viktor (3): Sisyphus, ViktorHack, ViktorFreedom
+// All endings save to localStorage via tla_endings for the ending tracker
+// ==========================================
+
 monogatari.script ({
 
 	// ==========================================

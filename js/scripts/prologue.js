@@ -1,5 +1,12 @@
 /* global monogatari */
 
+// ==========================================
+// Chapter: ПРОЛОГ
+// Scenes: apartment → office → street/death
+// Stats affected: argument_quality, denial_count, empathy_shown, humor_used, inna_interest
+// Branches: 3 morning paths × 3 death types → Judgment
+// ==========================================
+
 monogatari.script ({
 
 	// ==========================================
@@ -505,8 +512,8 @@ monogatari.script ({
 
 		{
 			'Function': {
-				'Apply': function () { slowBurnEffect (true); },
-				'Revert': function () { slowBurnEffect (false); }
+				'Apply': function () { slowBurnEffect (true); deathTextTop (true); },
+				'Revert': function () { slowBurnEffect (false); deathTextTop (false); }
 			}
 		},
 
@@ -533,6 +540,13 @@ monogatari.script ({
 		'Звуки уходят. Не резко — как музыка на затухании. Fade out.',
 		'Фонари гаснут по одному. Аккуратно. Как будто кто-то идёт по серверной и выдёргивает кабели.',
 		'Graceful shutdown.',
+
+		{
+			'Function': {
+				'Apply': function () { deathTextTop (false); slowBurnEffect (false); },
+				'Revert': function () {}
+			}
+		},
 
 		'show scene #000000 with fadeIn',
 		'wait 1000',
@@ -575,8 +589,8 @@ monogatari.script ({
 
 		{
 			'Function': {
-				'Apply': function () { slowBurnEffect (true); },
-				'Revert': function () { slowBurnEffect (false); }
+				'Apply': function () { slowBurnEffect (true); deathTextTop (true); },
+				'Revert': function () { slowBurnEffect (false); deathTextTop (false); }
 			}
 		},
 
@@ -590,6 +604,13 @@ monogatari.script ({
 		'mc (В наушниках. Конечно. Подкаст про свободу воли. Ирония уровня: бесконечность.)',
 		'mc (Хотя если свободная воля — иллюзия, то я не виноват. Нейроны решили.)',
 		'mc (Утешает? Нет.)',
+
+		{
+			'Function': {
+				'Apply': function () { deathTextTop (false); slowBurnEffect (false); },
+				'Revert': function () {}
+			}
+		},
 
 		'show scene #000000 with fadeIn',
 		'wait 1000',
