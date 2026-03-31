@@ -16,18 +16,26 @@ monogatari.script ({
 	// АД: Прибытие
 	// ==========================================
 	'Hell_Arrival': [
-		// 'play sound door_slam',
+		// Роутер по death_flavor
+		{
+			'Conditional': {
+				'Condition': function () { return this.storage ().death_flavor || 'mundane'; },
+				'mundane': 'jump Hell_Arrival_Mundane',
+				'ironic': 'jump Hell_Arrival_Ironic',
+				'overwork': 'jump Hell_Arrival_Overwork'
+			}
+		}
+	],
+
+	// --- Прибытие: стандартное (инфаркт на улице) ---
+	'Hell_Arrival_Mundane': [
 		'show scene hell_gates with fadeIn',
 		'wait 500',
 
 		{
 			'Function': {
-				'Apply': function () {
-					hellVignette (true);
-				},
-				'Revert': function () {
-					hellVignette (false);
-				}
+				'Apply': function () { hellVignette (true); },
+				'Revert': function () { hellVignette (false); }
 			}
 		},
 
@@ -41,8 +49,6 @@ monogatari.script ({
 		'show character mc shock at center with fadeIn',
 
 		'mc (Это... ад? Реально ад?)',
-		'mc (Нет. Стоп. Наблюдаю. Фиксирую. Как учёный.)',
-		'mc (Факт: я что-то чувствую. Факт: я не должен ничего чувствовать. Факт: разница между этими фактами — бесконечна.)',
 		'mc (Это файн. Всё файн.)',
 
 		'Ворота. Огромные, из чёрного железа.',
@@ -57,6 +63,81 @@ monogatari.script ({
 		'Варианты: «Грешник», «Еретик», «Атеист», «Прочее».',
 		'Внизу экрана мелким шрифтом: «Нажимая кнопку, вы соглашаетесь с условиями вечного пребывания (вы всё равно не читаете это)».',
 		'mc (EULA в аду. Разумеется.)',
+
+		'jump Hell_Arrival_Choice'
+	],
+
+	// --- Прибытие: ирония (сбит на пробежке) ---
+	'Hell_Arrival_Ironic': [
+		'show scene hell_gates with fadeIn',
+		'wait 500',
+
+		{
+			'Function': {
+				'Apply': function () { hellVignette (true); },
+				'Revert': function () { hellVignette (false); }
+			}
+		},
+
+		'stop music judgment_tension',
+		'stop music choir_ethereal',
+		'play music hell_drone with loop fade 3',
+
+		'Жарко. И Алексей всё ещё в кроссовках и шортах.',
+		'Наушник болтается на шее. Подкаст Харриса остановился на середине фразы про детерминизм.',
+
+		'show character mc shock at center with fadeIn',
+
+		'mc (Я... сбит машиной. На пробежке. Первой за полгода.)',
+		'mc (Подкаст про свободу воли. На красный свет. Ирония уровня — бесконечность.)',
+
+		'Ворота. Огромные, из чёрного железа. Рядом — аппарат для талонов.',
+		'На экране аппарата среди категорий: «Грешник», «Еретик», «Атеист», «Прочее».',
+		'И внизу, мелким шрифтом, приписка: «Дарвиновская премия — в соседнем окне».',
+		'mc (Они знают. Конечно они знают.)',
+		'mc (EULA в аду. С персональными оскорблениями. Прекрасно.)',
+
+		'jump Hell_Arrival_Choice'
+	],
+
+	// --- Прибытие: переработка (смерть за компьютером) ---
+	'Hell_Arrival_Overwork': [
+		'show scene hell_gates with fadeIn',
+		'wait 500',
+
+		{
+			'Function': {
+				'Apply': function () { hellVignette (true); },
+				'Revert': function () { hellVignette (false); }
+			}
+		},
+
+		'stop music judgment_tension',
+		'stop music choir_ethereal',
+		'play music hell_drone with loop fade 3',
+
+		'Жарко. Но Алексей привык — серверная на работе была не лучше.',
+		'Он стоит перед чем-то, что больше напоминает не врата ада, а проходную бизнес-центра.',
+
+		'show character mc shock at center with fadeIn',
+
+		'mc (Умер на работе. Без оплаты за переработку. И попал... на работу?)',
+
+		'Вместо «Оставь надежду» — экран с Jira-интерфейсом.',
+		'Тикет: «SOUL-7394028417: Онбординг нового грешника. Priority: LOW.»',
+		'mc (Priority: LOW. Я даже в аду не в приоритете.)',
+
+		'Аппарат для талонов. Стандартный набор: «Грешник», «Еретик», «Атеист», «Прочее».',
+		'EULA мелким шрифтом.',
+		'mc (Ну хоть EULA привычная. Как на работе — никто не читает, все соглашаются.)',
+
+		'jump Hell_Arrival_Choice'
+	],
+
+	// --- Общий выбор талона ---
+	'Hell_Arrival_Choice': [
+		'show scene hell_gates with fadeIn',
+		'show character mc shock at center',
 
 		{
 			'Choice': {
@@ -109,7 +190,24 @@ monogatari.script ({
 		'Демон вздыхает. Достаёт толстую папку.',
 
 		'demon Атеисты... Опять. Знаете, вас тут больше всего в последнее время.',
-		'demon Каждый второй: «а я не верил!» Мы не мучаем грешников. Мы сопровождаем их в процессе индивидуальной коррекции опыта.',
+
+		{
+			'Conditional': {
+				'Condition': function () {
+					var s = this.storage ();
+					if (s.judgment_argued_stats) return 'stats';
+					if (s.judgment_begged) return 'begged';
+					if (s.humor_used >= 2) return 'humor';
+					return 'default';
+				},
+				'stats': 'demon А, это вы. Тот, кто цитировал Pew Research на аудиенции. У нас тут ставки, сколько вы продержитесь.',
+				'begged': 'demon Хм, в вашем деле пометка: «раскаялся на суде». Это... необычно для атеиста. Приятно.',
+				'humor': 'demon О, комик. Нас предупредили. «Не смеяться — это поощряет.»',
+				'default': 'demon Каждый второй: «а я не верил!»'
+			}
+		},
+
+		'demon Мы не мучаем грешников. Мы сопровождаем их в процессе индивидуальной коррекции опыта.',
 		'mc (Индивидуальная коррекция опыта. HR-язык даже в аду.)',
 		'mc (Не называйте это пыткой. Это «индивидуальная программа мотивации».)',
 		'mc (Хотя... бюрократия в аду? Номерки? Формы?)',
@@ -325,10 +423,13 @@ monogatari.script ({
 		{
 			'Function': {
 				'Apply': function () {
-					this.storage ({ matrix_suspicion: this.storage ().matrix_suspicion + 2 });
+					var s = this.storage ();
+					var li = s.lilith_interest + (s.inna_interest >= 2 ? 1 : 0);
+					this.storage ({ matrix_suspicion: s.matrix_suspicion + 2, lilith_interest: li });
 				},
 				'Revert': function () {
-					this.storage ({ matrix_suspicion: this.storage ().matrix_suspicion - 2 });
+					var s = this.storage ();
+					this.storage ({ matrix_suspicion: s.matrix_suspicion - 2 });
 				}
 			}
 		},
@@ -831,41 +932,170 @@ monogatari.script ({
 		'show character mc angry at center',
 		'show character demon smile at left',
 
-		'mc Ладно. Тогда аргумент от несовместимости.',
-		'mc Всемогущий бог не может создать камень, который не может поднять. Логический парадокс.',
-		'mc Либо он не всемогущ, либо логика не работает. А если логика не работает — любое доказательство бессмысленно.',
-
-		'Демоны переглядываются. Один поднимает табличку: «5/10».',
-
-		'demon Уже лучше! Но смотрите — вы используете логику, чтобы опровергнуть то, что стоит за пределами логики.',
-		'demon Это как пытаться измерить любовь линейкой.',
-
-		'mc Это ложная аналогия и вы это знаете!',
-		'demon Мы демоны. Мы много чего знаем.',
+		'demon Раунд два. Мы приготовились.',
 
 		{
 			'Choice': {
-				'Dialog': 'mc (Ещё раз?)',
-				'again': {
-					'Text': 'Продолжить дебаты (упрямство!)',
-					'Do': 'jump Hell_DebateWin_Check',
+				'Dialog': 'mc (Какую стратегию выбрать?)',
+				'debate2_logic': {
+					'Text': 'Логика: парадокс всемогущества',
+					'Do': 'jump Hell_Debate_R2_Logic',
 					'onChosen': function () {
-						const s = this.storage ();
-						this.storage ({
-							denial_count: s.denial_count + 1,
-							wtf_level: Math.min (100, s.wtf_level + 10)
-						});
+						this.storage ({ debate_strategy: 'logical', argument_quality: this.storage ().argument_quality + 2 });
 					}
 				},
-				'give_up': {
-					'Text': 'Замолчать',
-					'Do': 'jump Hell_DebateWin_Check',
+				'debate2_emotional': {
+					'Text': 'Эмпатия: невинные страдания',
+					'Do': 'jump Hell_Debate_R2_Emotional',
 					'onChosen': function () {
-						this.storage ({ acceptance_score: this.storage ().acceptance_score + 1 });
+						this.storage ({ debate_strategy: 'emotional', empathy_shown: this.storage ().empathy_shown + 1 });
+					}
+				},
+				'debate2_absurd': {
+					'Text': 'Абсурд: если Бог совершенен, почему в аду Jira?',
+					'Do': 'jump Hell_Debate_R2_Absurd',
+					'onChosen': function () {
+						this.storage ({ debate_strategy: 'absurdist', humor_used: this.storage ().humor_used + 1, argument_quality: this.storage ().argument_quality + 1 });
 					}
 				}
 			}
 		}
+	],
+
+	'Hell_Debate_R2_Logic': [
+		'show character demon smile at left',
+		'mc Всемогущий бог не может создать камень, который не может поднять. Логический парадокс.',
+		'mc Либо он не всемогущ, либо логика не работает. А если логика не работает — любое доказательство бессмысленно.',
+
+		'Демоны переглядываются. Один поднимает табличку: «6/10».',
+
+		'demon Неплохо. Но вы используете логику, чтобы опровергнуть то, что стоит за пределами логики.',
+
+		{
+			'Choice': {
+				'Dialog': 'mc (Он контрит логику мета-логикой...)',
+				'double_down': {
+					'Text': '«Если логика не работает — отпустите меня. Ваш приговор тоже нелогичен.»',
+					'Do': 'jump Hell_Debate_R2_After',
+					'onChosen': function () {
+						this.storage ({ argument_quality: this.storage ().argument_quality + 2, wtf_level: Math.min (100, this.storage ().wtf_level + 10) });
+					}
+				},
+				'concede': {
+					'Text': '«Ладно. Допустим, логика — не единственный инструмент.»',
+					'Do': 'jump Hell_Debate_R2_After',
+					'onChosen': function () {
+						this.storage ({ acceptance_score: this.storage ().acceptance_score + 1, empathy_shown: this.storage ().empathy_shown + 1 });
+					}
+				}
+			}
+		}
+	],
+
+	'Hell_Debate_R2_Emotional': [
+		'show character demon smile at left',
+		'mc Забудем логику. Поговорим про боль.',
+		'mc Ребёнок, три года. Лейкемия. Он никогда не грешил. Он не выбирал. И он СТРАДАЛ.',
+		'mc Какой любящий бог допускает ЭТО?',
+
+		'Тишина. Даже демоны молчат.',
+		'Один тихо поднимает табличку: «7/10».',
+
+		'demon ...Мы не знаем. Мы — демоны. Мы не отвечаем за дизайн.',
+		'demon Но я скажу вот что: этот аргумент — первый, где вы говорите не о себе.',
+
+		{
+			'Choice': {
+				'Dialog': 'mc (Он... признал?)',
+				'push_further': {
+					'Text': '«Тогда КТО отвечает? И почему я не могу спросить ЕГО?»',
+					'Do': 'jump Hell_Debate_R2_After',
+					'onChosen': function () {
+						this.storage ({ argument_quality: this.storage ().argument_quality + 1, rebellion_score: this.storage ().rebellion_score + 1 });
+					}
+				},
+				'concede_empathy': {
+					'Text': '«Вы правы. Впервые я говорю не о себе.»',
+					'Do': 'jump Hell_Debate_R2_After',
+					'onChosen': function () {
+						this.storage ({ empathy_shown: this.storage ().empathy_shown + 2, acceptance_score: this.storage ().acceptance_score + 1 });
+					}
+				}
+			}
+		}
+	],
+
+	'Hell_Debate_R2_Absurd': [
+		'show character demon smile at left',
+		'mc Ладно, давайте по-другому.',
+		'mc Если Бог совершенен — почему в аду EULA? Почему талоны? Почему Jira?',
+		'mc Совершенное существо создало бы совершенное наказание. А тут — очередь как в МФЦ.',
+		'mc Это не ад. Это плохо написанная игра.',
+
+		'Демоны переглядываются. Один начинает хихикать. Потом другой.',
+		'Табличка: «8/10 — за смелость».',
+
+		'demon Знаете что? Вы правы. Бюрократия — это действительно ужасно.',
+		'demon Но она тут не потому, что Бог её придумал. Она тут потому, что ВЫ её придумали.',
+		'demon На Земле. Мы просто скопировали.',
+
+		'mc (Он... обвинил человечество в изобретении бюрократии. И он прав.)',
+
+		'jump Hell_Debate_R2_After'
+	],
+
+	// --- После дебата 2: Lilith touchpoint + выход ---
+	'Hell_Debate_R2_After': [
+		'hide character demon with fadeOut',
+
+		{
+			'Conditional': {
+				'Condition': function () { return this.storage ().lilith_met ? 'lilith' : 'skip'; },
+				'lilith': 'jump Hell_Debate_R2_Lilith',
+				'skip': 'jump Hell_DebateWin_Check'
+			}
+		}
+	],
+
+	'Hell_Debate_R2_Lilith': [
+		'show scene hell_corridor with fadeIn',
+		'show character mc normal at center',
+
+		'В коридоре после дебатов — Лилит. Стоит, прислонившись к стене. Как будто ждала.',
+
+		'lilith Я слушала. Ты неплохо держался.',
+		'mc Ты... наблюдала?',
+		'lilith Это моя работа. Наблюдать.',
+
+		{
+			'Choice': {
+				'Dialog': 'mc (Она ждала меня после дебатов...)',
+				'lilith_interested': {
+					'Text': '«И как? Впечатлил?»',
+					'Do': 'jump Hell_Debate_R2_Lilith_Done',
+					'onChosen': function () {
+						this.storage ({ lilith_interest: this.storage ().lilith_interest + 1 });
+					}
+				},
+				'lilith_suspicious': {
+					'Text': '«Наблюдать — это слежка. У тебя мой файл.»',
+					'Do': 'jump Hell_Debate_R2_Lilith_Done',
+					'onChosen': function () {
+						this.storage ({ matrix_suspicion: this.storage ().matrix_suspicion + 1 });
+					}
+				}
+			}
+		}
+	],
+
+	'Hell_Debate_R2_Lilith_Done': [
+		'lilith Увидимся, Волков.',
+		'Она уходит. Каблуки по камню.',
+		'mc (Она назвала меня по фамилии. Как Инна в офисе.)',
+
+		'hide character lilith with fadeOut',
+
+		'jump Hell_DebateWin_Check'
 	],
 
 	'Hell_Debate_Refuse': [
@@ -964,7 +1194,167 @@ monogatari.script ({
 
 		'mc (Военный-атеист, древний философ и сожжённая учёная. Моя компания в аду.)',
 
+		// --- Хинты на секретные концовки ---
+		{
+			'Conditional': {
+				'Condition': function () {
+					var s = this.storage ();
+					if (s.judgment_begged && s.acceptance_score >= 2) return 'prophet_hint';
+					if (s.prologue_was_kind && s.empathy_shown >= 2) return 'fullcircle_hint';
+					if (s.denial_count >= 4) return 'nihilist_hint';
+					return 'none';
+				},
+				'prophet_hint': 'soul2 Знаешь... я слышал, некоторых отсюда забирают. Не через побег. Через... приглашение.',
+				'fullcircle_hint': 'soul Парень, ты странный. Ты... добрый. Таких тут мало. Очень мало. Я слышал, для таких есть другой выход.',
+				'nihilist_hint': 'soul2 Один тут... просто остановился. Не бунтовал. Не сдался. Просто — перестал. И его больше не видели.',
+				'none': 'soul2 Ладно, привыкай. Тут все привыкают.'
+			}
+		},
+
 		'hide character soul with fadeOut',
+
+		// --- Lilith touchpoint: роняет папку ---
+		{
+			'Conditional': {
+				'Condition': function () { return this.storage ().lilith_met ? 'met' : 'skip'; },
+				'met': 'jump Hell_Lilith_Folder',
+				'skip': 'jump Hell_Exploration_Seed'
+			}
+		}
+	],
+
+	'Hell_Lilith_Folder': [
+		'В конце коридора — стук каблуков. Лилит. Она идёт быстро, папка под мышкой.',
+		'Папка падает. Бумаги рассыпаются по полу.',
+		'Лилит чертыхается. По-настоящему, не демонически.',
+
+		{
+			'Choice': {
+				'Dialog': 'mc (Она не заметила меня...)',
+				'pick_up': {
+					'Text': 'Помочь собрать бумаги',
+					'Do': 'jump Hell_Lilith_Folder_Help',
+					'onChosen': function () {
+						this.storage ({ lilith_interest: this.storage ().lilith_interest + 1, lilith_trust: this.storage ().lilith_trust + 1 });
+					}
+				},
+				'ignore_folder': {
+					'Text': 'Пройти мимо',
+					'Do': 'jump Hell_Exploration_Seed'
+				}
+			}
+		}
+	],
+
+	'Hell_Lilith_Folder_Help': [
+		'Алексей собирает бумаги. На одном листе — его имя. «Волков А.Д. — файл #7394028417».',
+		'mc (Это... мой файл?)',
+		'Лилит выхватывает лист.',
+		'lilith Спасибо. Ты не должен был это видеть.',
+		'mc Мой файл? У тебя мой файл?',
+		'lilith У всех демонов файлы на подопечных. Бюрократия.',
+		'Она смотрит на него. Не как демон. Как человек, которого поймали.',
+		'lilith ...Спасибо, что помог.',
+		'mc (Она смутилась. Демон. Смутилась.)',
+
+		'jump Hell_Exploration_Seed'
+	],
+
+	// --- Зерно: направление мысли ---
+	'Hell_Exploration_Seed': [
+		'show scene hell_corridor with fadeIn',
+		'show character mc normal at center',
+
+		'Алексей сидит на каменной скамье. Один. Думает.',
+		'mc (Борис, Ли, Мария. Они тут годами. Столетиями. И они... привыкли.)',
+		'mc (Я не хочу привыкать. Я хочу...)',
+
+		{
+			'Choice': {
+				'Dialog': 'mc (Что делать?)',
+				'seed_accept': {
+					'Text': '«Может, они правы. Может, нужно принять.»',
+					'Do': 'jump Hell_Exploration_Seed_Done',
+					'onChosen': function () {
+						this.storage ({ acceptance_score: this.storage ().acceptance_score + 2 });
+					}
+				},
+				'seed_rebel': {
+					'Text': '«Эти люди заслуживают лучшего. Нужно организоваться.»',
+					'Do': 'jump Hell_Exploration_Seed_Done',
+					'onChosen': function () {
+						this.storage ({ rebellion_score: this.storage ().rebellion_score + 2 });
+					}
+				},
+				'seed_investigate': {
+					'Text': '«Что-то не так с этим местом. Нужно копать глубже.»',
+					'Do': 'jump Hell_Exploration_Seed_Done',
+					'onChosen': function () {
+						this.storage ({ matrix_suspicion: this.storage ().matrix_suspicion + 2 });
+					}
+				}
+			}
+		}
+	],
+
+	'Hell_Exploration_Seed_Done': [
+		{
+			'Conditional': {
+				'Condition': function () {
+					var s = this.storage ();
+					return (s.viktor_met && s.viktor_friendship >= 1) ? 'viktor' : 'skip';
+				},
+				'viktor': 'jump Hell_Viktor_Midgame',
+				'skip': 'jump Hell_Lilith_Visit_Check'
+			}
+		}
+	],
+
+	// --- Виктор mid-game: аномалия в логах ---
+	'Hell_Viktor_Midgame': [
+		'show scene hell_server_room with fadeIn',
+		'show character mc normal at center',
+		'show character viktor friendly at left with fadeIn',
+
+		'viktor Пст! Алексей! Зайди на минуту.',
+		'mc Виктор? Что случилось?',
+		'viktor Смотри.',
+
+		'Виктор показывает терминал. Зелёные строки бегут по экрану.',
+
+		'viktor Видишь эту запись? Кто-то получил root-доступ. Вчера.',
+		'mc Root? В аду?',
+		'viktor Не просто root. Кто-то правил записи грешников. Менял даты. Удалял строки.',
+		'viktor Я проверил логи — таких правок не было 2000 лет. А тут вдруг — три за неделю.',
+
+		'mc (Root-доступ. Правки записей. Кто-то модифицирует систему изнутри.)',
+		'mc (Это... баг? Или фича?)',
+
+		{
+			'Choice': {
+				'Dialog': 'mc (Что это значит?)',
+				'viktor_dig': {
+					'Text': '«Можешь узнать, кто? Это может быть важно.»',
+					'Do': 'jump Hell_Viktor_Midgame_Done',
+					'onChosen': function () {
+						this.storage ({
+							viktor_friendship: this.storage ().viktor_friendship + 1,
+							matrix_suspicion: this.storage ().matrix_suspicion + 2,
+							noticed_patterns: true
+						});
+					}
+				},
+				'viktor_ignore': {
+					'Text': '«Не моё дело. У меня своих проблем хватает.»',
+					'Do': 'jump Hell_Viktor_Midgame_Done'
+				}
+			}
+		}
+	],
+
+	'Hell_Viktor_Midgame_Done': [
+		'viktor Ладно, иди. Не говори демонам, что тут был.',
+		'hide character viktor with fadeOut',
 
 		'jump Hell_Lilith_Visit_Check'
 	],
@@ -1495,19 +1885,34 @@ monogatari.script ({
 	// ==========================================
 	'Hell_Submit': [
 		'mc ...Ладно. Вы победили. ОН победил.',
-		'mc Я... верю.',
+		'mc Я... принимаю.',
+
+		'Но что именно он принимает?',
 
 		{
-			'Conditional': {
-				'Condition': function () {
-					const s = this.storage ();
-					if (s.humor_used >= 3) return 'pascal';
-					if (s.argument_quality >= 4) return 'theologian';
-					return 'believer';
+			'Choice': {
+				'Dialog': 'mc (Что значит — «верить»?)',
+				'submit_sincere': {
+					'Text': '«Я не понимаю. Но я чувствую. Впервые — чувствую.»',
+					'Do': 'jump Ending_Believer',
+					'onChosen': function () {
+						this.storage ({ acceptance_score: this.storage ().acceptance_score + 3 });
+					}
 				},
-				'pascal': 'jump Ending_Pascal',
-				'theologian': 'jump Ending_Theologian',
-				'believer': 'jump Ending_Believer'
+				'submit_bet': {
+					'Text': '«Паскаль был прав. Ставка с бесконечным выигрышем — рациональна.»',
+					'Do': 'jump Ending_Pascal',
+					'onChosen': function () {
+						this.storage ({ humor_used: this.storage ().humor_used + 1 });
+					}
+				},
+				'submit_study': {
+					'Text': '«Если это реально — это величайший объект исследования. Я хочу изучать.»',
+					'Do': 'jump Ending_Theologian',
+					'onChosen': function () {
+						this.storage ({ argument_quality: this.storage ().argument_quality + 1 });
+					}
+				}
 			}
 		}
 	],
@@ -1518,30 +1923,42 @@ monogatari.script ({
 	'Hell_Rebellion': [
 		'show character mc angry at center',
 		'mc Нет. НЕТ. Я не буду сдаваться.',
+		'mc Эти люди — Борис, Ли, Мария — заслуживают лучшего. Мы все заслуживаем.',
 
 		{
-			'Conditional': {
-				'Condition': function () {
-					const s = this.storage ();
-					if (s.prologue_debate_won && s.noticed_patterns) return 'hacker';
-					if (s.empathy_shown >= 3) return 'democracy';
-					return 'rebellion';
+			'Choice': {
+				'Dialog': 'mc (Как бороться?)',
+				'rebel_organize': {
+					'Text': '«Организовать людей. Забастовка. Профсоюз.»',
+					'Do': 'jump Hell_Rebellion_Recruit'
 				},
-				'hacker': 'jump Hell_Rebellion_Hacker',
-				'democracy': 'jump Hell_Rebellion_Democracy',
-				'rebellion': 'jump Hell_Rebellion_Recruit'
+				'rebel_hack': {
+					'Text': '«Я программист. Систему можно эксплоитить.»',
+					'Do': 'jump Hell_Rebellion_Hacker',
+					'Condition': function () {
+						var s = this.storage ();
+						return s.prologue_debate_won || s.noticed_patterns;
+					}
+				},
+				'rebel_democracy': {
+					'Text': '«Забастовка — временно. Нужны выборы. Демократия.»',
+					'Do': 'jump Hell_Rebellion_Democracy',
+					'Condition': function () { return this.storage ().empathy_shown >= 2; }
+				}
 			}
 		}
 	],
 
 	'Hell_Rebellion_Hacker': [
-		'mc Я программист. Бюрократия — это код. Код можно эксплоитить.',
-		'mc Форма 66-А и форма 666-АП. Одновременно. Парадокс.',
+		'mc Бюрократия — это код. Код можно эксплоитить.',
+		'mc Форма 66-А и форма 666-АП. Одновременно. Парадокс в системе.',
+		'mc (Если я прав насчёт паттернов — система рухнет.)',
 		'jump Ending_Hacker'
 	],
 
 	'Hell_Rebellion_Democracy': [
-		'mc Забастовка — временно. Нужна система. Выборы.',
+		'mc Забастовка — временно. Нужна система. Настоящие выборы.',
+		'mc Если демоны — бюрократы, они подчиняются процедурам. А процедуры можно создавать.',
 		'jump Ending_Democracy'
 	],
 
@@ -1549,20 +1966,26 @@ monogatari.script ({
 	// РОУТЕР: Суб-концовки бара
 	// ==========================================
 	'Hell_Bar_Idea': [
-		'mc (Если нельзя выиграть — можно хотя бы выпить?)',
+		'mc (Если нельзя выиграть — можно хотя бы создать место, где людям хорошо?)',
 		'Алексей поднимается. Усмехается.',
 
 		{
-			'Conditional': {
-				'Condition': function () {
-					const s = this.storage ();
-					if (s.humor_used >= 4) return 'franchise';
-					if (s.empathy_shown >= 3) return 'therapist';
-					return 'bar';
+			'Choice': {
+				'Dialog': 'mc (Что за место?)',
+				'bar_simple': {
+					'Text': '«Бар. Просто бар. Тихий угол в аду.»',
+					'Do': 'jump Hell_Bar_Search'
 				},
-				'franchise': 'jump Ending_Franchise',
-				'therapist': 'jump Ending_Therapist',
-				'bar': 'jump Hell_Bar_Search'
+				'bar_therapy': {
+					'Text': '«Не бар. Группа поддержки. Эти души нуждаются в помощи.»',
+					'Do': 'jump Ending_Therapist',
+					'Condition': function () { return this.storage ().empathy_shown >= 2; }
+				},
+				'bar_empire': {
+					'Text': '«Бар? Нет. СЕТЬ баров. Франшиза. В каждом круге ада.»',
+					'Do': 'jump Ending_Franchise',
+					'Condition': function () { return this.storage ().humor_used >= 3; }
+				}
 			}
 		}
 	],
@@ -1571,19 +1994,30 @@ monogatari.script ({
 	// РОУТЕР: Суб-концовки матрицы (после зеркального осознания)
 	// ==========================================
 	'Hell_Matrix_End_Router': [
+		'mc (Если это симуляция... что с этим делать?)',
+
 		{
-			'Conditional': {
-				'Condition': function () {
-					const s = this.storage ();
-					if (s.humor_used >= 3) return 'speedrun';
-					if (s.acceptance_score >= 3) return 'awakening';
-					if (s.wtf_level >= 70 && s.noticed_patterns) return 'dev';
-					return 'matrix';
+			'Choice': {
+				'Dialog': 'mc (Симуляция. И что теперь?)',
+				'matrix_accept': {
+					'Text': '«Неважно, симуляция или нет. Я чувствую — значит, это реально.»',
+					'Do': 'jump Ending_Matrix'
 				},
-				'speedrun': 'jump Ending_Speedrun',
-				'awakening': 'jump Ending_Awakening',
-				'dev': 'jump Ending_DevCommentary',
-				'matrix': 'jump Ending_Matrix'
+				'matrix_speedrun': {
+					'Text': '«Если это игра — можно найти эксплойты. Спидран.»',
+					'Do': 'jump Ending_Speedrun',
+					'Condition': function () { return this.storage ().humor_used >= 2; }
+				},
+				'matrix_meditate': {
+					'Text': '«Наблюдатель создаёт реальность. Если перестать наблюдать...»',
+					'Do': 'jump Ending_Awakening',
+					'Condition': function () { return this.storage ().acceptance_score >= 2; }
+				},
+				'matrix_dev': {
+					'Text': '«Найти разработчика. Поговорить. Потребовать README.»',
+					'Do': 'jump Ending_DevCommentary',
+					'Condition': function () { return this.storage ().noticed_patterns; }
+				}
 			}
 		}
 	],

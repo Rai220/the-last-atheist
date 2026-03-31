@@ -239,6 +239,17 @@ monogatari.script ({
 							humor_used: s.humor_used + 1
 						});
 					}
+				},
+				'notice_silhouette': {
+					'Text': 'Заметить знакомый силуэт в толпе',
+					'Do': 'jump Judgment_Queue_Silhouette',
+					'Condition': function () { return this.storage ().inna_met; },
+					'onChosen': function () {
+						this.storage ({
+							lilith_interest: this.storage ().lilith_interest + 1,
+							seen_inna_parallels: true
+						});
+					}
 				}
 			}
 		}
@@ -290,6 +301,20 @@ monogatari.script ({
 		'mc Абсолютно. Если это и правда загробная жизнь, я хочу знать условия обслуживания.',
 
 		'Смех. Впервые за... ну, за всю посмертную жизнь.',
+		'hide character soul with fadeOut',
+
+		'jump Judgment_Audience'
+	],
+
+	'Judgment_Queue_Silhouette': [
+		'В толпе — знакомая фигура. Высокая, тёмные волосы, каблуки.',
+		'mc (Инна?!)',
+		'Алексей пробирается сквозь очередь. Но силуэт растворяется за колонной.',
+		'mc (Нет. Показалось. У меня нет мозга — какие могут быть галлюцинации?)',
+		'mc (Хотя... если это место существует, то и галлюцинации, видимо, тоже.)',
+		'mc (Или она тоже умерла? Нет. Она была жива. Она писала мне в одиннадцать вечера.)',
+		'mc (...Почему меня это так зацепило?)',
+
 		'hide character soul with fadeOut',
 
 		'jump Judgment_Audience'
@@ -650,6 +675,15 @@ monogatari.script ({
 
 	'Judgment_Verdict_Light': [
 		'g Ты заблуждался, но не был лишён совести.',
+
+		{
+			'Conditional': {
+				'Condition': function () { return this.storage ().prologue_was_kind ? 'kind' : 'default'; },
+				'kind': 'g Ты написал Серёже «рад за тебя». Это немного, но это честно.',
+				'default': 'g Ты не был жесток. Этого достаточно.'
+			}
+		},
+
 		'g Ад. Но... облегчённая версия.',
 		'g Считай это чистилищем с расширенной программой.',
 
@@ -683,6 +717,14 @@ monogatari.script ({
 	'Judgment_Verdict_Personalized': [
 		'g Ты не просто не верил.',
 		'g Ты издевался. Ты насмехался. Ты считал себя умнее всех.',
+
+		{
+			'Conditional': {
+				'Condition': function () { return this.storage ().prologue_personality === 'aggressive' ? 'aggressive' : 'default'; },
+				'aggressive': 'g Ты высмеял друга. Публично. За то, что ему стало легче.',
+				'default': 'g Ты думал, что жестокость — это интеллектуальная честность.'
+			}
+		},
 
 		{
 			'Function': {

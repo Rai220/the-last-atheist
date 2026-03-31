@@ -80,7 +80,7 @@ monogatari.script ({
 					'Do': 'jump Prologue_Mock',
 					'onChosen': function () {
 						var s = this.storage ();
-						this.storage ({ cruelty_score: s.cruelty_score + 2, humor_used: s.humor_used + 1, denial_count: s.denial_count + 1 });
+						this.storage ({ cruelty_score: s.cruelty_score + 2, humor_used: s.humor_used + 1, denial_count: s.denial_count + 1, prologue_personality: 'aggressive' });
 					}
 				},
 				'ignore': {
@@ -91,7 +91,7 @@ monogatari.script ({
 					'Text': '«Рад за тебя, Серёж»',
 					'Do': 'jump Prologue_Kind',
 					'onChosen': function () {
-						this.storage ({ prologue_was_kind: true, empathy_shown: this.storage ().empathy_shown + 1 });
+						this.storage ({ prologue_was_kind: true, empathy_shown: this.storage ().empathy_shown + 1, prologue_personality: 'empathetic' });
 					}
 				}
 			}
@@ -207,6 +207,48 @@ monogatari.script ({
 		'Мимо церкви. Бабушка крестится. Голубь с кривым хвостом — на месте. Как NPC.',
 		'mc (Даже NPC-голубь пунктуальнее меня.)',
 
+		'У входа в храм — старушка роняет тяжёлую сумку. Апельсины катятся по тротуару.',
+		'Она хватается за поясницу. Не может нагнуться.',
+
+		{
+			'Choice': {
+				'Dialog': 'mc (Опаздываю на 20 минут. Тимлид уже звонит...)',
+				'help_babushka': {
+					'Text': 'Остановиться, собрать апельсины',
+					'Do': 'jump Prologue_Oversleep_Helped',
+					'onChosen': function () {
+						this.storage ({ empathy_shown: this.storage ().empathy_shown + 1, prologue_personality: 'empathetic' });
+					}
+				},
+				'run_past': {
+					'Text': 'Пробежать мимо (не успею)',
+					'Do': 'jump Prologue_Oversleep_Ran',
+					'onChosen': function () {
+						this.storage ({ prologue_personality: 'neutral' });
+					}
+				}
+			}
+		}
+	],
+
+	'Prologue_Oversleep_Helped': [
+		'Алексей тормозит. Собирает апельсины. Один закатился под скамейку.',
+		'Старушка: «Спасибо, сынок. Бог тебя видит.»',
+		'mc (Вряд ли. Но пожалуйста.)',
+		'mc (Опоздал ещё на три минуты. Зато совесть чиста. Ну, насколько это возможно для атеиста.)',
+
+		'Телефон вибрирует. Тимлид: «Ты где?»',
+		'Алексей не отвечает. Бежит быстрее.',
+
+		'jump Prologue_Work_Inna_Late'
+	],
+
+	'Prologue_Oversleep_Ran': [
+		'Алексей пробегает мимо. Краем глаза — старушка пытается поднять сумку.',
+		'mc (Кто-нибудь поможет. Статистически, при 200 прохожих в час вероятность помощи — 94%.)',
+		'mc (Я не плохой человек. Я просто опаздываю.)',
+		'mc (...Я не плохой человек.)',
+
 		'Телефон вибрирует. Тимлид: «Ты где?»',
 		'Алексей не отвечает. Бежит быстрее.',
 
@@ -230,9 +272,37 @@ monogatari.script ({
 
 		'Мимо церкви. Бабушка крестится. Голубь с кривым хвостом. Как всегда.',
 		'mc (Сколько раз я пробегал мимо этой церкви? Двадцать? Тридцать?)',
-		'mc (И каждый раз — одна и та же бабушка. Один и тот же голубь.)',
-		'mc (Как в таймлупе. Или как в плохо написанной...)',
-		'mc (Ладно, неважно.)',
+
+		'У забора — мужик в грязном пуховике. Картонка с надписью: «Помогите. Бог не помог.»',
+		'mc (Хм. Честная картонка, по крайней мере.)',
+
+		{
+			'Choice': {
+				'Dialog': 'mc (У меня сотня в кармане шортов...)',
+				'give_money': {
+					'Text': 'Дать сотню',
+					'Do': 'jump Prologue_Jogging_Gave',
+					'onChosen': function () {
+						this.storage ({ empathy_shown: this.storage ().empathy_shown + 1, prologue_personality: 'empathetic' });
+					}
+				},
+				'keep_running': {
+					'Text': '«Статистически, прямые пожертвования неэффективны»',
+					'Do': 'jump Prologue_Jogging_Kept',
+					'onChosen': function () {
+						this.storage ({ argument_quality: this.storage ().argument_quality + 1, prologue_personality: 'neutral' });
+					}
+				}
+			}
+		}
+	],
+
+	'Prologue_Jogging_Gave': [
+		'Алексей тормозит. Протягивает купюру.',
+		'Мужик смотрит на него. «Спасибо, брат. Ты верующий?»',
+		'mc Нет.',
+		'Мужик усмехается. «Ну и ладно. Деньги не пахнут. Даже атеистические.»',
+		'mc (Справедливо.)',
 
 		{
 			'Choice': {
@@ -241,7 +311,31 @@ monogatari.script ({
 					'Text': 'Перебежать на красный (успею)',
 					'Do': 'jump Prologue_Death_Car',
 					'onChosen': function () {
-						this.storage ({ death_type: 'car_accident' });
+						this.storage ({ death_type: 'car_accident', death_flavor: 'ironic' });
+					}
+				},
+				'wait_light': {
+					'Text': 'Подождать зелёный (я же рационалист)',
+					'Do': 'jump Prologue_Jogging_Office'
+				}
+			}
+		}
+	],
+
+	'Prologue_Jogging_Kept': [
+		'Алексей бежит дальше. Не оборачивается.',
+		'mc (GiveDirectly, Evidence Action — есть организации с доказанной эффективностью.)',
+		'mc (Бросить сотню на улице — это не благотворительность. Это самоуспокоение.)',
+		'mc (...Которое бы мне сейчас не помешало.)',
+
+		{
+			'Choice': {
+				'Dialog': 'Красный свет. Офис через дорогу. До начала рабочего дня — 8 минут.',
+				'cross': {
+					'Text': 'Перебежать на красный (успею)',
+					'Do': 'jump Prologue_Death_Car',
+					'onChosen': function () {
+						this.storage ({ death_type: 'car_accident', death_flavor: 'ironic' });
 					}
 				},
 				'wait_light': {
@@ -423,6 +517,7 @@ monogatari.script ({
 					'onChosen': function () {
 						this.storage ({
 							death_type: 'overwork',
+							death_flavor: 'overwork',
 							inna_interest: this.storage ().inna_interest + 1,
 							inna_met: true
 						});
@@ -471,6 +566,14 @@ monogatari.script ({
 	// СМЕРТЬ: Инфаркт на улице (стандарт)
 	// ==========================================
 	'Prologue_Death': [
+		{
+			'Function': {
+				'Apply': function () {
+					if (!this.storage ().death_flavor) this.storage ({ death_flavor: 'mundane' });
+				},
+				'Revert': function () {}
+			}
+		},
 		'show scene night_city with fadeIn',
 		'stop music internet_lo_fi with fade 1',
 		'stop music morning_ambient with fade 1',

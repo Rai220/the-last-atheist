@@ -19,7 +19,9 @@ monogatari.storage ({
 	prologue_debate_won: false,
 	prologue_was_kind: false,
 	death_type: 'heart_attack',
+	death_flavor: '',            // 'mundane'/'ironic'/'overwork' — влияет на атмосферу ада
 	morning_choice: '',
+	prologue_personality: '',    // 'aggressive'/'neutral'/'empathetic' — composite
 	inna_met: false,
 	inna_interest: 0,
 
@@ -43,6 +45,9 @@ monogatari.storage ({
 	// --- Флаги: Матрица ---
 	matrix_suspicion: 0,
 	noticed_patterns: false,
+	debate_strategy: '',         // 'logical'/'procedural'/'absurdist' — выбор в дебатах
+	seen_inna_parallels: false,
+	lilith_trust: 0,             // эмоциональная глубина, отдельно от interest
 
 	// --- Концовки ---
 	ending_reached: '',
