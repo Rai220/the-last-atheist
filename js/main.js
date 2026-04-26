@@ -229,6 +229,7 @@ function isLabelVisited (label) {
 // ============================================================
 $_ready (() => {
 	monogatari.init ('#monogatari').then (() => {
+		installProceedGuard ();
 		addSkipButton ();
 		addRouteMapButton ();
 		updateEndingCounter ();
@@ -246,6 +247,50 @@ $_ready (() => {
 		}
 	});
 });
+
+// ============================================================
+// Runtime guard: recover from script actions that reject forever
+// ============================================================
+function installProceedGuard () {
+	if (monogatari._tlaProceedGuardInstalled || typeof monogatari.proceed !== 'function') return;
+
+	const originalProceed = monogatari.proceed.bind (monogatari);
+	monogatari._tlaProceedGuardInstalled = true;
+	monogatari.proceed = function () {
+		return originalProceed.apply (monogatari, arguments).catch (function (error) {
+			if (!isRecoverableProceedError (error)) {
+				throw error;
+			}
+
+			const label = monogatari.state ('label');
+			const step = monogatari.state ('step');
+			console.warn ('[TLA] Skipping bad script action after Monogatari rejection', {
+				label: label,
+				step: step,
+				error: String (error)
+			});
+
+			return skipRejectedStatement (label, step);
+		});
+	};
+}
+
+function isRecoverableProceedError (error) {
+	const message = String (error && (error.message || error));
+	return message === 'Extra condition check failed.';
+}
+
+function skipRejectedStatement (label, step) {
+	const script = monogatari.label (label);
+	const nextStep = step + 1;
+	monogatari.state ({ label: label, step: nextStep });
+
+	if (!script || !script[nextStep]) {
+		return Promise.resolve ();
+	}
+
+	return monogatari.run (script[nextStep], false);
+}
 
 // ============================================================
 // Label tracker — polls the engine state to record visited labels
