@@ -65,6 +65,10 @@ monogatari.characters ({
 			tender: 'tender.png'
 		}
 	},
+	'alice': {
+		name: 'Алиса',
+		color: '#8ecbff'
+	},
 	'lilith': {
 		name: 'Лилит',
 		color: '#FF69B4',

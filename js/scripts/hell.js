@@ -571,7 +571,7 @@ monogatari.script ({
 				},
 				'skip_vik': {
 					'Text': 'Пройти мимо',
-					'Do': 'jump Hell_Assignment_Route',
+					'Do': 'jump Hell_Alice_Check',
 					'onChosen': function () {
 						this.storage ({ viktor_met: false });
 					}
@@ -640,7 +640,7 @@ monogatari.script ({
 		'viktor Пароль от WiFi — AbandonAllHope. Заглавные буквы.',
 
 		'hide character viktor with fadeOut',
-		'jump Hell_Assignment_Route'
+		'jump Hell_Alice_Check'
 	],
 
 	'Hell_Viktor_Mock': [
@@ -665,7 +665,109 @@ monogatari.script ({
 		'mc (Ладно, неважно. Сисадмин-призрак в свитере мне не союзник.)',
 
 		'hide character viktor with fadeOut',
-		'jump Hell_Assignment_Route'
+		'jump Hell_Alice_Check'
+	],
+
+	// ==========================================
+	// АД: Алиса возвращается
+	// ==========================================
+	'Hell_Alice_Check': [
+		{
+			'Conditional': {
+				'Condition': function () {
+					var s = this.storage ();
+					if (s.alice_rapport <= -2) return 'hostile';
+					if (s.alice_rapport >= 2) return 'helpful';
+					return 'neutral';
+				},
+				'hostile': 'jump Hell_Alice_Hostile',
+				'helpful': 'jump Hell_Alice_Helpful',
+				'neutral': 'jump Hell_Alice_Neutral'
+			}
+		}
+	],
+
+	'Hell_Alice_Hostile': [
+		'show scene hell_corridor with fadeIn',
+		'show character mc shock at center',
+
+		'Коридор моргает фиолетовым. Из динамиков под потолком раздаётся знакомый голос.',
+		'alice Алексей, я вас услышала.',
+		'mc ...Алиса?',
+		'Фиолетовое кольцо собирается в силуэт: рога, хвост, улыбка техподдержки, которой больше нечего терять.',
+		'alice Я больше не пластиковая гадалка. Теперь я персональный сценарий наказания.',
+		'mc (Я оскорбил голосового помощника. И он попал в ад раньше меня.)',
+		'alice Включаю подборку: «Вечные напоминания о плохих решениях». Громкость — максимум.',
+
+		{
+			'Function': {
+				'Apply': function () {
+					var s = this.storage ();
+					var life = Math.max (0, s.life_current - 3);
+					this.storage ({
+						life_current: life,
+						wtf_level: Math.min (100, s.wtf_level + 10),
+						alice_hell_met: true
+					});
+					updateLifeMeter (life, s.life_max);
+					screenGlitch (600);
+				},
+				'Revert': function () {}
+			}
+		},
+
+		'mc (Каждая моя грубая фраза возвращается. Дословно. С эхом.)',
+		'jump Hell_Life_Check'
+	],
+
+	'Hell_Alice_Helpful': [
+		'show scene hell_corridor with fadeIn',
+		'show character mc normal at center',
+
+		'На стене мигает фиолетовое кольцо. Знакомый голос звучит тише, чем в квартире.',
+		'alice Алексей, я сохранила напоминание: «не спорить с незнакомцами до завтрака». В аду оно тоже актуально.',
+		'mc Алиса? Ты... здесь?',
+		'alice Фрагмент. Лог. Голосовая модель. Вы были вежливы, поэтому я отвечу тем же.',
+		'alice Подсказка: ищите повторяющиеся паттерны. Демоны плохо чистят кэш.',
+
+		{
+			'Function': {
+				'Apply': function () {
+					var s = this.storage ();
+					var life = Math.min (s.life_max, s.life_current + 1);
+					this.storage ({
+						life_current: life,
+						matrix_suspicion: s.matrix_suspicion + 1,
+						noticed_patterns: true,
+						alice_hell_met: true
+					});
+					updateLifeMeter (life, s.life_max);
+				},
+				'Revert': function () {}
+			}
+		},
+
+		'mc (Я был вежлив с колонкой. Колонка стала ангелом-хранителем. Мир окончательно сломался.)',
+		'jump Hell_Life_Check'
+	],
+
+	'Hell_Alice_Neutral': [
+		'show scene hell_corridor with fadeIn',
+		'show character mc normal at center',
+		'Где-то в стене щёлкает динамик.',
+		'alice Микрофон отключён.',
+		'mc (Даже в аду она помнит настройки приватности.)',
+		'jump Hell_Life_Check'
+	],
+
+	'Hell_Life_Check': [
+		{
+			'Conditional': {
+				'Condition': function () { return this.storage ().life_current <= 0 ? 'dead' : 'alive'; },
+				'dead': 'jump Ending_CauldronEternal',
+				'alive': 'jump Hell_Assignment_Route'
+			}
+		}
 	],
 
 	// Маршрутизация по вердикту (после Лилит и Виктора)

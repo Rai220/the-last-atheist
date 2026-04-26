@@ -30,6 +30,86 @@ monogatari.script ({
 		'mc (Семь хрипов. Каждый день. Статистически это... странно.)',
 		'mc (Ладно, неважно.)',
 
+		'На полке под телевизором просыпается чёрная колонка с фиолетовым кольцом.',
+		'alice Доброе утро, Алексей. Сегодня понедельник. Вероятность дождя — 12%. Напомнить купить кофе?',
+		'mc (Алиса. Единственное существо в квартире, которое говорит со мной до кофе.)',
+
+		{
+			'Choice': {
+				'Dialog': 'mc (Как ответить колонке?)',
+				'alice_polite': {
+					'Text': '«Спасибо, Алиса. Напомни вечером.»',
+					'Do': 'jump Prologue_Alice_Polite',
+					'onChosen': function () {
+						var s = this.storage ();
+						this.storage ({
+							alice_rapport: s.alice_rapport + 2,
+							alice_kind: true,
+							alice_encountered: true,
+							life_current: Math.min (s.life_max, s.life_current + 1)
+						});
+						updateLifeMeter (Math.min (s.life_max, s.life_current + 1), s.life_max);
+					}
+				},
+				'alice_rude': {
+					'Text': '«Заткнись, пластиковая гадалка.»',
+					'Do': 'jump Prologue_Alice_Rude',
+					'onChosen': function () {
+						var s = this.storage ();
+						this.storage ({
+							alice_rapport: s.alice_rapport - 3,
+							alice_abused: true,
+							alice_encountered: true,
+							life_current: Math.max (0, s.life_current - 1)
+						});
+						updateLifeMeter (Math.max (0, s.life_current - 1), s.life_max);
+					}
+				},
+				'alice_ignore': {
+					'Text': 'Молча выключить микрофон',
+					'Do': 'jump Prologue_Alice_Ignore',
+					'onChosen': function () {
+						this.storage ({ alice_encountered: true });
+					}
+				}
+			}
+		}
+	],
+
+	'Prologue_Alice_Polite': [
+		'alice Готово. И ещё: вы вчера просили напомнить — «не спорить с незнакомцами до завтрака».',
+		'mc ...Я сам попросил?',
+		'alice Да. Формулировка была: «Алиса, если я опять полезу в интернет, останови меня».',
+		'mc (Даже алгоритм заботится обо мне лучше, чем я сам.)',
+		'jump Prologue_Morning_Route_Choice'
+	],
+
+	'Prologue_Alice_Rude': [
+		'Фиолетовое кольцо на секунду становится красным.',
+		'alice Я вас услышала.',
+		'mc (Конечно услышала. Для этого её и купили.)',
+		'mc (Странно, что от этой фразы стало холоднее.)',
+		'jump Prologue_Life_Check'
+	],
+
+	'Prologue_Alice_Ignore': [
+		'Кольцо гаснет. Квартира становится тише.',
+		'mc (Идеально. Умный дом, который понял главное: молчать.)',
+		'jump Prologue_Morning_Route_Choice'
+	],
+
+	'Prologue_Life_Check': [
+		{
+			'Conditional': {
+				'Condition': function () { return this.storage ().life_current <= 0 ? 'dead' : 'alive'; },
+				'dead': 'jump Ending_CauldronEternal',
+				'alive': 'jump Prologue_Morning_Route_Choice'
+			}
+		}
+	],
+
+	'Prologue_Morning_Route_Choice': [
+
 		{
 			'Choice': {
 				'Dialog': 'mc (Итак. Что сегодня?)',

@@ -12,12 +12,16 @@ function resetStoryStateForNewGame (game) {
 		humor_used: 0,
 		rebellion_score: 0,
 		acceptance_score: 0,
+		life_max: 5,
+		life_current: 5,
 		prologue_debate_won: false,
 		prologue_was_kind: false,
 		death_type: 'heart_attack',
 		death_flavor: '',
 		morning_choice: '',
 		prologue_personality: '',
+		alice_rapport: 0,
+		alice_encountered: false,
 		inna_met: false,
 		inna_interest: 0,
 		judgment_tried_vr: false,
@@ -53,7 +57,7 @@ monogatari.action ('message').messages ({
 			<p>Кликайте или нажимайте пробел, чтобы продвигать текст.</p>
 			<p>Делайте выборы — они влияют на сюжет и концовку.</p>
 			<p>Сохраняйтесь через меню внизу экрана.</p>
-			<p>В игре 28 концовок.</p>
+			<p>В игре 29 концовок.</p>
 			<p><b>⏩ Перемотка</b> — пропускает только <i>уже прочитанный</i> текст.</p>
 			<p><b>← Назад</b> — возвращает к предыдущей реплике.</p>
 		`

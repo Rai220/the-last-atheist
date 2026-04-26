@@ -1,9 +1,9 @@
 /* global monogatari */
 
 // ==========================================
-// Chapter: КОНЦОВКИ (28+)
+// Chapter: КОНЦОВКИ (29)
 // Groups:
-//   Early exits (4): Loophole, DemonFriend, Glitch, DebateWin
+//   Early exits (5): CauldronEternal, Loophole, DemonFriend, Glitch, DebateWin
 //   Belief (3): Believer, Pascal, Theologian
 //   Rebellion (3): Rebellion, Hacker, Democracy
 //   Bar (3): Bar, Franchise, Therapist
@@ -15,6 +15,42 @@
 // ==========================================
 
 monogatari.script ({
+
+	// ==========================================
+	// A0. РАННИЙ ВЫХОД: HP упали до нуля
+	// ==========================================
+	'Ending_CauldronEternal': [
+		'show scene hell_cauldrons with fadeIn',
+		'stop music morning_ambient',
+		'stop music internet_lo_fi',
+		'stop music choir_ethereal',
+		'stop music judgment_tension',
+		'play music hell_drone with loop',
+
+		{
+			'Function': {
+				'Apply': function () {
+					hellVignette (true);
+					updateLifeMeter (0, this.storage ().life_max || 3);
+					this.storage ({ ending_reached: 'cauldron_eternal', life_current: 0 });
+				},
+				'Revert': function () {}
+			}
+		},
+
+		'show character mc despair at center with fadeIn',
+		'Жизнь — или то, что заменяло её после смерти, — заканчивается последним щелчком.',
+		'Котёл открывается без пафоса. Просто крышка, пар и место ровно под одного упрямого атеиста.',
+		'mc (Вот и всё. Ни апелляции. Ни багрепорта. Ни save/load.)',
+		'alice Напоминание выполнено: «подумать о последствиях».',
+		'mc (Даже сейчас — уведомление.)',
+		'centered Алексей Волков. HP: 0.',
+		'wait 1000',
+		'centered КОНЦОВКА: «ВЕЧНЫЙ КОТЁЛ»',
+		'centered Иногда ресурс заканчивается раньше аргументов.',
+		'wait 2000',
+		'jump Ending_Credits'
+	],
 
 	// ==========================================
 	// A1. РАННИЙ ВЫХОД: Лазейка (Суд)
