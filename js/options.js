@@ -64,7 +64,7 @@ monogatari.settings({
 	'ForceAspectRatio': 'Global',
 
 	// Enables or disables the typing text animation for the whole game.
-	'TypeAnimation': true,
+	'TypeAnimation': false,
 
 	// Enables or disables instant text when moving the game forward.
 	// Enabled - Text will instantly appear when the player moves the text forward.
@@ -73,17 +73,17 @@ monogatari.settings({
 
 	// Enables or disables the typing text animation in NVL dialogs for the
 	// whole game.
-	'NVLTypeAnimation': true,
+	'NVLTypeAnimation': false,
 
 	// Enables or disables the typing animation for the narrator.
 	// If the previous property was set to false, the narrator won't shown
 	// the animation even if this is set to true.
-	'NarratorTypeAnimation': true,
+	'NarratorTypeAnimation': false,
 
 	// Enables or disables the typing animation for the special centered
 	// character. If the TypeAnimation property was set to false, the centered
 	// character won't show the animation even if this is set to true.
-	'CenteredTypeAnimation': true,
+	'CenteredTypeAnimation': false,
 
 	// Force some orientation on mobile devices. If this setting is set either
 	// to portrait or landscape, a warning message will be displayed so the

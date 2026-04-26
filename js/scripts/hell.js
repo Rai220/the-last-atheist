@@ -1170,6 +1170,7 @@ monogatari.script ({
 	'Hell_Debate_R2_Lilith': [
 		'show scene hell_corridor with fadeIn',
 		'show character mc normal at center',
+		'show character lilith flirt at right with fadeIn',
 
 		'В коридоре после дебатов — Лилит. Стоит, прислонившись к стене. Как будто ждала.',
 
