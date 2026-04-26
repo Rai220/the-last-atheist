@@ -4,7 +4,7 @@
 // Chapter: ПРОЛОГ
 // Scenes: apartment → office → street/death
 // Stats affected: argument_quality, denial_count, empathy_shown, humor_used, inna_interest
-// Branches: 3 morning paths × 3 death types → Judgment
+// Branches: morning choices route to contextual death scenes → Judgment
 // ==========================================
 
 monogatari.script ({
@@ -569,7 +569,7 @@ monogatari.script ({
 		{
 			'Function': {
 				'Apply': function () {
-					if (!this.storage ().death_flavor) this.storage ({ death_flavor: 'mundane' });
+					this.storage ({ death_type: 'heart_attack', death_flavor: 'mundane' });
 				},
 				'Revert': function () {}
 			}
@@ -670,6 +670,14 @@ monogatari.script ({
 	// СМЕРТЬ: Сбит машиной на пробежке
 	// ==========================================
 	'Prologue_Death_Car': [
+		{
+			'Function': {
+				'Apply': function () {
+					this.storage ({ death_type: 'car_accident', death_flavor: 'ironic' });
+				},
+				'Revert': function () {}
+			}
+		},
 		'show scene street with fadeIn',
 		'stop music morning_ambient with fade 1',
 
@@ -733,6 +741,14 @@ monogatari.script ({
 	// СМЕРТЬ: Переработка (за компьютером)
 	// ==========================================
 	'Prologue_Death_Overwork': [
+		{
+			'Function': {
+				'Apply': function () {
+					this.storage ({ death_type: 'overwork', death_flavor: 'overwork', inna_met: true });
+				},
+				'Revert': function () {}
+			}
+		},
 		'show scene office with fadeIn',
 		'stop music internet_lo_fi with fade 1',
 		'stop music morning_ambient with fade 1',

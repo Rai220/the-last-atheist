@@ -217,9 +217,10 @@ monogatari.script ({
 			'Function': {
 				'Apply': function () {
 					const s = this.storage ();
+					const matrixSuspicion = s.matrix_suspicion + 1;
 					this.storage ({
-						matrix_suspicion: s.matrix_suspicion + 1,
-						noticed_patterns: s.matrix_suspicion >= 2
+						matrix_suspicion: matrixSuspicion,
+						noticed_patterns: matrixSuspicion >= 2
 					});
 				},
 				'Revert': function () {
@@ -424,12 +425,19 @@ monogatari.script ({
 			'Function': {
 				'Apply': function () {
 					var s = this.storage ();
-					var li = s.lilith_interest + (s.inna_interest >= 2 ? 1 : 0);
-					this.storage ({ matrix_suspicion: s.matrix_suspicion + 2, lilith_interest: li });
+					var innaEchoBonus = s.inna_interest >= 2 ? 1 : 0;
+					this.storage ({
+						matrix_suspicion: s.matrix_suspicion + 2,
+						lilith_interest: s.lilith_interest + innaEchoBonus
+					});
 				},
 				'Revert': function () {
 					var s = this.storage ();
-					this.storage ({ matrix_suspicion: s.matrix_suspicion - 2 });
+					var innaEchoBonus = s.inna_interest >= 2 ? 1 : 0;
+					this.storage ({
+						matrix_suspicion: s.matrix_suspicion - 2,
+						lilith_interest: s.lilith_interest - innaEchoBonus
+					});
 				}
 			}
 		},
@@ -1091,7 +1099,14 @@ monogatari.script ({
 	'Hell_Debate_R2_Lilith_Done': [
 		'lilith Увидимся, Волков.',
 		'Она уходит. Каблуки по камню.',
-		'mc (Она назвала меня по фамилии. Как Инна в офисе.)',
+
+		{
+			'Conditional': {
+				'Condition': function () { return this.storage ().inna_met ? 'inna' : 'default'; },
+				'inna': 'mc (Она назвала меня по фамилии. Как Инна в офисе.)',
+				'default': 'mc (Она назвала меня по фамилии. Как будто читала личное дело. Хотя, скорее всего, читала.)'
+			}
+		},
 
 		'hide character lilith with fadeOut',
 
@@ -1178,7 +1193,14 @@ monogatari.script ({
 		'show character soul resigned at left with fadeIn',
 
 		'Борис — крепкий мужик, бывший военный. Алексей помнит его по очереди на суде.',
-		'soul Эй, парень. Инфаркт, да? Помню тебя.',
+		{
+			'Conditional': {
+				'Condition': function () { return this.storage ().death_type; },
+				'heart_attack': 'soul Эй, парень. Инфаркт, да? Помню тебя.',
+				'car_accident': 'soul Эй, парень. ДТП на пробежке, да? Помню тебя.',
+				'overwork': 'soul Эй, парень. Рабочий стол, клавиатура, пробелы? Помню тебя.'
+			}
+		},
 		'mc Борис? Ты тоже тут.',
 		'soul А куда мне деваться? Атеист с 1987 года. Партия научила.',
 
@@ -1249,6 +1271,22 @@ monogatari.script ({
 	'Hell_Lilith_Folder_Help': [
 		'Алексей собирает бумаги. На одном листе — его имя. «Волков А.Д. — файл #7394028417».',
 		'mc (Это... мой файл?)',
+		{
+			'Conditional': {
+				'Condition': function () {
+					var s = this.storage ();
+					if (!s.inna_met) return 'no_inna';
+					if (s.death_type === 'car_accident') return 'car';
+					if (s.death_type === 'overwork') return 'overwork';
+					return 'office';
+				},
+				'car': 'На полях — короткая пометка: «Контакт с земным HR: минимальный. Сильнее давить через визуальные совпадения, не через память».',
+				'overwork': 'На полях — короткая пометка: «Инна: поздний контакт, SMS в 23:00, кофе/кабинет 6 закреплены».',
+				'office': 'На полях — короткая пометка: «Инна: офисный контакт, кофе/кабинет 6, высокая вероятность узнавания».',
+				'no_inna': 'На полях — короткая пометка: «Земной HR-контакт отсутствует. Не использовать личные отсылки».'
+			}
+		},
+		'mc (У них есть пометки даже о том, что я должен вспомнить.)',
 		'Лилит выхватывает лист.',
 		'lilith Спасибо. Ты не должен был это видеть.',
 		'mc Мой файл? У тебя мой файл?',
@@ -1267,6 +1305,9 @@ monogatari.script ({
 
 		'Алексей сидит на каменной скамье. Один. Думает.',
 		'mc (Борис, Ли, Мария. Они тут годами. Столетиями. И они... привыкли.)',
+		'mc (Каждый нашёл объяснение, чтобы не сойти с ума. Борис — приказ. Ли — цикл. Мария — несправедливость.)',
+		'mc (А я ищу своё. Научное. Красивое. Желательно с README.)',
+		'mc (И всё чаще ловлю себя на мысли: я не проверяю гипотезу. Я защищаю её.)',
 		'mc (Я не хочу привыкать. Я хочу...)',
 
 		{
@@ -1291,6 +1332,18 @@ monogatari.script ({
 					'Do': 'jump Hell_Exploration_Seed_Done',
 					'onChosen': function () {
 						this.storage ({ matrix_suspicion: this.storage ().matrix_suspicion + 2 });
+					}
+				},
+				'seed_doubt': {
+					'Text': '«А если я просто хочу верить в симуляцию?»',
+					'Do': 'jump Hell_Exploration_Seed_Done',
+					'onChosen': function () {
+						var s = this.storage ();
+						this.storage ({
+							acceptance_score: s.acceptance_score + 1,
+							matrix_suspicion: s.matrix_suspicion + 1,
+							noticed_patterns: true
+						});
 					}
 				}
 			}
@@ -1519,6 +1572,19 @@ monogatari.script ({
 		'mc Бюрократия в загробном мире? Номерки? Формы 66-А?',
 		'mc Бог, который читает Reddit? Демон с бейджиком «специалист по приёму»?',
 		'mc Буддист в христианском аду?',
+		{
+			'Conditional': {
+				'Condition': function () {
+					var s = this.storage ();
+					if (s.seen_inna_parallels) return 'seen';
+					if (s.inna_met) return 'met';
+					return 'none';
+				},
+				'seen': 'mc Инна в офисе. Потом силуэт в очереди. Потом Лилит с теми же словами. Это не совпадения — это повторно используемые ассеты.',
+				'met': 'mc Инна в офисе. Потом Лилит с теми же словами. Это не совпадения — это скрипт, который экономит на персонажах.',
+				'none': 'mc Даже Лилит выглядит как собранный под меня архетип: HR, соблазн, угроза, отдел кадров ада.'
+			}
+		},
 
 		'show character mc angry at center',
 
@@ -1773,7 +1839,7 @@ monogatari.script ({
 		'hide character demon with fadeOut',
 		'mc (Уф! Пронесло!)',
 		'mc (Демоны не очень-то быстрые. Бюрократическая работа не способствует физподготовке.)',
-		'end'
+		'jump Hell_Exploration_Seed'
 	],
 
 	'Hell_QTE_Caught': [
@@ -1791,7 +1857,7 @@ monogatari.script ({
 		'mc АЙ!',
 		'demon Вернитесь в свою зону мук. Форма на выход — 666-ВЫХ. Срок рассмотрения — вечность.',
 		'hide character demon with fadeOut',
-		'end'
+		'jump Hell_Debate_Loop'
 	],
 
 	// ==========================================
@@ -2242,7 +2308,13 @@ monogatari.script ({
 		'mc Лилит... Можно странный вопрос?',
 		'lilith Странных вопросов в аду не бывает.',
 		'mc На работе у меня была HR-менеджер. Инна. Она... говорила как ты. Улыбалась как ты.',
-		'mc Те же слова. «Ужасный, но есть». «Кабинет 6». Даже бейджик одинаковый.',
+		{
+			'Conditional': {
+				'Condition': function () { return this.storage ().seen_inna_parallels ? 'seen' : 'not_seen'; },
+				'seen': 'mc Я видел её силуэт на суде. Потом тебя. Те же слова. «Ужасный, но есть». «Кабинет 6». Даже бейджик одинаковый.',
+				'not_seen': 'mc Те же слова. «Ужасный, но есть». «Кабинет 6». Даже бейджик одинаковый. Может, я цепляюсь за совпадения, но их слишком много.'
+			}
+		},
 
 		'Долгая пауза. Лилит отводит взгляд.',
 
@@ -2266,6 +2338,7 @@ monogatari.script ({
 
 		'mc (Инна... была... Лилит?! Лилит наблюдала за мной ещё при жизни?!)',
 		'mc (Каблуки. Улыбка. Кабинет 6. Кофе. Всё это было... подготовкой?!)',
+		'mc (И всё равно это не доказательство. Только ощущение. Ровно то, за что я смеялся над Серёжей.)',
 
 		'lilith Не злись. Я не выбирала задание. Но...',
 		'lilith Кофе я приносила по своей инициативе. Тогда — и сейчас.',

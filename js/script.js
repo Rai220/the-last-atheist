@@ -1,5 +1,49 @@
 /* global monogatari */
 
+function resetStoryStateForNewGame (game) {
+	var current = game.storage ();
+	game.storage ({
+		player: current.player || { name: '' },
+		wtf_level: 0,
+		denial_count: 0,
+		cruelty_score: 0,
+		argument_quality: 0,
+		empathy_shown: 0,
+		humor_used: 0,
+		rebellion_score: 0,
+		acceptance_score: 0,
+		prologue_debate_won: false,
+		prologue_was_kind: false,
+		death_type: 'heart_attack',
+		death_flavor: '',
+		morning_choice: '',
+		prologue_personality: '',
+		inna_met: false,
+		inna_interest: 0,
+		judgment_tried_vr: false,
+		judgment_argued_stats: false,
+		judgment_begged: false,
+		judgment_verdict: 'standard',
+		met_other_atheists: false,
+		started_rebellion: false,
+		found_bar_location: false,
+		debate_cycle: 0,
+		demon_friendship: 0,
+		lilith_interest: 0,
+		lilith_met: false,
+		viktor_friendship: 0,
+		viktor_met: false,
+		matrix_suspicion: 0,
+		noticed_patterns: false,
+		debate_strategy: '',
+		seen_inna_parallels: false,
+		lilith_trust: 0,
+		ending_reached: '',
+		papers_please_score: 0,
+		qte_escapes: 0
+	});
+}
+
 // Сообщения
 monogatari.action ('message').messages ({
 	'Help': {
@@ -9,7 +53,7 @@ monogatari.action ('message').messages ({
 			<p>Кликайте или нажимайте пробел, чтобы продвигать текст.</p>
 			<p>Делайте выборы — они влияют на сюжет и концовку.</p>
 			<p>Сохраняйтесь через меню внизу экрана.</p>
-			<p>В игре 25 концовок.</p>
+			<p>В игре 28 концовок.</p>
 			<p><b>⏩ Перемотка</b> — пропускает только <i>уже прочитанный</i> текст.</p>
 			<p><b>← Назад</b> — возвращает к предыдущей реплике.</p>
 		`
@@ -55,6 +99,14 @@ monogatari.script ({
 	],
 
 	'Start': [
+		{
+			'Function': {
+				'Apply': function () {
+					resetStoryStateForNewGame (this);
+				},
+				'Revert': function () {}
+			}
+		},
 		'jump Prologue_Morning_Choice'
 	]
 });
