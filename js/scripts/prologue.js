@@ -832,7 +832,7 @@ monogatari.script ({
 
 		'stop music internet_lo_fi',
 		'stop music morning_ambient',
-		'play music choir_ethereal with loop fade 3',
+		'play music choir_ethereal with loop',
 
 		{
 			'Function': {
@@ -858,14 +858,18 @@ monogatari.script ({
 		'И очередь. Бесконечная очередь из полупрозрачных фигур.',
 		'Кто-то в тоге. Кто-то в джинсах. Кто-то голый — и ему всё равно.',
 
-		'show scene judgment_hall with fadeIn',
-		'show character mc shock at center with fadeIn',
-
 		'mc ......',
 		'mc Нет.',
 		'mc Нет нет нет нет нет.',
 
 		'wait 500',
+
+		{
+			'Function': {
+				'Apply': function () { divineGlow (false); },
+				'Revert': function () { divineGlow (true); }
+			}
+		},
 
 		'jump Judgment_Arrival'
 	]
