@@ -255,10 +255,31 @@ function installProceedGuard () {
 	if (monogatari._tlaProceedGuardInstalled || typeof monogatari.proceed !== 'function') return;
 
 	const originalProceed = monogatari.proceed.bind (monogatari);
+	const originalRun = monogatari.run.bind (monogatari);
+	const originalLoadFromSlot = typeof monogatari.loadFromSlot === 'function' ? monogatari.loadFromSlot.bind (monogatari) : null;
 	monogatari._tlaProceedGuardInstalled = true;
+
+	monogatari.run = function () {
+		return originalRun.apply (monogatari, arguments).catch (function (error) {
+			if (!isRecoverableScriptError (error)) {
+				throw error;
+			}
+
+			const label = monogatari.state ('label');
+			const step = monogatari.state ('step');
+			console.warn ('[TLA] Skipping bad script action after Monogatari run rejection', {
+				label: label,
+				step: step,
+				error: String (error)
+			});
+
+			return skipRejectedStatement (label, step);
+		});
+	};
+
 	monogatari.proceed = function () {
 		return originalProceed.apply (monogatari, arguments).catch (function (error) {
-			if (!isRecoverableProceedError (error)) {
+			if (!isRecoverableScriptError (error)) {
 				throw error;
 			}
 
@@ -273,9 +294,21 @@ function installProceedGuard () {
 			return skipRejectedStatement (label, step);
 		});
 	};
+
+	if (originalLoadFromSlot) {
+		monogatari.loadFromSlot = function () {
+			return originalLoadFromSlot.apply (monogatari, arguments).then (function (result) {
+				schedulePostLoadRecovery ();
+				return result;
+			}).catch (function (error) {
+				recoverFromLoadFailure ();
+				throw error;
+			});
+		};
+	}
 }
 
-function isRecoverableProceedError (error) {
+function isRecoverableScriptError (error) {
 	const message = String (error && (error.message || error));
 	return message === 'Extra condition check failed.';
 }
@@ -290,6 +323,47 @@ function skipRejectedStatement (label, step) {
 	}
 
 	return monogatari.run (script[nextStep], false);
+}
+
+function recoverFromLoadFailure () {
+	try {
+		monogatari.global ('playing', false);
+		monogatari.global ('block', false);
+		monogatari.global ('_engine_block', false);
+		monogatari.showScreen ('load');
+	} catch (e) {
+		try { monogatari.showScreen ('main'); } catch (ignored) {}
+	}
+}
+
+function schedulePostLoadRecovery () {
+	setTimeout (recoverEmptyGameScreenAfterLoad, 400);
+	setTimeout (recoverEmptyGameScreenAfterLoad, 1200);
+}
+
+function recoverEmptyGameScreenAfterLoad () {
+	try {
+		const gameScreen = document.querySelector ('[data-screen="game"]');
+		const choiceContainer = document.querySelector ('choice-container, [data-component="choice-container"]');
+		const centered = document.querySelector ('[data-component="centered-dialog"]');
+		const sayText = document.querySelector ('[data-ui="say"]');
+		const hasChoices = choiceContainer && choiceContainer.children.length > 0;
+		const hasCentered = centered && centered.innerText.trim ();
+		const hasSayText = sayText && sayText.innerText.trim ();
+		const gameOpen = gameScreen && gameScreen.classList.contains ('active');
+
+		if (!gameOpen || hasChoices || hasCentered || hasSayText) return;
+
+		console.warn ('[TLA] Empty game screen after load; advancing one step to recover dialogue', {
+			label: monogatari.state ('label'),
+			step: monogatari.state ('step')
+		});
+		monogatari.global ('block', false);
+		monogatari.global ('_engine_block', false);
+		monogatari.proceed ();
+	} catch (e) {
+		console.warn ('[TLA] Post-load recovery failed', e);
+	}
 }
 
 // ============================================================
