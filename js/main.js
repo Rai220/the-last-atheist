@@ -3,7 +3,7 @@
 
 const { $_ready, $_ } = Monogatari;
 
-// Все 25 концовок для трекера
+// Все 29 концовок для трекера
 const ALL_ENDINGS = {
 	// ★ Major endings
 	'matrix': '★ Контакт',
@@ -33,6 +33,7 @@ const ALL_ENDINGS = {
 	'debate_win': 'Аргумент',
 	'speedrun': 'Спидран',
 	'escape_caught': 'Пойманы',
+	'cauldron_eternal': 'Вечный котёл',
 	'sisyphus': 'Сизиф',
 	'viktor_hack': 'sudo rm pain',
 	'viktor_freedom': 'DROP TABLE sinners'
@@ -768,6 +769,7 @@ function toggleDevMode () {
 				stat ('humor', s.humor_used) +
 				stat ('rebellion', s.rebellion_score) +
 				stat ('acceptance', s.acceptance_score) +
+				stat ('life', s.life_current + '/' + s.life_max) +
 				'</div>' +
 				'<div style="margin-top:6px;border-top:1px solid #333;padding-top:4px;">' +
 				stat ('lilith', s.lilith_interest) +
@@ -775,6 +777,7 @@ function toggleDevMode () {
 				stat ('matrix', s.matrix_suspicion) +
 				stat ('demon', s.demon_friendship) +
 				stat ('inna', s.inna_interest) +
+				stat ('alice', s.alice_rapport) +
 				'</div>' +
 				'<div style="margin-top:4px;color:#666;">verdict: ' + (s.judgment_verdict || '—') + '</div>';
 		} catch (e) {
@@ -783,7 +786,8 @@ function toggleDevMode () {
 	}
 
 	function stat (name, val) {
-		var color = val > 0 ? '#0f0' : val < 0 ? '#f44' : '#666';
+		var numeric = typeof val === 'number' ? val : parseFloat (val);
+		var color = numeric > 0 ? '#0f0' : numeric < 0 ? '#f44' : '#666';
 		return '<div>' + name + ': <span style="color:' + color + ';">' + val + '</span></div>';
 	}
 

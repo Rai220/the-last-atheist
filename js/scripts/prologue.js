@@ -4,7 +4,7 @@
 // Chapter: ПРОЛОГ
 // Scenes: apartment → office → street/death
 // Stats affected: argument_quality, denial_count, empathy_shown, humor_used, inna_interest
-// Branches: 3 morning paths × 3 death types → Judgment
+// Branches: morning choices route to contextual death scenes → Judgment
 // ==========================================
 
 monogatari.script ({
@@ -29,6 +29,86 @@ monogatari.script ({
 
 		'mc (Семь хрипов. Каждый день. Статистически это... странно.)',
 		'mc (Ладно, неважно.)',
+
+		'На полке под телевизором просыпается чёрная колонка с фиолетовым кольцом.',
+		'alice Доброе утро, Алексей. Сегодня понедельник. Вероятность дождя — 12%. Напомнить купить кофе?',
+		'mc (Алиса. Единственное существо в квартире, которое говорит со мной до кофе.)',
+
+		{
+			'Choice': {
+				'Dialog': 'mc (Как ответить колонке?)',
+				'alice_polite': {
+					'Text': '«Спасибо, Алиса. Напомни вечером.»',
+					'Do': 'jump Prologue_Alice_Polite',
+					'onChosen': function () {
+						var s = this.storage ();
+						this.storage ({
+							alice_rapport: s.alice_rapport + 2,
+							alice_kind: true,
+							alice_encountered: true,
+							life_current: Math.min (s.life_max, s.life_current + 1)
+						});
+						updateLifeMeter (Math.min (s.life_max, s.life_current + 1), s.life_max);
+					}
+				},
+				'alice_rude': {
+					'Text': '«Заткнись, пластиковая гадалка.»',
+					'Do': 'jump Prologue_Alice_Rude',
+					'onChosen': function () {
+						var s = this.storage ();
+						this.storage ({
+							alice_rapport: s.alice_rapport - 3,
+							alice_abused: true,
+							alice_encountered: true,
+							life_current: Math.max (0, s.life_current - 1)
+						});
+						updateLifeMeter (Math.max (0, s.life_current - 1), s.life_max);
+					}
+				},
+				'alice_ignore': {
+					'Text': 'Молча выключить микрофон',
+					'Do': 'jump Prologue_Alice_Ignore',
+					'onChosen': function () {
+						this.storage ({ alice_encountered: true });
+					}
+				}
+			}
+		}
+	],
+
+	'Prologue_Alice_Polite': [
+		'alice Готово. И ещё: вы вчера просили напомнить — «не спорить с незнакомцами до завтрака».',
+		'mc ...Я сам попросил?',
+		'alice Да. Формулировка была: «Алиса, если я опять полезу в интернет, останови меня».',
+		'mc (Даже алгоритм заботится обо мне лучше, чем я сам.)',
+		'jump Prologue_Morning_Route_Choice'
+	],
+
+	'Prologue_Alice_Rude': [
+		'Фиолетовое кольцо на секунду становится красным.',
+		'alice Я вас услышала.',
+		'mc (Конечно услышала. Для этого её и купили.)',
+		'mc (Странно, что от этой фразы стало холоднее.)',
+		'jump Prologue_Life_Check'
+	],
+
+	'Prologue_Alice_Ignore': [
+		'Кольцо гаснет. Квартира становится тише.',
+		'mc (Идеально. Умный дом, который понял главное: молчать.)',
+		'jump Prologue_Morning_Route_Choice'
+	],
+
+	'Prologue_Life_Check': [
+		{
+			'Conditional': {
+				'Condition': function () { return this.storage ().life_current <= 0 ? 'dead' : 'alive'; },
+				'dead': 'jump Ending_CauldronEternal',
+				'alive': 'jump Prologue_Morning_Route_Choice'
+			}
+		}
+	],
+
+	'Prologue_Morning_Route_Choice': [
 
 		{
 			'Choice': {
@@ -569,7 +649,7 @@ monogatari.script ({
 		{
 			'Function': {
 				'Apply': function () {
-					if (!this.storage ().death_flavor) this.storage ({ death_flavor: 'mundane' });
+					this.storage ({ death_type: 'heart_attack', death_flavor: 'mundane' });
 				},
 				'Revert': function () {}
 			}
@@ -670,6 +750,14 @@ monogatari.script ({
 	// СМЕРТЬ: Сбит машиной на пробежке
 	// ==========================================
 	'Prologue_Death_Car': [
+		{
+			'Function': {
+				'Apply': function () {
+					this.storage ({ death_type: 'car_accident', death_flavor: 'ironic' });
+				},
+				'Revert': function () {}
+			}
+		},
 		'show scene street with fadeIn',
 		'stop music morning_ambient with fade 1',
 
@@ -733,6 +821,14 @@ monogatari.script ({
 	// СМЕРТЬ: Переработка (за компьютером)
 	// ==========================================
 	'Prologue_Death_Overwork': [
+		{
+			'Function': {
+				'Apply': function () {
+					this.storage ({ death_type: 'overwork', death_flavor: 'overwork', inna_met: true });
+				},
+				'Revert': function () {}
+			}
+		},
 		'show scene office with fadeIn',
 		'stop music internet_lo_fi with fade 1',
 		'stop music morning_ambient with fade 1',
@@ -816,7 +912,7 @@ monogatari.script ({
 
 		'stop music internet_lo_fi',
 		'stop music morning_ambient',
-		'play music choir_ethereal with loop fade 3',
+		'play music choir_ethereal with loop',
 
 		{
 			'Function': {
@@ -842,14 +938,18 @@ monogatari.script ({
 		'И очередь. Бесконечная очередь из полупрозрачных фигур.',
 		'Кто-то в тоге. Кто-то в джинсах. Кто-то голый — и ему всё равно.',
 
-		'show scene judgment_hall with fadeIn',
-		'show character mc shock at center with fadeIn',
-
 		'mc ......',
 		'mc Нет.',
 		'mc Нет нет нет нет нет.',
 
 		'wait 500',
+
+		{
+			'Function': {
+				'Apply': function () { divineGlow (false); },
+				'Revert': function () { divineGlow (true); }
+			}
+		},
 
 		'jump Judgment_Arrival'
 	]

@@ -72,6 +72,45 @@ button {
 	transition: filter 0.5s ease;
 }
 
+#life-meter {
+	position: absolute;
+	top: 14px;
+	right: 24px;
+	z-index: 50;
+	width: 180px;
+	height: 14px;
+	border: 1px solid rgba(255, 255, 255, 0.22);
+	background: rgba(0, 0, 0, 0.65);
+	box-shadow: 0 0 12px rgba(255, 68, 68, 0.18);
+}
+
+#life-fill {
+	height: 100%;
+	width: 100%;
+	background: linear-gradient(90deg, #5cff7a, #d8ff5c);
+	transition: width 0.35s ease, background 0.35s ease, box-shadow 0.35s ease;
+}
+
+#life-meter.life-flash {
+	animation: lifeFlash 0.7s ease;
+}
+
+#life-meter::before {
+	content: 'ЖИЗНЬ';
+	position: absolute;
+	top: 16px;
+	right: 0;
+	color: rgba(255, 255, 255, 0.72);
+	font-size: 10px;
+	letter-spacing: 0.12em;
+	text-shadow: 0 0 6px rgba(0, 0, 0, 0.9);
+}
+
+@keyframes lifeFlash {
+	0%, 100% { transform: scale(1); }
+	40% { transform: scale(1.04); }
+}
+
 [data-screen="game"] [data-component="background-image"] img,
 [data-screen="game"] [data-ui="background"] {
 	transition: filter 0.8s ease, opacity 0.8s ease;

@@ -106,6 +106,33 @@ function updateWtfMeter (value) {
 	setTimeout (() => meter.classList.remove ('wtf-flash'), 2000);
 }
 
+function updateLifeMeter (current, max) {
+	const fill = document.getElementById ('life-fill');
+	const text = document.getElementById ('life-text');
+	const meter = document.getElementById ('life-meter');
+	if (!fill || !text || !meter) return;
+
+	const safeMax = max || 5;
+	const safeCurrent = Math.max (0, Math.min (safeMax, current));
+	const percent = Math.round ((safeCurrent / safeMax) * 100);
+
+	fill.style.width = percent + '%';
+	text.textContent = safeCurrent + '/' + safeMax;
+
+	meter.classList.toggle ('life-danger', safeCurrent <= 1);
+	meter.classList.add ('life-flash');
+	setTimeout (() => meter.classList.remove ('life-flash'), 1000);
+}
+
+function changeLife (game, delta) {
+	const s = game.storage ();
+	const max = s.life_max || 5;
+	const current = Math.max (0, Math.min (max, (s.life_current || max) + delta));
+	game.storage ({ life_current: current, life_max: max });
+	updateLifeMeter (current, max);
+	return current;
+}
+
 // Текст сверху (для сцены смерти, чтобы не перекрывать лежащего героя)
 function deathTextTop (enable = true) {
 	const el = document.querySelector ('[data-screen="game"]');

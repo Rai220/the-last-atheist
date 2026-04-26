@@ -14,6 +14,8 @@ monogatari.storage ({
 	humor_used: 0,           // сарказм
 	rebellion_score: 0,      // бунтарство в аду
 	acceptance_score: 0,     // принятие
+	life_current: 5,         // уровень жизни/стойкости; 0 → котёл
+	life_max: 5,
 
 	// --- Флаги: Пролог ---
 	prologue_debate_won: false,
@@ -24,6 +26,7 @@ monogatari.storage ({
 	prologue_personality: '',    // 'aggressive'/'neutral'/'empathetic' — composite
 	inna_met: false,
 	inna_interest: 0,
+	alice_rapport: 0,            // отношение к домашнему ИИ-помощнику
 
 	// --- Флаги: Страшный Суд ---
 	judgment_tried_vr: false,
