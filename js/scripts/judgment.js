@@ -141,7 +141,7 @@ monogatari.script ({
 			'Conditional': {
 				'Condition': function () { return this.storage ().death_type; },
 				'heart_attack': 'mc ...Алексей. Тоже... инфаркт. Кажется.',
-				'car_accident': 'mc ...Алексей. Машина сбила. На пробежке.',
+				'car_accident': 'mc ...Алексей. Меня машина сбила. На пробежке.',
 				'overwork': 'mc ...Алексей. Инфаркт. На работе. За компьютером.'
 			}
 		},
