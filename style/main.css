@@ -527,6 +527,18 @@ dialog-log [data-content="log"] {
 }
 
 @media screen and (max-width: 768px) {
+	#life-meter {
+		top: 6px;
+		right: 8px;
+		width: 96px;
+		height: 8px;
+	}
+
+	#life-meter::before {
+		top: 10px;
+		font-size: 8px;
+	}
+
 	/* Текстовый бокс — больше места, мельче текст */
 	[data-component="text-box"] {
 		font-size: 0.85em !important;
@@ -553,7 +565,7 @@ dialog-log [data-content="log"] {
 	/* Кнопки выбора — компактнее */
 	[data-component="choice-container"] {
 		--text-box-reserve: clamp(7rem, 31svh, 11rem);
-		--choice-top-offset: clamp(0.75rem, 4svh, 2rem);
+		--choice-top-offset: clamp(2.25rem, 7svh, 3rem);
 		--choice-bottom-reserve: calc(var(--text-box-reserve) + var(--quick-menu-height) + 0.875rem);
 		padding: 0 8px !important;
 	}
@@ -630,7 +642,7 @@ dialog-log [data-content="log"] {
 
 	[data-component="choice-container"] {
 		--text-box-reserve: clamp(6.25rem, 28svh, 9rem);
-		--choice-top-offset: 0.5rem;
+		--choice-top-offset: 3rem;
 		--choice-bottom-reserve: calc(var(--text-box-reserve) + var(--quick-menu-height) + 0.75rem);
 		gap: 3px !important;
 	}
@@ -646,7 +658,12 @@ dialog-log [data-content="log"] {
 	}
 
 	[data-screen="game"] img[data-character] {
-		max-height: calc(100svh - var(--text-box-reserve) - var(--quick-menu-height) - 2rem) !important;
+		left: 50% !important;
+		right: auto !important;
+		top: 5.75rem !important;
+		transform: translateX(-50%) !important;
+		max-width: 56vw !important;
+		max-height: min(30svh, calc(100svh - var(--text-box-reserve) - var(--quick-menu-height) - 2rem)) !important;
 	}
 
 	[data-component="quick-menu"] {
@@ -659,8 +676,20 @@ dialog-log [data-content="log"] {
 	:root {
 		--quick-menu-height: 28px;
 		--text-box-reserve: clamp(5rem, 38svh, 7.5rem);
-		--choice-top-offset: 0.35rem;
+		--choice-top-offset: 2rem;
 		--choice-bottom-reserve: calc(var(--text-box-reserve) + var(--quick-menu-height) + 0.5rem);
+	}
+
+	#life-meter {
+		top: 4px;
+		right: 6px;
+		width: 72px;
+		height: 5px;
+	}
+
+	#life-meter::before {
+		top: 7px;
+		font-size: 7px;
 	}
 
 	[data-component="text-box"] {
@@ -680,7 +709,9 @@ dialog-log [data-content="log"] {
 	}
 
 	[data-screen="game"] img[data-character] {
-		max-height: calc(100svh - var(--quick-menu-height) - 1rem) !important;
+		top: 3rem !important;
+		right: 1rem !important;
+		max-height: min(40svh, calc(100svh - var(--text-box-reserve) - var(--quick-menu-height) - 0.75rem)) !important;
 	}
 
 	[data-component="choice-container"] {
