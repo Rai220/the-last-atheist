@@ -43,6 +43,7 @@ function resetStoryStateForNewGame (game) {
 		debate_strategy: '',
 		seen_inna_parallels: false,
 		lilith_trust: 0,
+		pigidij_pulled: false,
 		ending_reached: '',
 		qte_escapes: 0
 	});

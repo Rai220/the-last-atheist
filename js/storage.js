@@ -54,6 +54,9 @@ monogatari.storage ({
 	seen_inna_parallels: false,
 	lilith_trust: 0,             // эмоциональная глубина, отдельно от interest
 
+	// --- Дебаты: разовые ходы ---
+	pigidij_pulled: false,        // применил ли игрок ловушку с «преподобным Пигидием»
+
 	// --- Концовки ---
 	ending_reached: '',
 

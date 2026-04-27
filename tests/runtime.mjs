@@ -122,7 +122,16 @@ const GATES = [
 		jump: 'Hell_Lilith_Visit_Check', expectLabel: 'Hell_Lilith_Coffee' },
 	{ desc: 'Hell_Lilith_Visit_Check → Debate Round 2 (no met)',
 		preset: { lilith_met: false }, jump: 'Hell_Lilith_Visit_Check',
-		expectLabel: 'Hell_Debate_Round_2' }
+		expectLabel: 'Hell_Debate_Round_2' },
+	// Демон-job-offer ветвится по pigidij_pulled: если игрок применил
+	// ловушку — демон не зовёт его в команду (закрывает Ending_DemonFriend
+	// по этой ветке). Если honest path — обычный оффер.
+	{ desc: 'Hell_Demon_Job_Offer (no pigidij) → normal offer',
+		preset: {}, jump: 'Hell_Demon_Job_Offer',
+		expectLabel: 'Hell_Demon_Job_Offer_Normal' },
+	{ desc: 'Hell_Demon_Job_Offer (after pigidij) → cold pass',
+		preset: { pigidij_pulled: true }, jump: 'Hell_Demon_Job_Offer',
+		expectLabel: 'Hell_Demon_Job_Offer_Pigidij' }
 ];
 
 // ----- Helpers --------------------------------------------------------
@@ -359,16 +368,31 @@ async function testProceedGuard (browser, port) {
 }
 
 // Headless-shell в песочнице нестабилен — даём каждому подтесту свежий браузер.
+// Плюс ретрай первого goto: если сразу после launch `page.goto` падает с
+// «Target … closed», пробуем ещё один свежий браузер.
 async function testUI (launchBrowser, port) {
 	const failures = [];
 	const details = [];
 
+	async function withRetry (label, fn, attempts = 2) {
+		let lastErr = null;
+		for (let i = 0; i < attempts; i++) {
+			try { return await fn (); }
+			catch (e) {
+				lastErr = e;
+				if (!/Target.*closed|page has been closed/i.test (e.message)) throw e;
+				await sleep (500);
+			}
+		}
+		throw lastErr;
+	}
+
 	// --- Прогон 1: main menu (skip-btn скрыт, кнопка карты на месте) ---
-	{
-		const browser = await launchBrowser ();
-		try {
-			const { ctx, page } = await freshContext (browser);
+	try {
+		await withRetry ('main-menu', async () => {
+			const browser = await launchBrowser ();
 			try {
+				const { ctx, page } = await freshContext (browser);
 				await page.goto (`http://localhost:${port}/index.html`, { waitUntil: 'domcontentloaded' });
 				await page.waitForFunction (() => typeof monogatari !== 'undefined', { timeout: 8000 });
 				let mainShown = false;
@@ -396,17 +420,17 @@ async function testUI (launchBrowser, port) {
 				details.push (`mainShown=${mainShown}, skip-btn=${result.skipDisp}, mainRouteMapBtn=${result.hasMain}`);
 				if (mainShown && result.skipDisp !== 'none') failures.push (`#skip-btn виден на главном меню (display=${result.skipDisp}); должен быть none`);
 				if (!result.hasMain) failures.push ('Кнопка «Карта рутов» отсутствует в главном меню');
-			} finally { await ctx.close ().catch (() => {}); }
-		} catch (e) { failures.push ('UI[main-menu]: ' + e.message.slice (0, 200)); }
-		await browser.close ().catch (() => {});
-	}
+				await ctx.close ().catch (() => {});
+			} finally { await browser.close ().catch (() => {}); }
+		});
+	} catch (e) { failures.push ('UI[main-menu]: ' + e.message.slice (0, 200)); }
 
 	// --- Прогон 2: life-meter работает + route-map-btn в quick-menu ---
-	{
-		const browser = await launchBrowser ();
-		try {
-			const { ctx, page } = await freshContext (browser);
+	try {
+		await withRetry ('in-game', async () => {
+			const browser = await launchBrowser ();
 			try {
+				const { ctx, page } = await freshContext (browser);
 				await page.goto (`http://localhost:${port}/index.html`, { waitUntil: 'domcontentloaded' });
 				await page.waitForFunction (() => typeof monogatari !== 'undefined' && monogatari.proceed, { timeout: 8000 });
 				await page.waitForTimeout (300);
@@ -438,10 +462,10 @@ async function testUI (launchBrowser, port) {
 				}
 				if (!ui.hasBtn) failures.push ('route-map-btn отсутствует в in-game quick-menu');
 				if (ui.hasBtn && !ui.overlayOpen) failures.push ('Клик по route-map-btn не открыл overlay');
-			} finally { await ctx.close ().catch (() => {}); }
-		} catch (e) { failures.push ('UI[in-game]: ' + e.message.slice (0, 200)); }
-		await browser.close ().catch (() => {});
-	}
+				await ctx.close ().catch (() => {});
+			} finally { await browser.close ().catch (() => {}); }
+		});
+	} catch (e) { failures.push ('UI[in-game]: ' + e.message.slice (0, 200)); }
 
 	return {
 		name: 'UI: skip-btn, life meter, route map, main menu',
