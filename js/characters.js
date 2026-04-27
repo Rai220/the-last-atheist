@@ -27,7 +27,7 @@ monogatari.characters ({
 		}
 	},
 	'demon': {
-		name: 'Демон-бюрократ',
+		name: 'Асмодей',
 		color: '#FF4444',
 		directory: 'demon',
 		sprites: {
