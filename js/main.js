@@ -14,6 +14,7 @@ const ALL_ENDINGS = {
 	'hell_romance': '★ Ад вдвоём',
 	'escape_together': '★ Служебный выход',
 	'therapist': '★ Терапевт',
+	'i_am_the_bug': '★ Я — баг',
 	// Regular endings
 	'believer': 'Обращённый',
 	'pascal': 'Пари Паскаля',
@@ -97,6 +98,7 @@ const ROUTE_MAP = {
 		{ id: 'Hell_Breakdown', label: 'Кризис', group: 'hell' },
 		{ id: 'Hell_Lilith_Romance', label: 'Роман', group: 'hell' },
 		{ id: 'Hell_Matrix_Realization', label: 'Осознание', group: 'hell' },
+		{ id: 'Hell_Bug_Discovery', label: 'git log', group: 'hell' },
 
 		{ id: 'Ending_CauldronEternal', label: 'Вечный котёл', group: 'endings', ending: 'cauldron_eternal' },
 		{ id: 'Ending_Loophole', label: 'Лазейка', group: 'endings', ending: 'loophole' },
@@ -116,6 +118,7 @@ const ROUTE_MAP = {
 		{ id: 'Ending_Speedrun', label: 'Спидран', group: 'endings', ending: 'speedrun' },
 		{ id: 'Ending_Awakening', label: 'Пробуждение', group: 'endings', ending: 'awakening' },
 		{ id: 'Ending_DevCommentary', label: 'README', group: 'endings', ending: 'dev_commentary' },
+		{ id: 'Ending_IAmTheBug', label: 'Я — баг', group: 'endings', ending: 'i_am_the_bug' },
 		{ id: 'Ending_AliceLog', label: 'Лог Алисы', group: 'endings', ending: 'alice_log' },
 		{ id: 'Ending_AliceSilent', label: 'Тишина Алисы', group: 'endings', ending: 'alice_silent' },
 		{ id: 'Ending_Nihilist', label: 'Ничто', group: 'endings', ending: 'nihilist' },
@@ -208,6 +211,8 @@ const ROUTE_MAP = {
 		['Hell_Matrix_Realization', 'Ending_Speedrun'],
 		['Hell_Matrix_Realization', 'Ending_Awakening'],
 		['Hell_Matrix_Realization', 'Ending_DevCommentary'],
+		['Hell_Matrix_Realization', 'Hell_Bug_Discovery'],
+		['Hell_Bug_Discovery', 'Ending_IAmTheBug'],
 		['Hell_Matrix_Realization', 'Ending_AliceLog'],
 		['Hell_Matrix_Realization', 'Ending_AliceSilent'],
 		['Hell_Lilith_Romance', 'Ending_HellRomance'],

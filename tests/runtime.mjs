@@ -85,7 +85,8 @@ const ENDINGS_FULL = [
 	['lilith_conflicted', 'Ending_LilithConflicted'],
 	['sisyphus',          'Ending_Sisyphus'],
 	['viktor_hack',       'Ending_ViktorHack'],
-	['viktor_freedom',    'Ending_ViktorFreedom']
+	['viktor_freedom',    'Ending_ViktorFreedom'],
+	['i_am_the_bug',      'Ending_IAmTheBug']
 ];
 const _limit = parseInt (process.env.TLA_TEST_ENDINGS_LIMIT || '0', 10);
 const ENDINGS = _limit > 0 ? ENDINGS_FULL.slice (0, _limit) : ENDINGS_FULL;
