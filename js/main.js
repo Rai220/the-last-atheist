@@ -96,6 +96,7 @@ const ROUTE_MAP = {
 		{ id: 'Hell_Lilith_Romance', label: 'Роман', group: 'hell' },
 		{ id: 'Hell_Matrix_Realization', label: 'Осознание', group: 'hell' },
 
+		{ id: 'Ending_CauldronEternal', label: 'Вечный котёл', group: 'endings', ending: 'cauldron_eternal' },
 		{ id: 'Ending_Loophole', label: 'Лазейка', group: 'endings', ending: 'loophole' },
 		{ id: 'Ending_DemonFriend', label: 'Коллега', group: 'endings', ending: 'demon_friend' },
 		{ id: 'Ending_Glitch', label: 'Глитч', group: 'endings', ending: 'glitch' },
@@ -120,7 +121,7 @@ const ROUTE_MAP = {
 		{ id: 'Ending_EscapeTogether', label: 'Побег', group: 'endings', ending: 'escape_together' },
 		{ id: 'Ending_LilithBetrayal', label: 'Предательство', group: 'endings', ending: 'lilith_betrayal' },
 		{ id: 'Ending_LilithConflicted', label: 'Перевод', group: 'endings', ending: 'lilith_conflicted' },
-		{ id: 'Ending_EscapeCaught', label: 'Пойманы', group: 'endings', ending: 'escape_caught' },
+		{ id: 'Escape_Caught', label: 'Пойманы', group: 'endings', ending: 'escape_caught' },
 		{ id: 'Ending_Sisyphus', label: 'Сизиф', group: 'endings', ending: 'sisyphus' },
 		{ id: 'Ending_ViktorHack', label: 'sudo rm pain', group: 'endings', ending: 'viktor_hack' },
 		{ id: 'Ending_ViktorFreedom', label: 'DROP TABLE', group: 'endings', ending: 'viktor_freedom' }
@@ -180,6 +181,8 @@ const ROUTE_MAP = {
 		['Hell_Exploration_Seed', 'Hell_Viktor_Midgame'],
 		['Hell_Exploration_Seed', 'Hell_Breakdown'],
 		['Hell_Viktor_Midgame', 'Hell_Breakdown'],
+		['Prologue_Mock', 'Ending_CauldronEternal'],
+		['Hell_Bureaucracy', 'Ending_CauldronEternal'],
 		['Hell_Bureaucracy', 'Ending_DemonFriend'],
 		['Hell_Debate_Round_1', 'Ending_Glitch'],
 		['Hell_Debate_Round_1', 'Ending_DebateWin'],
@@ -205,7 +208,7 @@ const ROUTE_MAP = {
 		['Hell_Lilith_Romance', 'Ending_EscapeTogether'],
 		['Hell_Lilith_Romance', 'Ending_LilithBetrayal'],
 		['Hell_Lilith_Romance', 'Ending_LilithConflicted'],
-		['Hell_Lilith_Romance', 'Ending_EscapeCaught']
+		['Hell_Lilith_Romance', 'Escape_Caught']
 	]
 };
 
@@ -227,11 +230,26 @@ function isLabelVisited (label) {
 // ============================================================
 // Initialization
 // ============================================================
+// Глобальный перехват «Wait period has not ended.»: внутри Monogatari эта
+// ошибка может отвергаться без участия наших обёрток над proceed/run, что
+// засоряет консоль и в потенциале мешает отладчикам считать игру стабильной.
+// Это не баг сценария, а нормальная ситуация при быстром proceed во время `wait N`.
+if (typeof window !== 'undefined') {
+	window.addEventListener ('unhandledrejection', function (event) {
+		var reason = event && event.reason;
+		var msg = reason && (reason.message || reason);
+		if (typeof msg === 'string' && /Wait period has not ended/i.test (msg)) {
+			event.preventDefault ();
+		}
+	});
+}
+
 $_ready (() => {
 	monogatari.init ('#monogatari').then (() => {
 		installProceedGuard ();
 		addSkipButton ();
 		addRouteMapButton ();
+		watchMainMenuForRouteMapBtn ();
 		updateEndingCounter ();
 		startLabelTracker ();
 		initJustLilithEasterEgg ();
@@ -261,6 +279,10 @@ function installProceedGuard () {
 
 	monogatari.run = function () {
 		return originalRun.apply (monogatari, arguments).catch (function (error) {
+			if (isWaitPeriodError (error)) {
+				// Игрок проматывает во время `wait N` — это не баг, просто ждём.
+				return;
+			}
 			if (!isRecoverableScriptError (error)) {
 				throw error;
 			}
@@ -279,6 +301,10 @@ function installProceedGuard () {
 
 	monogatari.proceed = function () {
 		return originalProceed.apply (monogatari, arguments).catch (function (error) {
+			if (isWaitPeriodError (error)) {
+				// Игрок проматывает во время `wait N` — обычное дело при скипе.
+				return;
+			}
 			if (!isRecoverableScriptError (error)) {
 				throw error;
 			}
@@ -311,6 +337,11 @@ function installProceedGuard () {
 function isRecoverableScriptError (error) {
 	const message = String (error && (error.message || error));
 	return message === 'Extra condition check failed.';
+}
+
+function isWaitPeriodError (error) {
+	const message = String (error && (error.message || error));
+	return /Wait period has not ended/i.test (message);
 }
 
 function skipRejectedStatement (label, step) {
@@ -563,6 +594,8 @@ function addSkipButton () {
 		'cursor:pointer; font-size:1.5em; padding:6px 10px;' +
 		'opacity:0.7; user-select:none;' +
 		'background:rgba(0,0,0,0.5); border-radius:8px;' +
+		// display:none по умолчанию — кнопке нечего делать на главном меню/splash.
+		'display:none;' +
 		'transition:all 0.2s; line-height:1;';
 	skipBtn.addEventListener ('mouseenter', function () {
 		if (!_skipWatchdog) skipBtn.style.opacity = '1';
@@ -598,12 +631,16 @@ function addSkipButton () {
 
 	document.body.appendChild (skipBtn);
 
-	// Hide button when not on game screen
+	// Показываем только когда игрок реально в игре (game-screen активен и
+	// не идёт сплеш-сцена). Стартует скрытой — см. style.display=none выше.
 	setInterval (function () {
 		var gameScreen = document.querySelector ('[data-screen="game"]');
-		var isVisible = gameScreen && (gameScreen.classList.contains ('active') ||
+		var gameOpen = gameScreen && (gameScreen.classList.contains ('active') ||
 			getComputedStyle (gameScreen).display !== 'none');
-		skipBtn.style.display = isVisible ? '' : 'none';
+		var onSplash = gameScreen && gameScreen.classList.contains ('splash-screen');
+		var label = (function () { try { return monogatari.state ('label'); } catch { return ''; } }) ();
+		var isStartLabel = label === 'Start' || label === '_SplashScreen' || label === '';
+		skipBtn.style.display = (gameOpen && !onSplash && !isStartLabel) ? '' : 'none';
 	}, 500);
 }
 
@@ -627,18 +664,40 @@ function addRouteMapButton () {
 
 	quickMenu.appendChild (mapBtn);
 
-	// Also add to main menu
+	// Also add to main menu. Скрин рендерится не сразу — пытаемся, и если не вышло,
+	// наблюдаем за DOM до появления кнопок главного меню.
+	tryInsertMainRouteMapBtn ();
+}
+
+function tryInsertMainRouteMapBtn () {
+	if (document.getElementById ('main-route-map-btn')) return true;
 	var mainScreen = document.querySelector ('[data-screen="main"]');
-	if (mainScreen) {
-		var mainMapBtn = document.createElement ('button');
-		mainMapBtn.textContent = '🗺 Карта рутов';
-		mainMapBtn.id = 'main-route-map-btn';
-		mainMapBtn.addEventListener ('click', showRouteMap);
-		var menuBtns = mainScreen.querySelector ('[data-action-list="in-menu"]') || mainScreen.querySelector ('div');
-		if (menuBtns) {
-			menuBtns.appendChild (mainMapBtn);
-		}
-	}
+	if (!mainScreen) return false;
+	// `<main-menu>` внутри main-screen — web-component, его кнопки лежат в shadow root.
+	// Берём первый подходящий контейнер, в который наш button реально встанет.
+	var menuHost = mainScreen.querySelector ('[data-action-list="in-menu"]')
+		|| mainScreen.querySelector ('main-menu')
+		|| mainScreen.querySelector ('div')
+		|| mainScreen;
+	var mainMapBtn = document.createElement ('button');
+	mainMapBtn.textContent = '🗺 Карта рутов';
+	mainMapBtn.id = 'main-route-map-btn';
+	mainMapBtn.style.cssText = 'margin-top:0.5em;cursor:pointer;background:transparent;border:1px solid currentColor;color:inherit;padding:0.4em 0.8em;font-family:inherit;font-size:0.95em;';
+	mainMapBtn.addEventListener ('click', showRouteMap);
+	try { menuHost.appendChild (mainMapBtn); } catch (e) { return false; }
+	return true;
+}
+
+// Наблюдатель за main-screen: при показе главного меню гарантируем,
+// что кнопка карты рутов в нём присутствует.
+function watchMainMenuForRouteMapBtn () {
+	var mainScreen = document.querySelector ('[data-screen="main"]');
+	if (!mainScreen) return;
+	if (tryInsertMainRouteMapBtn ()) return;
+	var observer = new MutationObserver (function () {
+		if (tryInsertMainRouteMapBtn ()) observer.disconnect ();
+	});
+	observer.observe (mainScreen, { childList: true, subtree: true, attributes: true });
 }
 
 function showRouteMap () {

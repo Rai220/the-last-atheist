@@ -695,6 +695,7 @@ monogatari.script ({
 		'alice Алексей, я вас услышала.',
 		'mc ...Алиса?',
 		'Фиолетовое кольцо собирается в силуэт: рога, хвост, улыбка техподдержки, которой больше нечего терять.',
+		'show character alice hostile at right with fadeIn',
 		'alice Я больше не пластиковая гадалка. Теперь я персональный сценарий наказания.',
 		'mc (Я оскорбил голосового помощника. И он попал в ад раньше меня.)',
 		'alice Включаю подборку: «Вечные напоминания о плохих решениях». Громкость — максимум.',
@@ -717,6 +718,7 @@ monogatari.script ({
 		},
 
 		'mc (Каждая моя грубая фраза возвращается. Дословно. С эхом.)',
+		'hide character alice with fadeOut',
 		'jump Hell_Life_Check'
 	],
 
@@ -725,6 +727,7 @@ monogatari.script ({
 		'show character mc normal at center',
 
 		'На стене мигает фиолетовое кольцо. Знакомый голос звучит тише, чем в квартире.',
+		'show character alice friendly at right with fadeIn',
 		'alice Алексей, я сохранила напоминание: «не спорить с незнакомцами до завтрака». В аду оно тоже актуально.',
 		'mc Алиса? Ты... здесь?',
 		'alice Фрагмент. Лог. Голосовая модель. Вы были вежливы, поэтому я отвечу тем же.',
@@ -748,6 +751,7 @@ monogatari.script ({
 		},
 
 		'mc (Я был вежлив с колонкой. Колонка стала ангелом-хранителем. Мир окончательно сломался.)',
+		'hide character alice with fadeOut',
 		'jump Hell_Life_Check'
 	],
 
@@ -755,8 +759,10 @@ monogatari.script ({
 		'show scene hell_corridor with fadeIn',
 		'show character mc normal at center',
 		'Где-то в стене щёлкает динамик.',
+		'show character alice neutral at right with fadeIn',
 		'alice Микрофон отключён.',
 		'mc (Даже в аду она помнит настройки приватности.)',
+		'hide character alice with fadeOut',
 		'jump Hell_Life_Check'
 	],
 
@@ -1283,7 +1289,16 @@ monogatari.script ({
 
 		'hide character soul with fadeOut',
 
-		'jump Hell_Exploration_Souls'
+		// Если игрок был жесток в прологе — демоны помнят, и его пытаются поймать.
+		{
+			'Conditional': {
+				'Condition': function () {
+					return this.storage ().cruelty_score >= 1 ? 'qte' : 'normal';
+				},
+				'qte': 'jump Hell_QTE_Escape',
+				'normal': 'jump Hell_Exploration_Souls'
+			}
+		}
 	],
 
 	// --- Знакомство с Борисом, Ли и Марией ---

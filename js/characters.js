@@ -67,7 +67,13 @@ monogatari.characters ({
 	},
 	'alice': {
 		name: 'Алиса',
-		color: '#8ecbff'
+		color: '#8ecbff',
+		directory: 'alice',
+		sprites: {
+			friendly: 'friendly.png',
+			hostile: 'hostile.png',
+			neutral: 'neutral.png'
+		}
 	},
 	'lilith': {
 		name: 'Лилит',

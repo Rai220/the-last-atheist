@@ -108,16 +108,17 @@ function updateWtfMeter (value) {
 
 function updateLifeMeter (current, max) {
 	const fill = document.getElementById ('life-fill');
-	const text = document.getElementById ('life-text');
 	const meter = document.getElementById ('life-meter');
-	if (!fill || !text || !meter) return;
+	// `text` опционален: индикатор может быть и без числовой подписи.
+	const text = document.getElementById ('life-text');
+	if (!fill || !meter) return;
 
 	const safeMax = max || 5;
 	const safeCurrent = Math.max (0, Math.min (safeMax, current));
 	const percent = Math.round ((safeCurrent / safeMax) * 100);
 
 	fill.style.width = percent + '%';
-	text.textContent = safeCurrent + '/' + safeMax;
+	if (text) text.textContent = safeCurrent + '/' + safeMax;
 
 	meter.classList.toggle ('life-danger', safeCurrent <= 1);
 	meter.classList.add ('life-flash');

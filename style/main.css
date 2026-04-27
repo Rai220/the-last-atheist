@@ -95,6 +95,23 @@ button {
 	transition: width 0.35s ease, background 0.35s ease, box-shadow 0.35s ease;
 }
 
+#life-text {
+	position: absolute;
+	top: 16px;
+	left: 0;
+	color: rgba(255, 255, 255, 0.72);
+	font-size: 10px;
+	font-family: inherit;
+	letter-spacing: 0.04em;
+	text-shadow: 0 0 6px rgba(0, 0, 0, 0.9);
+	pointer-events: none;
+}
+
+#life-meter.life-danger #life-fill {
+	background: linear-gradient(90deg, #ff4444, #ff8855);
+	box-shadow: 0 0 14px rgba(255, 68, 68, 0.65);
+}
+
 #life-meter.life-flash {
 	animation: lifeFlash 0.7s ease;
 }

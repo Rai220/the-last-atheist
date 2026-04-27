@@ -27,6 +27,7 @@ monogatari.storage ({
 	inna_met: false,
 	inna_interest: 0,
 	alice_rapport: 0,            // отношение к домашнему ИИ-помощнику
+	alice_encountered: false,    // встретили ли мы Алису в аду
 
 	// --- Флаги: Страшный Суд ---
 	judgment_tried_vr: false,

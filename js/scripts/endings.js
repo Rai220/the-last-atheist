@@ -1237,6 +1237,13 @@ monogatari.script ({
 	],
 
 	'Escape_Caught': [
+		{
+			'Function': {
+				'Apply': function () { this.storage ({ ending_reached: 'escape_caught' }); },
+				'Revert': function () {}
+			}
+		},
+
 		'hide character demon with fadeOut',
 		'mc (Поймали.)',
 		'lilith Алексей... мне жаль.',
@@ -1580,9 +1587,12 @@ monogatari.script ({
 				'Apply': function () {
 					var endings = JSON.parse (localStorage.getItem ('tla_endings') || '{}');
 					var count = Object.keys (endings).length;
+					// total берётся из ALL_ENDINGS (объявлен в js/main.js) с фолбэком,
+					// чтобы текст не ломался, если страница обращается до полной загрузки скриптов.
+					var total = (typeof ALL_ENDINGS !== 'undefined') ? Object.keys (ALL_ENDINGS).length : count;
 					var el = document.querySelector ('[data-component="centered-dialog"] [data-content="wrapper"]');
 					if (el) {
-						el.innerHTML = '<p>Концовки найдены: ' + count + ' из 28</p>';
+						el.innerHTML = '<p>Концовки найдены: ' + count + ' из ' + total + '</p>';
 					}
 				},
 				'Revert': function () {}

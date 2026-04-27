@@ -6,7 +6,8 @@
   "devDependencies": {
     "@electron/notarize": "^2.4.0",
     "electron": "^33.2.0",
-    "electron-builder": "^25.0.5"
+    "electron-builder": "^25.0.5",
+    "playwright": "^1.50.0"
   },
   "build": {
     "directories": {
@@ -55,9 +56,15 @@
     "build:mac": "yarn electron-builder -m",
     "build:linux": "yarn electron-builder -l",
     "build:web": "bun build-web.ts",
-    "build:electrobun": "bunx electrobun build"
+    "build:electrobun": "bunx electrobun build",
+    "test": "node tests/run.mjs",
+    "test:static": "node tests/run.mjs static",
+    "test:runtime": "node tests/run.mjs runtime"
   },
   "dependencies": {
+    "@capacitor/android": "^8.3.0",
+    "@capacitor/cli": "^8.3.0",
+    "@capacitor/core": "^8.3.0",
     "electrobun": "^1.16.0"
   }
 }
