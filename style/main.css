@@ -20,6 +20,10 @@
 	--bg-dark: #0a0a0a;
 	--bg-panel: rgba(0, 0, 0, 0.88);
 	--gold-accent: #ffd700;
+	--quick-menu-height: 42px;
+	--text-box-reserve: clamp(8.5rem, 26svh, 14rem);
+	--choice-top-offset: clamp(1.25rem, 8svh, 4rem);
+	--choice-bottom-reserve: calc(var(--text-box-reserve) + var(--quick-menu-height) + 0.75rem);
 }
 
 /* --- Общие стили --- */
@@ -119,15 +123,23 @@ button {
 /* --- Контейнер выборов --- */
 
 [data-component="choice-container"] {
-	bottom: 25% !important;
-	max-height: 60vh;
+	top: var(--choice-top-offset) !important;
+	bottom: var(--choice-bottom-reserve) !important;
+	left: 50% !important;
+	right: auto !important;
+	transform: translateX(-50%) !important;
+	width: min(92vw, 44rem) !important;
+	max-height: calc(100svh - var(--choice-top-offset) - var(--choice-bottom-reserve));
 	overflow-y: auto;
+	overflow-x: hidden;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	gap: 6px;
 	padding: 12px;
+	box-sizing: border-box;
 	animation: choicesFadeIn 0.4s ease-out;
+	overscroll-behavior: contain;
 }
 
 @keyframes choicesFadeIn {
@@ -146,9 +158,12 @@ button {
 	margin: 2px 0;
 	font-size: 0.82em;
 	line-height: 1.3;
-	max-width: 90%;
+	width: 100%;
+	max-width: 100% !important;
 	white-space: normal;
 	word-wrap: break-word;
+	overflow-wrap: anywhere;
+	box-sizing: border-box;
 	transition: all 0.25s ease;
 	position: relative;
 	backdrop-filter: blur(4px);
@@ -239,6 +254,16 @@ button {
 }
 
 [data-screen="game"] character-sprite [data-content="wrapper"] [data-layer] {
+	object-fit: contain;
+	object-position: bottom center;
+}
+
+[data-screen="game"] img[data-character] {
+	top: auto !important;
+	bottom: var(--quick-menu-height) !important;
+	width: auto !important;
+	max-width: min(100vw, 72rem) !important;
+	max-height: calc(100svh - var(--quick-menu-height) - 0.75rem) !important;
 	object-fit: contain;
 	object-position: bottom center;
 }
@@ -524,15 +549,15 @@ dialog-log [data-content="log"] {
 
 	/* Кнопки выбора — компактнее */
 	[data-component="choice-container"] {
-		bottom: 15% !important;
-		max-height: 70vh !important;
+		--text-box-reserve: clamp(7rem, 31svh, 11rem);
+		--choice-top-offset: clamp(0.75rem, 4svh, 2rem);
+		--choice-bottom-reserve: calc(var(--text-box-reserve) + var(--quick-menu-height) + 0.5rem);
 		padding: 0 8px !important;
 	}
 
 	[data-component="choice-container"] button {
 		font-size: 0.72em;
 		padding: 6px 10px;
-		max-width: 95%;
 		margin: 2px auto;
 	}
 
@@ -540,6 +565,11 @@ dialog-log [data-content="log"] {
 	[data-screen="game"] character-sprite {
 		height: 50svh !important;
 		max-height: 50svh !important;
+	}
+
+	[data-screen="game"] img[data-character] {
+		max-height: calc(100svh - var(--text-box-reserve) - var(--quick-menu-height) - 0.5rem) !important;
+		max-width: 100vw !important;
 	}
 
 	/* Quick menu — компактнее */
@@ -596,8 +626,9 @@ dialog-log [data-content="log"] {
 	}
 
 	[data-component="choice-container"] {
-		bottom: 5% !important;
-		max-height: 80vh !important;
+		--text-box-reserve: clamp(6.25rem, 28svh, 9rem);
+		--choice-top-offset: 0.5rem;
+		--choice-bottom-reserve: calc(var(--text-box-reserve) + var(--quick-menu-height) + 0.35rem);
 		gap: 3px !important;
 	}
 
@@ -611,6 +642,10 @@ dialog-log [data-content="log"] {
 		max-height: 35svh !important;
 	}
 
+	[data-screen="game"] img[data-character] {
+		max-height: calc(100svh - var(--text-box-reserve) - var(--quick-menu-height) - 0.35rem) !important;
+	}
+
 	[data-component="quick-menu"] {
 		font-size: 0.65em !important;
 	}
@@ -618,6 +653,13 @@ dialog-log [data-content="log"] {
 
 /* Ландшафтная ориентация на маленьком экране */
 @media screen and (max-height: 450px) and (orientation: landscape) {
+	:root {
+		--quick-menu-height: 28px;
+		--text-box-reserve: clamp(5rem, 38svh, 7.5rem);
+		--choice-top-offset: 0.35rem;
+		--choice-bottom-reserve: calc(var(--text-box-reserve) + var(--quick-menu-height) + 0.25rem);
+	}
+
 	[data-component="text-box"] {
 		font-size: 0.75em !important;
 		max-height: 50vh !important;
@@ -632,6 +674,15 @@ dialog-log [data-content="log"] {
 	[data-screen="game"] character-sprite {
 		height: 60svh !important;
 		max-height: 60svh !important;
+	}
+
+	[data-screen="game"] img[data-character] {
+		max-height: calc(100svh - var(--quick-menu-height) - 0.25rem) !important;
+	}
+
+	[data-component="choice-container"] {
+		padding: 0 6px !important;
+		gap: 3px !important;
 	}
 
 	[data-component="choice-container"] button {
