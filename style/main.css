@@ -305,6 +305,12 @@ button {
 	transform: none !important;
 }
 
+[data-screen="game"]:has(img[data-character] ~ img[data-character]) img[data-character] {
+	height: auto !important;
+	max-width: min(32vw, 22rem) !important;
+	max-height: 100% !important;
+}
+
 /* --- WTF-метр --- */
 
 #wtf-meter {
