@@ -44,7 +44,6 @@ monogatari.script ({
 						var s = this.storage ();
 						this.storage ({
 							alice_rapport: s.alice_rapport + 2,
-							alice_kind: true,
 							alice_encountered: true,
 							life_current: Math.min (s.life_max, s.life_current + 1)
 						});
@@ -58,7 +57,6 @@ monogatari.script ({
 						var s = this.storage ();
 						this.storage ({
 							alice_rapport: s.alice_rapport - 3,
-							alice_abused: true,
 							alice_encountered: true,
 							life_current: Math.max (0, s.life_current - 1)
 						});

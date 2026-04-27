@@ -22,6 +22,7 @@ function resetStoryStateForNewGame (game) {
 		prologue_personality: '',
 		alice_rapport: 0,
 		alice_encountered: false,
+		alice_hell_met: false,
 		inna_met: false,
 		inna_interest: 0,
 		judgment_tried_vr: false,
@@ -43,7 +44,6 @@ function resetStoryStateForNewGame (game) {
 		seen_inna_parallels: false,
 		lilith_trust: 0,
 		ending_reached: '',
-		papers_please_score: 0,
 		qte_escapes: 0
 	});
 }

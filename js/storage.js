@@ -27,7 +27,8 @@ monogatari.storage ({
 	inna_met: false,
 	inna_interest: 0,
 	alice_rapport: 0,            // отношение к домашнему ИИ-помощнику
-	alice_encountered: false,    // встретили ли мы Алису в аду
+	alice_encountered: false,    // встретили ли мы Алису в прологе
+	alice_hell_met: false,       // встретили ли мы Алису в аду (Hell_Alice_*)
 
 	// --- Флаги: Страшный Суд ---
 	judgment_tried_vr: false,
@@ -57,6 +58,5 @@ monogatari.storage ({
 	ending_reached: '',
 
 	// --- Мини-игры ---
-	papers_please_score: 0,
 	qte_escapes: 0
 });

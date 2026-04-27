@@ -230,6 +230,135 @@ function checkCreditsCounterMatchesAllEndings () {
 	};
 }
 
+function checkScriptWritesAreDeclared () {
+	// Каждый ключ, который скрипты пишут через `this.storage({ ... })`,
+	// должен быть объявлен в `js/storage.js`. Иначе он не сбросится при новой игре
+	// и не будет иметь дефолтного значения — классический latent-bug.
+	const { storage } = collectStorageAndReset ();
+	const declared = new Set (storage);
+	const undeclared = new Map (); // key → [{file, line}]
+	for (const file of SCRIPT_FILES) {
+		const txt = readScript (file);
+		const lines = txt.split ('\n');
+		// Сканируем тело каждого `this.storage({ ... })`. Поддерживаем многострочные
+		// объекты, поэтому ловим скобки руками.
+		for (let i = 0; i < lines.length; i++) {
+			const start = lines[i].indexOf ('this.storage');
+			if (start === -1) continue;
+			// найдём открывающую `{` после `this.storage(`
+			let s = lines[i].indexOf ('{', start);
+			let row = i, col = s;
+			while (s === -1 && row < lines.length - 1) {
+				row++;
+				col = lines[row].indexOf ('{');
+				if (col !== -1) s = col;
+			}
+			if (s === -1) continue;
+			let depth = 0, body = '', startRow = row;
+			for (let r = row; r < lines.length; r++) {
+				const line = lines[r];
+				const from = (r === row) ? s : 0;
+				for (let c = from; c < line.length; c++) {
+					const ch = line[c];
+					if (ch === '{') depth++;
+					else if (ch === '}') {
+						depth--;
+						if (depth === 0) {
+							body += line.slice (from, c);
+							r = lines.length;
+							break;
+						}
+					}
+					if (depth > 0 && c >= from) body += ch;
+				}
+				if (depth > 0 && r < lines.length) body += '\n';
+			}
+			for (const km of body.matchAll (/(?:^|[\s,{])([a-z_][a-z_0-9]*)\s*:/g)) {
+				const k = km[1];
+				if (declared.has (k)) continue;
+				if (!undeclared.has (k)) undeclared.set (k, []);
+				undeclared.get (k).push (`${file}:${startRow + 1}`);
+			}
+		}
+	}
+	const failures = [];
+	for (const [k, locs] of undeclared) {
+		failures.push (`"${k}" пишется в ${[...new Set (locs)].join (', ')}, но не объявлен в js/storage.js`);
+	}
+	return {
+		name: 'Script writes only touch keys declared in storage.js',
+		ok: failures.length === 0,
+		details: `${declared.size} declared keys, ${undeclared.size} undeclared writes.`,
+		failures
+	};
+}
+
+function checkStorageDeclarationsAreWritten () {
+	// Симметрия для checkScriptWritesAreDeclared: каждый объявленный в storage.js
+	// ключ должен где-то реально использоваться — иначе это мёртвый стат, который
+	// объявлен, сбрасывается, но никогда не меняется и не гейтит ветки.
+	// Допустимо «использование на чтение»: ключ может быть начальным значением,
+	// если хотя бы один скрипт его читает (this.storage ().key) или сравнивает в
+	// Condition. Поэтому проверяем и записи, и чтения.
+	const { storage } = collectStorageAndReset ();
+	// Технические/служебные ключи, которые движок Monogatari трогает сам.
+	const ALLOW_UNUSED = new Set (['player']);
+	const allFiles = SCRIPT_FILES.map (f => readScript (f)).join ('\n');
+	const main = readSource ('js/main.js');
+	const haystack = allFiles + '\n' + main;
+	const orphans = [];
+	for (const key of storage) {
+		if (ALLOW_UNUSED.has (key)) continue;
+		// Достаточно встретить идентификатор где угодно в скриптах или в main.js:
+		// `s.key`, `storage().key`, `key:` внутри `this.storage({...})`, и т.п.
+		const re = new RegExp ('\\b' + key + '\\b');
+		if (!re.test (haystack)) orphans.push (key);
+	}
+	return {
+		name: 'Every storage.js key is read or written somewhere',
+		ok: orphans.length === 0,
+		details: `${storage.length} declared keys, ${orphans.length} unused.`,
+		failures: orphans.map (k => `"${k}" объявлен в storage.js, но не используется ни в js/scripts/*.js, ни в js/main.js (мёртвый стат)`)
+	};
+}
+
+function checkRuntimeEndingsListInSync () {
+	// Файл tests/runtime.mjs держит ENDINGS_FULL — список пар [key, Label]
+	// для headless-прогона всех концовок. Когда сценарист добавляет новую
+	// концовку в ALL_ENDINGS, он легко забывает обновить этот список —
+	// тогда runtime-тест её не покрывает и регрессии не ловятся.
+	// Этот чек ловит обе стороны дрейфа: пропавшие и лишние ключи.
+	const all = collectAllEndingKeys ();
+	const labels = collectLabels ();
+	const runtime = readSource ('tests/runtime.mjs');
+	const block = extractBlock (runtime, /const ENDINGS_FULL\s*=\s*\[/, '\n];');
+	if (!block) {
+		return {
+			name: 'tests/runtime.mjs ENDINGS_FULL covers all ALL_ENDINGS keys',
+			ok: false,
+			details: 'не нашёл ENDINGS_FULL в tests/runtime.mjs',
+			failures: ['ENDINGS_FULL = [ ... ]; не распарсился. Проверь синтаксис tests/runtime.mjs.']
+		};
+	}
+	const pairs = [...block.matchAll (/\[\s*'([a-z_]+)'\s*,\s*'([A-Z][A-Za-z0-9_]+)'\s*\]/g)]
+		.map (m => [m[1], m[2]]);
+	const runtimeKeys = pairs.map (p => p[0]);
+	const missing = all.filter (k => !runtimeKeys.includes (k));
+	const extra = runtimeKeys.filter (k => !all.includes (k));
+	const brokenLabels = pairs.filter (([, lbl]) => !labels.has (lbl));
+	const failures = [
+		...missing.map (k => `ALL_ENDINGS["${k}"] не покрыт runtime-тестом — добавь ['${k}', 'Ending_...'] в tests/runtime.mjs`),
+		...extra.map (k => `ENDINGS_FULL содержит '${k}', которого нет в ALL_ENDINGS — устаревший runtime-кейс`),
+		...brokenLabels.map (([k, lbl]) => `ENDINGS_FULL['${k}'] → '${lbl}': такого лейбла нет в js/scripts/*.js`)
+	];
+	return {
+		name: 'tests/runtime.mjs ENDINGS_FULL covers all ALL_ENDINGS keys',
+		ok: failures.length === 0,
+		details: `ALL_ENDINGS=${all.length}, ENDINGS_FULL=${runtimeKeys.length}.`,
+		failures
+	};
+}
+
 function checkStorageResetSymmetry () {
 	const { storage, reset } = collectStorageAndReset ();
 	// 'player' живёт в подобъекте — допустимо отсутствие в reset.
@@ -257,7 +386,10 @@ const CHECKS = [
 	checkRouteMapCoversAllEndings,
 	checkEachEndingHasReachedAssign,
 	checkCreditsCounterMatchesAllEndings,
-	checkStorageResetSymmetry
+	checkScriptWritesAreDeclared,
+	checkStorageDeclarationsAreWritten,
+	checkStorageResetSymmetry,
+	checkRuntimeEndingsListInSync
 ];
 
 export function runStatic () {

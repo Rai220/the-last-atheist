@@ -3,7 +3,7 @@
 
 const { $_ready, $_ } = Monogatari;
 
-// Все 29 концовок для трекера
+// Все 31 концовка для трекера
 const ALL_ENDINGS = {
 	// ★ Major endings
 	'matrix': '★ Контакт',
@@ -25,6 +25,8 @@ const ALL_ENDINGS = {
 	'franchise': 'Франшиза',
 	'awakening': 'Пробуждение',
 	'dev_commentary': 'README.md',
+	'alice_log': 'Лог Алисы',
+	'alice_silent': 'Тишина Алисы',
 	'nihilist': 'Ничто',
 	// Quick endings
 	'loophole': 'Лазейка',
@@ -114,6 +116,8 @@ const ROUTE_MAP = {
 		{ id: 'Ending_Speedrun', label: 'Спидран', group: 'endings', ending: 'speedrun' },
 		{ id: 'Ending_Awakening', label: 'Пробуждение', group: 'endings', ending: 'awakening' },
 		{ id: 'Ending_DevCommentary', label: 'README', group: 'endings', ending: 'dev_commentary' },
+		{ id: 'Ending_AliceLog', label: 'Лог Алисы', group: 'endings', ending: 'alice_log' },
+		{ id: 'Ending_AliceSilent', label: 'Тишина Алисы', group: 'endings', ending: 'alice_silent' },
 		{ id: 'Ending_Nihilist', label: 'Ничто', group: 'endings', ending: 'nihilist' },
 		{ id: 'Ending_Prophet', label: 'Пророк', group: 'endings', ending: 'prophet' },
 		{ id: 'Ending_FullCircle', label: 'Полный круг', group: 'endings', ending: 'full_circle' },
@@ -204,6 +208,8 @@ const ROUTE_MAP = {
 		['Hell_Matrix_Realization', 'Ending_Speedrun'],
 		['Hell_Matrix_Realization', 'Ending_Awakening'],
 		['Hell_Matrix_Realization', 'Ending_DevCommentary'],
+		['Hell_Matrix_Realization', 'Ending_AliceLog'],
+		['Hell_Matrix_Realization', 'Ending_AliceSilent'],
 		['Hell_Lilith_Romance', 'Ending_HellRomance'],
 		['Hell_Lilith_Romance', 'Ending_EscapeTogether'],
 		['Hell_Lilith_Romance', 'Ending_LilithBetrayal'],
