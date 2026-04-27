@@ -74,6 +74,7 @@ const ENDINGS_FULL = [
 	['awakening',         'Ending_Awakening'],
 	['full_circle',       'Ending_FullCircle'],
 	['dev_commentary',    'Ending_DevCommentary'],
+	['anon_from_hell',    'Ending_AnonFromHell'],
 	['alice_log',         'Ending_AliceLog'],
 	['alice_silent',      'Ending_AliceSilent'],
 	['nihilist',          'Ending_Nihilist'],

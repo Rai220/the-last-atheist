@@ -182,6 +182,16 @@ monogatari.script ({
 		'mc Мы все не допускали.',
 		'hide character panchin with fadeOut',
 
+		'К очереди подлетает молодой ангел с планшетом. Крылья ещё слишком белые, взгляд — слишком живой.',
+		'show character intern nervous at right with fadeIn',
+		'intern Волков Алексей Дмитриевич? Подтвердите, пожалуйста, что вы осознаёте факт смерти.',
+		'mc Нет.',
+		'intern Понял. Ставлю «частично».',
+		'mc Почему частично?',
+		'intern Вы спорите. Значит, процесс признания уже начался.',
+		'mc (Даже небесные стажёры работают по agile.)',
+		'hide character intern with fadeOut',
+
 		'show character soul resigned at left with fadeIn',
 		'soul2 Простите, вы крайний?',
 		'mc Видимо, да.',
@@ -570,7 +580,7 @@ monogatari.script ({
 
 		'mc (Это... хоть что-то значит?)',
 
-		'jump Judgment_Verdict'
+		'jump Judgment_Sergey_Witness'
 	],
 
 	'Judgment_Review_Cruel': [
@@ -606,6 +616,53 @@ monogatari.script ({
 		'mc (Но Серёже нужен был не факт. Ему нужен был друг.)',
 		'mc (А я выбрал быть правым. Потому что быть правым — легче, чем быть добрым.)',
 		'mc (Рационализм — прекрасный щит. За ним можно прятать что угодно. Даже обычную человеческую трусость.)',
+
+		'jump Judgment_Sergey_Witness'
+	],
+
+	// --- Свидетельство Серёжи: не про правоту, а про человека за тезисом ---
+	'Judgment_Sergey_Witness': [
+		'Среди образов вспыхивает ещё один. Не яркий. Домашний.',
+		'Экран телефона. Тот самый чат. И голос, который Алексей узнаёт сразу.',
+
+		{
+			'Conditional': {
+				'Condition': function () {
+					return this.storage ().prologue_was_kind ? 'kind' : 'cruel';
+				},
+				'kind': 'jump Judgment_Sergey_Witness_Kind',
+				'cruel': 'jump Judgment_Sergey_Witness_Cruel'
+			}
+		}
+	],
+
+	'Judgment_Sergey_Witness_Kind': [
+		'show character sergey gentle at left with fadeIn',
+		'sergey Я тогда написал про спину. Неловко написал, наверное.',
+		'sergey Ждал, что ты меня разнесёшь. Ты умел. Очень чисто, по пунктам.',
+		'sergey А ты написал: «рад за тебя».',
+		'mc (Я даже не помнил, что ответил именно так.)',
+		'sergey Для тебя это была вежливость. Для меня — вечер, где мне не пришлось защищаться перед другом.',
+		'g Добро без согласия. Редкая вещь.',
+		'jump Judgment_Sergey_Witness_Tail'
+	],
+
+	'Judgment_Sergey_Witness_Cruel': [
+		'show character sergey hurt at left with fadeIn',
+		'sergey Я тогда долго смотрел на твой ответ.',
+		'sergey Ты был прав. Наверное. Спина правда могла пройти сама. Я это понимал.',
+		'sergey Только я написал не диссертацию. Я написал другу, что мне стало легче.',
+		'mc ......',
+		'sergey Потом я молился за тебя. Не чтобы победить в споре.',
+		'sergey Чтобы перестать на тебя злиться.',
+		'g Ты просил фактов, Алексей. Вот факт: он страдал. Ты этого не проверял.',
+		'jump Judgment_Sergey_Witness_Tail'
+	],
+
+	'Judgment_Sergey_Witness_Tail': [
+		'mc (Я всю жизнь спорил с тезисами. Иногда за ними стояли люди.)',
+		'mc (И я называл это интеллектуальной честностью.)',
+		'hide character sergey with fadeOut',
 
 		'jump Judgment_Verdict'
 	],

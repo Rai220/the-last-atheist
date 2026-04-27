@@ -254,6 +254,102 @@ CHARACTERS: dict[str, dict] = {
             ),
         },
     },
+    "sergey": {
+        "dir": "characters/sergey",
+        "look": (
+            "Sergey, called Seryozha, a kind adult Russian man around 38-40, former university friend of Alexey. "
+            "Warm plain face, soft brown eyes, short light-brown hair with a slightly receding hairline, "
+            "neatly trimmed beard shadow, average build, a little tired but gentle. "
+            "Wearing a simple muted olive cardigan over a light grey shirt, dark trousers, modest worn shoes, "
+            "a small wooden Orthodox cross partly visible at the neck, not flashy. "
+            "He looks like an ordinary decent person, not a preacher and not a fanatic: vulnerable, sincere, "
+            "slightly awkward, carrying old back pain in his posture. Full body, facing viewer."
+        ),
+        "ref_pose": "Standing modestly with relaxed shoulders, hands loosely together in front, quiet gentle half-smile, a little embarrassed but open.",
+        "expressions": {
+            "gentle": "Gentle grateful expression, small warm smile, shoulders relaxed, one hand over chest as if thanking a friend.",
+            "awkward": "Awkward and embarrassed: hesitant smile, eyes lowered slightly, one hand scratching the back of his head, posture unsure.",
+            "hurt": "Quietly hurt: eyes wet but not crying, mouth tense, shoulders closed, hands clasped too tightly, wounded by a friend's words.",
+            "praying": "Soft private prayer: eyes closed, hands loosely clasped near chest, humble posture, calm rather than dramatic.",
+            "relieved": "Relieved after pain has passed: brighter eyes, cautious smile, standing a little straighter, one hand at his lower back.",
+        },
+    },
+    "mira": {
+        "dir": "characters/mira",
+        "look": (
+            "Mira, archivist of unanswered prayers in the afterlife. Adult woman around 45, slender and tall, "
+            "calm intelligent face, ash-blonde hair gathered in a loose low bun with a few stray strands, "
+            "pale luminous skin, tired violet-grey eyes behind thin round glasses. "
+            "Wearing a long dark plum archive coat over a high-collared black dress, practical boots, "
+            "thin gloves, a lanyard with a tiny brass archive key and a small stack of paper tags. "
+            "Her silhouette is elegant, quiet and slightly ghostly, surrounded by the feeling of libraries, dust and silence. "
+            "She is not angelic or demonic; she is a keeper of records no one knows how to read. Full body, facing viewer."
+        ),
+        "ref_pose": "Standing composed with a folder pressed to her chest, neutral compassionate gaze, posture precise and still.",
+        "expressions": {
+            "archive": "Professional archivist mode: holding a thick folder labeled only with blank paper tags, calm precise gaze, one gloved finger marking a page.",
+            "gentle": "Gentle witness: soft compassionate eyes, small sad smile, folder lowered, posture open and reassuring.",
+            "stern": "Quietly stern: glasses slightly lowered, one eyebrow raised, folder held like evidence, precise unamused expression.",
+            "sad": "Deep sadness contained: eyes downcast, shoulders barely dropped, one hand resting on a folder of unanswered prayers.",
+            "unreadable": "Unreadable and mysterious: face calm like a sealed archive, violet-grey eyes reflecting faint paper-white light, hands folded around a brass key.",
+        },
+    },
+    "oleg": {
+        "dir": "characters/oleg",
+        "look": (
+            "Oleg, purgatory lawyer specializing in hopeless appeals. Adult Russian man around 50, dry and wiry, "
+            "long narrow face, sharp nose, tired clever eyes, thinning dark hair combed back, clean-shaven. "
+            "Wearing a rumpled brown suit that was once expensive, loose tie, white shirt with rolled sleeves, "
+            "worn leather shoes, pockets stuffed with folded papers and numbered queue tickets. "
+            "He carries an old battered briefcase and a stamp pad. Bureaucratic tragicomedy energy: "
+            "he knows the procedure is absurd and still believes wording matters. Full body, facing viewer."
+        ),
+        "ref_pose": "Standing with one hand holding a battered briefcase and the other holding a document, tired professional half-smile.",
+        "expressions": {
+            "neutral": "Neutral legal consultation: tired attentive gaze, document in hand, briefcase at his side, ready to explain bad news politely.",
+            "objection": "Objection pose: one finger raised sharply, mouth open mid-argument, papers flying slightly, legal passion in tired eyes.",
+            "exhausted": "Exhausted after eternal paperwork: shoulders sagging, tie loosened, briefcase hanging low, deadpan expression.",
+            "smug": "Dry smug victory: tiny satisfied smile, eyebrow raised, holding a stamped complaint form like a chess move.",
+            "hopeful": "Cautiously hopeful: softer eyes, document held carefully with both hands, as if this impossible appeal might matter.",
+        },
+    },
+    "nadya": {
+        "dir": "characters/nadya",
+        "look": (
+            "Nadya, former moderator of online religious debates, now hell dispute moderator. Adult woman around 32, "
+            "sharp observant face, short dark bob haircut with one teal streak, tired green eyes, practical build. "
+            "Wearing a dark charcoal blazer over a black turtleneck, dark jeans, sturdy boots, "
+            "a moderator badge on a lanyard, a red stamp in one hand and a tablet full of complaint threads in the other. "
+            "She looks competent, sleep-deprived, dryly funny and impossible to impress. Full body, facing viewer."
+        ),
+        "ref_pose": "Standing with tablet tucked under one arm, red stamp in the other hand, tired professional stare.",
+        "expressions": {
+            "tired": "Deeply tired moderator stare, half-lidded eyes, tablet under arm, stamp held loosely, posture of someone who has seen every argument.",
+            "strict": "Strict moderation mode: eyebrows lowered, red stamp raised, tablet screen glowing, decisive no-nonsense posture.",
+            "amused": "Dry amusement: one corner of mouth lifted, eyebrow raised, holding the stamp like a punchline, eyes still tired.",
+            "facepalm": "Facepalm: one hand covering part of her face, tablet tucked under arm, body language of exhausted disbelief.",
+            "stamp": "Action pose stamping a complaint form: red stamp descending firmly, focused eyes, bureaucratic finality.",
+        },
+    },
+    "intern": {
+        "dir": "characters/intern",
+        "look": (
+            "A young angel intern in the heavenly bureaucracy, adult and early twenties. "
+            "Soft androgynous face, anxious large blue-grey eyes, short curly blond hair, clean pale skin. "
+            "Small white feathered wings not fully grown, slightly uneven. Wearing simple white-gold trainee armor "
+            "over a pale blue tunic, too-new sandals, and a lanyard with a glowing trainee badge. "
+            "Holding a slim celestial tablet and a stylus. He looks kind, nervous, overworked and not yet hardened by procedure. "
+            "Full body, facing viewer."
+        ),
+        "ref_pose": "Standing politely with celestial tablet held in both hands, anxious helpful smile, wings tucked close.",
+        "expressions": {
+            "polite": "Polite trainee smile, tablet held carefully in both hands, wings tucked, eager to follow procedure correctly.",
+            "nervous": "Nervous: wide anxious eyes, stylus almost slipping from hand, wings slightly ruffled, worried about making a mistake.",
+            "panic": "Tiny bureaucratic panic: tablet tilted, papers of light fluttering around, mouth slightly open, wings half-spread.",
+            "relieved": "Relieved: soft exhale, small sincere smile, shoulders loosening, tablet hugged to chest.",
+            "determined": "Newfound determination: standing straighter, tablet at side, small wings open a little, kind but firm gaze.",
+        },
+    },
 }
 
 

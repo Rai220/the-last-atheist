@@ -104,5 +104,69 @@ monogatari.characters ({
 			excited: 'excited.png',
 			hurt: 'hurt.png'
 		}
+	},
+	'pastmc': {
+		name: 'IronyOverload2024',
+		color: '#88ccff'
+	},
+	'sergey': {
+		name: 'Серёжа',
+		color: '#d8c276',
+		directory: 'sergey',
+		sprites: {
+			gentle: 'gentle.png',
+			awkward: 'awkward.png',
+			hurt: 'hurt.png',
+			praying: 'praying.png',
+			relieved: 'relieved.png'
+		}
+	},
+	'mira': {
+		name: 'Мира',
+		color: '#c9a8ff',
+		directory: 'mira',
+		sprites: {
+			archive: 'archive.png',
+			gentle: 'gentle.png',
+			stern: 'stern.png',
+			sad: 'sad.png',
+			unreadable: 'unreadable.png'
+		}
+	},
+	'oleg': {
+		name: 'Олег',
+		color: '#ffcc88',
+		directory: 'oleg',
+		sprites: {
+			neutral: 'neutral.png',
+			objection: 'objection.png',
+			exhausted: 'exhausted.png',
+			smug: 'smug.png',
+			hopeful: 'hopeful.png'
+		}
+	},
+	'nadya': {
+		name: 'Надя',
+		color: '#88ddaa',
+		directory: 'nadya',
+		sprites: {
+			tired: 'tired.png',
+			strict: 'strict.png',
+			amused: 'amused.png',
+			facepalm: 'facepalm.png',
+			stamp: 'stamp.png'
+		}
+	},
+	'intern': {
+		name: 'Ангел-стажёр',
+		color: '#d8e8ff',
+		directory: 'intern',
+		sprites: {
+			polite: 'polite.png',
+			nervous: 'nervous.png',
+			panic: 'panic.png',
+			relieved: 'relieved.png',
+			determined: 'determined.png'
+		}
 	}
 });
