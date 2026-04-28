@@ -447,6 +447,19 @@ monogatari.script ({
 							wtf_level: Math.min (100, s.wtf_level + 5)
 						});
 					}
+				},
+				'ask_judge': {
+					'Text': '«Кто меня судит — Вы или моя память?»',
+					'Do': 'jump Judgment_Ask_True_Judge',
+					'onChosen': function () {
+						const s = this.storage ();
+						this.storage ({
+							asked_true_judge: true,
+							argument_quality: s.argument_quality + 1,
+							matrix_suspicion: s.matrix_suspicion + 1,
+							noticed_patterns: true
+						});
+					}
 				}
 			}
 		}
@@ -534,6 +547,28 @@ monogatari.script ({
 		'jump Judgment_Review'
 	],
 
+	// --- Кто именно судит ---
+	'Judgment_Ask_True_Judge': [
+		'show character mc normal at center',
+		'mc Подождите.',
+		'mc Если вы всеведущи, вам не нужен процесс. Если справедливы — вам не нужна сцена.',
+		'mc Тогда кто сейчас меня судит?',
+		'mc Вы? Или моя память, которой наконец дали проектор?',
+
+		'Свет не усиливается. Не давит. Просто становится тише.',
+
+		'g Хороший вопрос.',
+		'mc Это ответ?',
+		'g Нет. Это место, где ответ обычно подменяют приговором.',
+		'g Смотри внимательно, Алексей. Не на Меня. На то, что ты сам принесёшь в этот зал.',
+
+		'mc (Сам принесу?)',
+		'mc (Значит, суд — не только сверху. Он ещё и изнутри.)',
+		'mc (Значит, даже здесь нельзя спрятаться за внешнюю инстанцию.)',
+
+		'jump Judgment_Review'
+	],
+
 	// ==========================================
 	// СТРАШНЫЙ СУД: Обзор жизни
 	// ==========================================
@@ -580,7 +615,7 @@ monogatari.script ({
 
 		'mc (Это... хоть что-то значит?)',
 
-		'jump Judgment_Sergey_Witness'
+		'jump Judgment_Mother_Dispatch'
 	],
 
 	'Judgment_Review_Cruel': [
@@ -617,6 +652,70 @@ monogatari.script ({
 		'mc (А я выбрал быть правым. Потому что быть правым — легче, чем быть добрым.)',
 		'mc (Рационализм — прекрасный щит. За ним можно прятать что угодно. Даже обычную человеческую трусость.)',
 
+		'jump Judgment_Mother_Dispatch'
+	],
+
+	// --- Мать: недосказанное до Серёжи ---
+	'Judgment_Mother_Dispatch': [
+		{
+			'Conditional': {
+				'Condition': function () {
+					return this.storage ().mother_called ? 'mother' : 'skip';
+				},
+				'mother': 'jump Judgment_Mother_Witness',
+				'skip': 'jump Judgment_Sergey_Witness'
+			}
+		}
+	],
+
+	'Judgment_Mother_Witness': [
+		'Ещё один образ возникает не как обвинение. Как кухня.',
+		'Старые часы. Чайник. Телефон на клеёнке.',
+		'Мать сидит рядом с телефоном и смотрит на экран так, будто от взгляда зависит, позвонит ли он.',
+
+		{
+			'Conditional': {
+				'Condition': function () {
+					var s = this.storage ();
+					if (s.mother_promise) return 'promise';
+					if (s.mother_lied) return 'lie';
+					return 'deflect';
+				},
+				'promise': 'jump Judgment_Mother_Promise',
+				'lie': 'jump Judgment_Mother_Lie',
+				'deflect': 'jump Judgment_Mother_Deflect'
+			}
+		}
+	],
+
+	'Judgment_Mother_Promise': [
+		'В её календаре на субботу стоит пометка: «Алёша. Пирог. Без ноутбука?»',
+		'mc (Я обещал.)',
+		'g Да.',
+		'mc (И не успел.)',
+		'g Не успел — не всегда то же самое, что обманул.',
+		'mc (Но для неё результат один.)',
+		'g Поэтому результат — не всё.',
+		'jump Judgment_Sergey_Witness'
+	],
+
+	'Judgment_Mother_Lie': [
+		'В её телефоне последняя строка от него так и не появилась.',
+		'Она набирает «Ты доехал?» — стирает. Набирает снова. Стирает.',
+		'mc (Я сказал «потом».)',
+		'g Ты часто называл страх занятостью.',
+		'mc (Я боялся чего? Пирога?)',
+		'g Близости без аргументов. Там нечем защищаться.',
+		'jump Judgment_Sergey_Witness'
+	],
+
+	'Judgment_Mother_Deflect': [
+		'Она слушает прогноз погоды по радио, хотя уже спросила у него.',
+		'Двенадцать процентов дождя. Те же цифры. Та же попытка говорить о чём-то безопасном.',
+		'mc (Я обещал позвонить вечером.)',
+		'g Обещания, сказанные автоматически, тоже слышат.',
+		'mc (И ждут.)',
+		'g И ждут.',
 		'jump Judgment_Sergey_Witness'
 	],
 
@@ -628,12 +727,25 @@ monogatari.script ({
 		{
 			'Conditional': {
 				'Condition': function () {
+					if (this.storage ().sergey_private_call) return 'call';
 					return this.storage ().prologue_was_kind ? 'kind' : 'cruel';
 				},
+				'call': 'jump Judgment_Sergey_Witness_Call',
 				'kind': 'jump Judgment_Sergey_Witness_Kind',
 				'cruel': 'jump Judgment_Sergey_Witness_Cruel'
 			}
 		}
+	],
+
+	'Judgment_Sergey_Witness_Call': [
+		'show character sergey relieved at left with fadeIn',
+		'sergey Ты тогда позвонил. Я ждал удара, если честно.',
+		'sergey Думал: сейчас будет «корреляция не каузация», ссылки, сарказм.',
+		'sergey А ты спросил, как я. И не стал спорить.',
+		'mc (Я помню этот звонок. Десять минут. Я почти ничего не сказал.)',
+		'sergey Для тебя это было «не спорить утром». Для меня — доказательство, что друг ещё где-то там.',
+		'g Добро без победы. Редкая вещь.',
+		'jump Judgment_Sergey_Witness_Tail'
 	],
 
 	'Judgment_Sergey_Witness_Kind': [

@@ -10,6 +10,9 @@
 'use strict';
 /* global monogatari */
 
+var tlaRuntimeTestMode = typeof window !== 'undefined'
+	&& new URLSearchParams (window.location.search).has ('tla_runtime_test');
+
 monogatari.settings({
 
 	// The name of your game, this will be used to store all the data so once
@@ -118,7 +121,7 @@ monogatari.settings({
 	// Name of the Splash Screen Label. If a name is given and a label with that
 	// name exists on the game's script, it will be used to show a splash screen
 	// right after the loading screen.
-	'SplashScreenLabel': '_SplashScreen',
+	'SplashScreenLabel': tlaRuntimeTestMode ? '' : '_SplashScreen',
 
 	// Define what storage engine should be used to save the game data. *
 	// Adapters Available:

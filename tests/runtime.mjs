@@ -12,6 +12,11 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname (fileURLToPath (import.meta.url));
 const REPO = path.resolve (__dirname, '..');
+const TEST_QUERY = '?tla_runtime_test=1';
+
+function gameUrl (port) {
+	return `http://localhost:${port}/index.html${TEST_QUERY}`;
+}
 
 // ----- найти свободный порт, чтобы не конфликтовать с `bun run serve` (5100)
 async function findFreePort () {
@@ -66,19 +71,26 @@ const ENDINGS_FULL = [
 	['rebellion',         'Ending_Rebellion'],
 	['hacker',            'Ending_Hacker'],
 	['democracy',         'Ending_Democracy'],
+	['appeal',            'Ending_Appeal'],
 	['bar',               'Ending_Bar'],
 	['franchise',         'Ending_Franchise'],
 	['therapist',         'Ending_Therapist'],
+	['archivist',         'Ending_Archivist'],
 	['matrix',            'Ending_Matrix'],
 	['speedrun',          'Ending_Speedrun'],
+	['beta_tester',       'Ending_BetaTester'],
 	['awakening',         'Ending_Awakening'],
 	['full_circle',       'Ending_FullCircle'],
 	['dev_commentary',    'Ending_DevCommentary'],
+	['empty_throne',      'Ending_EmptyThrone'],
 	['anon_from_hell',    'Ending_AnonFromHell'],
+	['control_group',     'Ending_ControlGroup'],
 	['alice_log',         'Ending_AliceLog'],
 	['alice_silent',      'Ending_AliceSilent'],
 	['nihilist',          'Ending_Nihilist'],
 	['prophet',           'Ending_Prophet'],
+	['witness',           'Ending_Witness'],
+	['last_call',         'Ending_LastCall'],
 	['hell_romance',      'Ending_HellRomance'],
 	['escape_together',   'Ending_EscapeTogether'],
 	['escape_caught',     'Escape_Caught'],
@@ -97,6 +109,15 @@ const GATES = [
 	{ desc: 'Hell_Secret_Check → prophet (begged + acceptance + empathy)',
 		preset: { judgment_begged: true, acceptance_score: 3, empathy_shown: 3 },
 		jump: 'Hell_Breakdown', expectEnd: 'prophet' },
+	{ desc: 'Hell_Secret_Check → witness (Sergey call + empathy)',
+		preset: { sergey_private_call: true, acceptance_score: 2, empathy_shown: 4 },
+		jump: 'Hell_Breakdown', expectEnd: 'witness' },
+	{ desc: 'Hell_Secret_Check → last_call (mother + true judge)',
+		preset: { mother_called: true, asked_true_judge: true, acceptance_score: 2 },
+		jump: 'Hell_Breakdown', expectEnd: 'last_call' },
+	{ desc: 'Hell_Secret_Check → archivist (archive + empathy)',
+		preset: { archive_touched: true, acceptance_score: 2, empathy_shown: 3 },
+		jump: 'Hell_Breakdown', expectEnd: 'archivist' },
 	{ desc: 'Hell_Secret_Check → full_circle',
 		preset: { prologue_was_kind: true, empathy_shown: 3, acceptance_score: 3 },
 		jump: 'Hell_Breakdown', expectEnd: 'full_circle' },
@@ -147,12 +168,39 @@ async function freshContext (browser) {
 async function bootGame (page, port) {
 	const errs = [];
 	page.on ('pageerror', e => errs.push (e.message));
-	await page.goto (`http://localhost:${port}/index.html`, { waitUntil: 'domcontentloaded' });
+	await page.goto (gameUrl (port), { waitUntil: 'domcontentloaded' });
 	await page.waitForFunction (() => typeof monogatari !== 'undefined' && monogatari.proceed, { timeout: 8000 });
-	await page.waitForTimeout (300);
-	await page.evaluate (async () => { try { await monogatari.startGame (); } catch {} });
+	await waitForRuntimeReady (page);
+	await startGameForRuntime (page);
 	await page.waitForTimeout (150);
 	return errs;
+}
+
+async function waitForRuntimeReady (page) {
+	await page.waitForFunction (() => {
+		const main = document.querySelector ('[data-screen="main"]');
+		const game = document.querySelector ('[data-screen="game"]');
+		return !!(main?.classList.contains ('active') || game?.classList.contains ('active'));
+	}, { timeout: 8000 });
+}
+
+async function startGameForRuntime (page) {
+	await page.evaluate (async () => {
+		try {
+			if (typeof monogatari.startGame === 'function') {
+				await monogatari.startGame ();
+				return;
+			}
+			monogatari.global ('playing', true);
+			monogatari.global ('block', false);
+			monogatari.global ('_engine_block', false);
+			if (typeof monogatari.onStart === 'function') await monogatari.onStart ();
+			if (typeof monogatari.showScreen === 'function') monogatari.showScreen ('game');
+			const current = monogatari.label ();
+			const step = monogatari.state ('step') || 0;
+			if (current && current[step]) await monogatari.run (current[step]);
+		} catch {}
+	});
 }
 
 // Прокручиваем игру до Ending_Credits / появления tla_endings или таймаута.
@@ -254,10 +302,10 @@ async function testEndings (launchBrowser, port) {
 		const errs = [];
 		page.on ('pageerror', e => errs.push (e.message));
 		try {
-			await page.goto (`http://localhost:${port}/index.html`, { waitUntil: 'domcontentloaded' });
+			await page.goto (gameUrl (port), { waitUntil: 'domcontentloaded' });
 			await page.waitForFunction (() => typeof monogatari !== 'undefined' && monogatari.proceed, { timeout: 8000 });
-			await page.waitForTimeout (300);
-			await page.evaluate (async () => { try { await monogatari.startGame (); } catch {} });
+			await waitForRuntimeReady (page);
+			await startGameForRuntime (page);
 			await page.waitForTimeout (120);
 			const result = await advanceToEnding (page, lbl);
 			const ok = !!result.tla[key];
@@ -306,10 +354,10 @@ async function testGates (launchBrowser, port) {
 			continue;
 		}
 		try {
-			await page.goto (`http://localhost:${port}/index.html`, { waitUntil: 'domcontentloaded' });
+			await page.goto (gameUrl (port), { waitUntil: 'domcontentloaded' });
 			await page.waitForFunction (() => typeof monogatari !== 'undefined' && monogatari.proceed, { timeout: 8000 });
-			await page.waitForTimeout (300);
-			await page.evaluate (async () => { try { await monogatari.startGame (); } catch {} });
+			await waitForRuntimeReady (page);
+			await startGameForRuntime (page);
 			await page.waitForTimeout (120);
 			await page.evaluate (preset => monogatari.storage (preset), sc.preset);
 			const final = await advanceToLabel (page, sc.jump, sc.expectLabel, sc.expectEnd);
@@ -394,7 +442,7 @@ async function testUI (launchBrowser, port) {
 			const browser = await launchBrowser ();
 			try {
 				const { ctx, page } = await freshContext (browser);
-				await page.goto (`http://localhost:${port}/index.html`, { waitUntil: 'domcontentloaded' });
+				await page.goto (gameUrl (port), { waitUntil: 'domcontentloaded' });
 				await page.waitForFunction (() => typeof monogatari !== 'undefined', { timeout: 8000 });
 				let mainShown = false;
 				for (let i = 0; i < 20; i++) {
@@ -432,10 +480,10 @@ async function testUI (launchBrowser, port) {
 			const browser = await launchBrowser ();
 			try {
 				const { ctx, page } = await freshContext (browser);
-				await page.goto (`http://localhost:${port}/index.html`, { waitUntil: 'domcontentloaded' });
+				await page.goto (gameUrl (port), { waitUntil: 'domcontentloaded' });
 				await page.waitForFunction (() => typeof monogatari !== 'undefined' && monogatari.proceed, { timeout: 8000 });
-				await page.waitForTimeout (300);
-				await page.evaluate (async () => { try { await monogatari.startGame (); } catch {} });
+				await waitForRuntimeReady (page);
+				await startGameForRuntime (page);
 				await page.evaluate (() => monogatari.run ('jump Prologue_Morning_Choice').catch (() => {}));
 				await page.waitForTimeout (350);
 				// Делаем все проверки в одном evaluate, чтобы не плодить раунд-трипов

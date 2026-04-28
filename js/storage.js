@@ -20,6 +20,12 @@ monogatari.storage ({
 	// --- Флаги: Пролог ---
 	prologue_debate_won: false,
 	prologue_was_kind: false,
+	sergey_private_call: false,
+	mother_called: false,
+	mother_promise: false,
+	mother_lied: false,
+	pattern_journal: false,
+	route_deviation: false,
 	death_type: 'heart_attack',
 	death_flavor: '',            // 'mundane'/'ironic'/'overwork' — влияет на атмосферу ада
 	morning_choice: '',
@@ -34,12 +40,15 @@ monogatari.storage ({
 	judgment_tried_vr: false,
 	judgment_argued_stats: false,
 	judgment_begged: false,
+	asked_true_judge: false,
 	judgment_verdict: 'standard',
 
 	// --- Флаги: Ад ---
 	met_other_atheists: false,
 	started_rebellion: false,
 	found_bar_location: false,
+	archive_touched: false,
+	oleg_consulted: false,
 	debate_cycle: 0,
 	demon_friendship: 0,
 	lilith_interest: 0,

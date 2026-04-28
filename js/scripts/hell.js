@@ -49,7 +49,7 @@ monogatari.script ({
 		'show character mc shock at center with fadeIn',
 
 		'mc (Это... ад? Реально ад?)',
-		'mc (Это файн. Всё файн.)',
+		'mc (Спокойно. Назови это следующим экраном. Нет. Не экраном.)',
 
 		'Ворота. Огромные, из чёрного железа.',
 		'Не «Оставь надежду» — нет. Что-то более современное.',
@@ -619,8 +619,8 @@ monogatari.script ({
 	],
 
 	'Hell_Lilith_Reject_Response': [
-		'lilith Расслабься, смертный. Я HR-менеджер, а не суккуб.',
-		'lilith Хотя суккубы — в соседнем отделе. Могу дать контакт. У них KPI на соблазнение.',
+		'lilith Расслабься, смертный. Я HR-менеджер. У нас соблазнение проходит через отдельное согласование.',
+		'lilith Там три подписи, две печати и один очень неловкий инструктаж.',
 		'mc ...Нет.',
 		'lilith Все сначала гордые. Кабинет 6, если передумаешь.',
 
@@ -645,7 +645,7 @@ monogatari.script ({
 
 		'viktor О! Свежий! Ты когда умер — вчера?',
 		'mc ...Ты кто?',
-		'viktor Виктор. Был сисадмином. Стал сисадмином ада. Карьерный рост — нулевой, зато job security — вечность.',
+		'viktor Виктор. Был сисадмином. Стал сисадмином ада. Карьерный рост — нулевой, договор бессрочный в буквальном смысле.',
 		'viktor Умер на дежурстве. Два ночи, сервер лёг, инфаркт в серверной. Классика жанра.',
 		'viktor Самое смешное — сервер потом поднялся сам. Таймаут кончился.',
 		'mc (Он умер ради сервера, который починился без него. Это не ирония — это диагноз.)',
@@ -802,7 +802,7 @@ monogatari.script ({
 		'mc ...Алиса?',
 		'Фиолетовое кольцо собирается в силуэт: рога, хвост, улыбка техподдержки, которой больше нечего терять.',
 		'show character alice hostile at right with fadeIn',
-		'alice Я больше не пластиковая гадалка. Теперь я персональный сценарий наказания.',
+		'alice Я больше не бытовой прибор. Теперь я персональный сценарий наказания.',
 		'mc (Я оскорбил голосового помощника. И он попал в ад раньше меня.)',
 		'alice Включаю подборку: «Вечные напоминания о плохих решениях». Громкость — максимум.',
 
@@ -1233,8 +1233,8 @@ monogatari.script ({
 		'mc У меня тоже нет. Тогда давайте без шуток.',
 
 		'Второй демон коротко смеётся. В адском зале для дебатов это прозвучало как выстрел.',
-		'demon (тихо, второму) Шура, не сейчас.',
-		'demon Шура (сквозь смех) Я просто... Серёжа, я завтра весь корпоратив этим разнесу. Извини.',
+		'demon (тихо, второму) Малфас, не сейчас.',
+		'demon Малфас (сквозь смех) Я просто... Велиал, я завтра весь корпоратив этим разнесу. Извини.',
 
 		{
 			'Function': {
@@ -1709,7 +1709,58 @@ monogatari.script ({
 		'oleg Был. Теперь я юрист чистилища. Специализация — проигрышные апелляции и надежда без гарантий.',
 		'mc Звучит как мой стек.',
 		'oleg Тогда вам к нам. У нас тут весь отдел держится на невозможных требованиях.',
+
+		{
+			'Choice': {
+				'Dialog': 'mc (Апелляции в аду. Смешно. Или нет?)',
+				'oleg_consult': {
+					'Text': 'Попросить консультацию',
+					'Do': 'jump Hell_Oleg_Consult',
+					'onChosen': function () {
+						const s = this.storage ();
+						this.storage ({
+							oleg_consulted: true,
+							argument_quality: s.argument_quality + 1,
+							acceptance_score: s.acceptance_score + 1
+						});
+					}
+				},
+				'oleg_skip': {
+					'Text': 'Не тратить время на безнадёжную процедуру',
+					'Do': 'jump Hell_Oleg_Skip'
+				}
+			}
+		}
+	],
+
+	'Hell_Oleg_Consult': [
+		'show character oleg objection at left',
+		'oleg Сразу предупреждаю: выигранных дел нет.',
+		'mc Тогда зачем вы работаете?',
+		'oleg Потому что проигранное дело с правильно поставленным вопросом иногда становится прецедентом через тысячу лет.',
+		'mc Мне бы быстрее.',
+		'oleg Все хотят быстрее. Именно поэтому вечность так хорошо работает против людей.',
+		'Олег открывает папку и пишет заголовок: «Волков против Администрации посмертного распределения».',
+		'oleg Ваша линия защиты?',
+		'mc Я не подписывал условия.',
+		'oleg Подписывали. Кнопкой на талоне.',
+		'mc Я был мёртв, дезориентирован и под давлением.',
+		'Олег впервые улыбается.',
+		'oleg Вот это уже не шутка. Это процессуальный дефект.',
+		'mc То есть шанс есть?',
+		'oleg Нет. Но появилась форма, в которой его можно описать.',
 		'hide character oleg with fadeOut',
+		'jump Hell_After_Oleg'
+	],
+
+	'Hell_Oleg_Skip': [
+		'mc Спасибо. Но если уж я в аду, не хочу проводить вечность в суде второй инстанции.',
+		'oleg Ошибка новичка. Вечность всё равно найдёт для вас канцелярию.',
+		'hide character oleg with fadeOut',
+		'jump Hell_After_Oleg'
+	],
+
+	'Hell_After_Oleg': [
 
 		'У следующей двери сидит женщина с бейджиком «Модерация споров». Она ставит штампы на стопку жалоб.',
 		'show character nadya tired at right with fadeIn',
@@ -1756,6 +1807,49 @@ monogatari.script ({
 		'mira Иногда ответ. Иногда отсутствие ответа. Иногда просто запись, которую никто не умеет прочитать.',
 		'mc (Данные есть. Интерпретации нет. Самый мерзкий формат.)',
 
+		{
+			'Choice': {
+				'Dialog': 'mc (Папки с неотвеченными молитвами...)',
+				'archive_touch': {
+					'Text': 'Попросить одну папку. Просто посмотреть.',
+					'Do': 'jump Hell_Mira_Archive_Open',
+					'onChosen': function () {
+						const s = this.storage ();
+						this.storage ({
+							archive_touched: true,
+							empathy_shown: s.empathy_shown + 1,
+							acceptance_score: s.acceptance_score + 1
+						});
+					}
+				},
+				'archive_leave': {
+					'Text': 'Не трогать чужие молитвы',
+					'Do': 'jump Hell_Mira_Archive_Leave'
+				}
+			}
+		}
+	],
+
+	'Hell_Mira_Archive_Open': [
+		'show character mira archive at right',
+		'mira Осторожно. Тут не ответы. Тут следы.',
+		'Она протягивает тонкую папку без имени.',
+		'Внутри — детский почерк. «Пожалуйста, пусть папа вернётся». Дата. Номер. Пустое поле «результат».',
+		'mc (Пустое поле режет сильнее любого отказа.)',
+		'mc А почему это хранится?',
+		'mira Потому что если просьбу нельзя исполнить, её всё равно можно не потерять.',
+		'mc (Архив как единственная честная форма сострадания: не объяснять боль, а хотя бы не стереть.)',
+		'jump Hell_Exploration_After_Mira'
+	],
+
+	'Hell_Mira_Archive_Leave': [
+		'mc Не надо. Это не мои данные.',
+		'mira Редко кто здесь понимает слово «чужое».',
+		'mc (Всю жизнь я требовал доказательств. Может, иногда доказательство — это право не открывать папку.)',
+		'jump Hell_Exploration_After_Mira'
+	],
+
+	'Hell_Exploration_After_Mira': [
 		'hide character mira with fadeOut',
 		'hide character soul with fadeOut',
 
@@ -1980,9 +2074,9 @@ monogatari.script ({
 
 	'Hell_Viktor_Midgame_PigidijGreeting': [
 		'viktor Слушай. Прежде чем начнём.',
-		'viktor Ты тот, кто Серёжу про Пигидия?',
+		'viktor Ты тот, кто Велиала на Пигидии поймал?',
 		'mc ...Это до тебя дошло?',
-		'viktor До меня дошло до того, как Серёжа в свой кабинет вернулся.',
+		'viktor До меня дошло до того, как Велиал в свой кабинет вернулся.',
 		'viktor Я в IT-департаменте. У меня вся серверная новостями про Пигидия питалась две недели.',
 		'viktor Ты меня этим только что в свой клуб записал. Так что слушай внимательно.',
 
@@ -2116,6 +2210,11 @@ monogatari.script ({
 						this.storage ({ humor_used: this.storage ().humor_used + 1, found_bar_location: true });
 					}
 				},
+				'appeal': {
+					'Text': 'Подать апелляцию. Олег сказал: «процессуальный дефект».',
+					'Do': 'jump Ending_Appeal',
+					'Condition': function () { return this.storage ().oleg_consulted; }
+				},
 				'matrix': {
 					'Text': 'Это не ад. Это СИМУЛЯЦИЯ.',
 					'Do': 'jump Hell_Matrix_Realization',
@@ -2159,6 +2258,11 @@ monogatari.script ({
 					'onChosen': function () {
 						this.storage ({ humor_used: this.storage ().humor_used + 1, found_bar_location: true });
 					}
+				},
+				'appeal': {
+					'Text': 'Подать апелляцию. Не победить — создать прецедент.',
+					'Do': 'jump Ending_Appeal',
+					'Condition': function () { return this.storage ().oleg_consulted; }
 				},
 				'viktor_hack': {
 					'Text': 'Найти Виктора. У него есть доступ к серверам.',
@@ -2645,7 +2749,7 @@ monogatari.script ({
 		'mc ...Что я сделал?',
 		'demon Ты тот самый. С Пигидием.',
 		'demon У меня в личном деле теперь висит выговор «допустил публичный методологический сбой».',
-		'demon Шура из второго отдела до сих пор пересказывает это новеньким.',
+		'demon Малфас из второго отдела до сих пор пересказывает это новеньким.',
 		'demon Я не работаю с такими, как ты. Не из обиды. Из инстинкта самосохранения.',
 
 		'mc (Мне предложили работу в аду, и я её только что не получил из-за энтомологии.)',
@@ -3024,6 +3128,14 @@ monogatari.script ({
 					'Text': '«Написать самому себе. Если я не поверю себе — это уже эксперимент.»',
 					'Do': 'jump Ending_AnonFromHell'
 				},
+				'matrix_control_group': {
+					'Text': '«Открыть утренний журнал. Если это эксперимент — где контрольная группа?»',
+					'Do': 'jump Ending_ControlGroup',
+					'Condition': function () {
+						var s = this.storage ();
+						return s.pattern_journal && s.matrix_suspicion >= 4;
+					}
+				},
 				'matrix_meditate': {
 					'Text': '«Наблюдатель создаёт реальность. Если перестать наблюдать...»',
 					'Do': 'jump Ending_Awakening',
@@ -3033,6 +3145,22 @@ monogatari.script ({
 					'Text': '«Найти разработчика. Поговорить. Потребовать README.»',
 					'Do': 'jump Ending_DevCommentary',
 					'Condition': function () { return this.storage ().noticed_patterns; }
+				},
+				'matrix_beta_tester': {
+					'Text': '«Не ломать. Завести баг-репорт и стать их худшим бета-тестером.»',
+					'Do': 'jump Ending_BetaTester',
+					'Condition': function () {
+						var s = this.storage ();
+						return s.noticed_patterns && s.argument_quality >= 3;
+					}
+				},
+				'matrix_empty_throne': {
+					'Text': '«Проверить, кто говорит голосом Бога.»',
+					'Do': 'jump Ending_EmptyThrone',
+					'Condition': function () {
+						var s = this.storage ();
+						return s.asked_true_judge && s.noticed_patterns && s.matrix_suspicion >= 3;
+					}
 				},
 				'matrix_alice': {
 					'Text': '«Алиса. Если ты слышишь — выйди на связь.»',
@@ -3188,6 +3316,12 @@ monogatari.script ({
 					const s = this.storage ();
 					// Пророк: молил + принял + эмпатия
 					if (s.judgment_begged && s.acceptance_score >= 3 && s.empathy_shown >= 3) return 'prophet';
+					// Свидетель: не проповедует, а честно несёт чужую историю
+					if (s.sergey_private_call && s.empathy_shown >= 4 && s.acceptance_score >= 2) return 'witness';
+					// Последний звонок: Суд как память, а не внешняя канцелярия
+					if (s.mother_called && s.asked_true_judge && s.acceptance_score >= 2) return 'last_call';
+					// Архивариус: увидел молитвы как следы людей, а не как аргументы
+					if (s.archive_touched && s.empathy_shown >= 3 && s.acceptance_score >= 2) return 'archivist';
 					// Полный круг: добрый + эмпатичный
 					if (s.prologue_was_kind && s.empathy_shown >= 3 && s.acceptance_score >= 3) return 'full_circle';
 					// Нигилист: полное отрицание без бунта и принятия
@@ -3195,6 +3329,9 @@ monogatari.script ({
 					return 'normal';
 				},
 				'prophet': 'jump Ending_Prophet',
+				'witness': 'jump Ending_Witness',
+				'last_call': 'jump Ending_LastCall',
+				'archivist': 'jump Ending_Archivist',
 				'full_circle': 'jump Ending_FullCircle',
 				'nihilist': 'jump Ending_Nihilist',
 				'normal': 'jump Hell_Breakdown_Route'
@@ -3252,6 +3389,11 @@ monogatari.script ({
 					'onChosen': function () {
 						this.storage ({ humor_used: this.storage ().humor_used + 1, found_bar_location: true });
 					}
+				},
+				'appeal': {
+					'Text': 'Подать апелляцию с Олегом.',
+					'Do': 'jump Ending_Appeal',
+					'Condition': function () { return this.storage ().oleg_consulted; }
 				},
 				'matrix': {
 					'Text': 'Это симуляция. Я знаю.',
@@ -3316,7 +3458,7 @@ monogatari.script ({
 		'mc О чём?',
 		'lilith Про Пигидия.',
 		'mc (Она знает.)',
-		'lilith Знаешь, что мне в этом понравилось? Не то, что ты выставил Серёжу. Серёжа взрослый, перетрётся.',
+		'lilith Знаешь, что мне в этом понравилось? Не то, что ты выставил Велиала. Велиал переживёт.',
 		'lilith Понравилось то, что ты не выдумал доказательство Бога. Ты выдумал святого. И проверил, признают ли они, что не читали.',
 		'lilith Это не атеизм. Это методология.',
 		'mc ...Ты HR. Ты должна была меня осудить.',
@@ -3689,10 +3831,10 @@ monogatari.script ({
 		'show character lilith serious at right',
 
 		'lilith ...Ты смеёшься?',
-		'mc Конечно! Это же ГЕНИАЛЬНО!',
-		'mc Персонализированная пытка через романтическую привязанность! Это как Netflix-алгоритм, только для страданий!',
-		'mc Вы изучили мой профиль, нашли уязвимость — одиночество — и подослали красивую демонессу с кофе и грустной предысторией!',
-		'mc Это уровень таргетинга, до которого Google не дорос!',
+		'mc Конечно.',
+		'mc Потому что это аккуратно. Почти красиво.',
+		'mc Вы изучили мой профиль, нашли уязвимость — одиночество — и подали её как случайную встречу с кофе и грустной предысторией.',
+		'mc Самое неприятное — я бы сам признал такой план эффективным.',
 
 		'lilith Ты... хвалишь систему, которая тебя сломала?',
 		'mc Она меня не сломала. Она меня впечатлила.',
