@@ -279,15 +279,36 @@ button {
 [data-screen="game"] img[data-character] {
 	top: auto !important;
 	bottom: 0 !important;
-	left: auto !important;
-	right: auto !important;
-	transform: none !important;
 	height: 100% !important;
 	max-height: 100% !important;
 	width: auto !important;
 	max-width: min(100vw, 72rem) !important;
 	object-fit: contain;
 	object-position: bottom center;
+}
+
+[data-screen="game"] img[data-character].left {
+	left: 0 !important;
+	right: auto !important;
+	transform: none !important;
+}
+
+[data-screen="game"] img[data-character].center {
+	left: 50% !important;
+	right: auto !important;
+	transform: translateX(-50%) !important;
+}
+
+[data-screen="game"] img[data-character].right {
+	left: auto !important;
+	right: 0 !important;
+	transform: none !important;
+}
+
+[data-screen="game"]:has(img[data-character] ~ img[data-character]) img[data-character] {
+	height: auto !important;
+	max-width: min(32vw, 22rem) !important;
+	max-height: 100% !important;
 }
 
 /* --- WTF-метр --- */
@@ -678,11 +699,8 @@ dialog-log [data-content="log"] {
 	}
 
 	[data-screen="game"] img[data-character] {
-		left: auto !important;
-		right: auto !important;
 		top: auto !important;
 		bottom: 0 !important;
-		transform: none !important;
 		height: 100% !important;
 		max-width: 56vw !important;
 		max-height: 100% !important;
@@ -733,7 +751,6 @@ dialog-log [data-content="log"] {
 	[data-screen="game"] img[data-character] {
 		top: auto !important;
 		bottom: 0 !important;
-		right: auto !important;
 		height: 100% !important;
 		max-height: 100% !important;
 	}
