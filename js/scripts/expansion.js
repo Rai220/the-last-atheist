@@ -152,6 +152,14 @@ monogatari.script ({
 				'mass2': {
 					'Text': 'Дверь «ФИНАЛЬНЫЙ МАССИВ» — ещё 154 сюрприза',
 					'Do': 'jump Expansion_Mass2'
+				},
+				'mass3': {
+					'Text': 'Дверь «MASS3» — финальная',
+					'Do': 'jump Expansion_Mass3'
+				},
+				'overshot': {
+					'Text': 'Дверь «★ ОВЕРШУТ» — финалы 1000+',
+					'Do': 'jump Expansion_Overshot'
 				}
 			}
 		}
