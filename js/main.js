@@ -222,7 +222,40 @@ const ALL_ENDINGS = {
 	'weather_sun': 'Солнце', 'weather_wind': 'Ветер', 'weather_storm': '★ Гроза 2003',
 	// Мета
 	'meta_4thwall': '★ 4-я стена', 'meta_menu': 'Main Menu', 'meta_save': 'Save File',
-	'meta_cheat': 'IDDQD', 'meta_dev_mode': 'Dev Mode', 'meta_unlock': '★ Unlock All'
+	'meta_cheat': 'IDDQD', 'meta_dev_mode': 'Dev Mode', 'meta_unlock': '★ Unlock All',
+
+	// Expansion Pack v8 — Второй архипелаг (14 групп ~90 концовок)
+	'num_0': '0', 'num_1': '1', 'num_2': '2', 'num_3': '3', 'num_7': '★ Семь хрипов',
+	'num_13': '13', 'num_42': '42', 'num_666': '666', 'num_1984': '1984', 'num_7394': '7394028417',
+	'hist_pushkin': 'Пушкин', 'hist_lenin': 'Ленин', 'hist_stalin': 'Сталин',
+	'hist_gagarin': 'Гагарин', 'hist_chaikov': 'Чайковский', 'hist_perelman': 'Пуанкаре',
+	'hist_glushkov': 'ОГАС', 'hist_lobachev': 'Лобачевский',
+	'animal_cat': 'Кот', 'animal_dog': 'Собака', 'animal_owl': 'Сова', 'animal_fox': 'Лиса',
+	'animal_bear': 'Медведь', 'animal_fish': 'Рыба', 'animal_wolf': 'Волк', 'animal_bee': 'Пчела',
+	'color_red': 'Красный', 'color_blue': 'Синий', 'color_green': 'Зелёный', 'color_yellow': 'Жёлтый',
+	'color_white': 'Белый', 'color_black': 'Чёрный', 'color_grey': 'Серый', 'color_violet': 'Фиолетовый',
+	'body_heart': '★ Сердце', 'body_brain': 'Мозг в банке', 'body_lung': 'Лёгкое', 'body_skin': 'Кожа',
+	'body_eye': 'Глаз', 'body_ear': 'Ухо', 'body_finger': 'Указательный', 'body_bone': 'Кость',
+	'letter_a': 'А', 'letter_ya': 'Я', 'letter_o': 'О', 'letter_j': 'Ж',
+	'letter_tvrd': 'Ъ', 'letter_yo': 'Ё', 'letter_omega': 'Ω', 'letter_alpha': 'α',
+	'sound_click': 'Щелчок', 'sound_buzz': 'Зуммер', 'sound_whisper': 'Шёпот',
+	'sound_thunder': 'Гром', 'sound_chime': 'Колокольчик', 'sound_dial': 'Гудок',
+	'smell_coffee': 'Кофе', 'smell_paper': 'Бумага', 'smell_rain': 'Асфальт-дождь',
+	'smell_workshop': 'Мастерская', 'smell_dust': 'Пыль', 'smell_bread': 'Хлеб',
+	'time_dawn': 'Рассвет', 'time_0744': '★ 7:44', 'time_noon': 'Полдень',
+	'time_dusk': 'Закат', 'time_0300': '3:00', 'time_blue_hour': 'Синий час',
+	'tech_win98': 'Win98', 'tech_icq': 'ICQ', 'tech_flash': 'Flash',
+	'tech_ie6': 'IE6', 'tech_dialup': 'Dial-up', 'tech_y2k': 'Y2K',
+	'sci_phys': 'Сохранение', 'sci_chem': 'Химик', 'sci_bio': 'Биолог',
+	'sci_psy': 'Психолог Бога', 'sci_math': 'Аксиома', 'sci_econ': 'ВВП ада',
+	'rel_christ': 'Христианство v2', 'rel_islam': 'Финик', 'rel_bud': 'Нирвана',
+	'rel_jud': '47 вопросов', 'rel_pas': 'FSM', 'rel_sci': 'Ксену',
+	'game_doom': 'Doom', 'game_tetris': 'Тетрис', 'game_disco': 'Disco',
+	'game_mine': 'Minecraft', 'game_cs': 'CS', 'game_dwarf': 'DF',
+	'comp_ath_saint': 'Святой атеист', 'comp_dev_hum': 'Добрый демон',
+	'comp_god_coder': 'git@god', 'comp_rob_moth': 'Alice-мама',
+	'comp_priest_it': 'Онлайн-литургия', 'comp_lov_sim': 'NPC-любовь',
+	'comp_chef_math': 'borsch(borsch)', 'comp_dad_cot': 'Котёл-обмен'
 };
 
 // ============================================================
