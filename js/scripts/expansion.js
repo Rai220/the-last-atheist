@@ -144,6 +144,10 @@ monogatari.script ({
 				'archipelago4': {
 					'Text': 'Дверь «ЧЕТВЁРТЫЙ АРХИПЕЛАГ» — четырнадцать массивных островов',
 					'Do': 'jump Expansion_Archipelago4'
+				},
+				'giant_archipelago': {
+					'Text': 'Дверь «ГИГАНТСКИЙ АРХИПЕЛАГ» — сюрприз из 141 концовки',
+					'Do': 'jump Expansion_GiantArchipelago'
 				}
 			}
 		}
