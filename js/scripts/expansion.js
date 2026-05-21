@@ -140,6 +140,10 @@ monogatari.script ({
 				'archipelago3': {
 					'Text': 'Дверь «ТРЕТИЙ АРХИПЕЛАГ» — пятнадцать островов',
 					'Do': 'jump Expansion_Archipelago3'
+				},
+				'archipelago4': {
+					'Text': 'Дверь «ЧЕТВЁРТЫЙ АРХИПЕЛАГ» — четырнадцать массивных островов',
+					'Do': 'jump Expansion_Archipelago4'
 				}
 			}
 		}
