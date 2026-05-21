@@ -5,3 +5,11 @@ node_modules/
 .free-code-logs/
 tests/.last-run.json
 tests/.endings-partial.json
+tests/screenshots/
+tests/dom-probe.mjs
+tests/deep-probe.mjs
+tests/endings-fast-report.json
+tests/layout-report.json
+__pycache__/
+.claude/
+build/

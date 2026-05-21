@@ -460,6 +460,32 @@ monogatari.script ({
 							noticed_patterns: true
 						});
 					}
+				},
+				'settle': {
+					'Text': '«Я хочу досудебное соглашение.»',
+					'Do': 'jump Judgment_Settle'
+				},
+				'witness': {
+					'Text': '«Я не обвиняемый. Я свидетель.»',
+					'Do': 'jump Judgment_Witness'
+				},
+				'savepoint': {
+					'Text': '«Есть ли у меня право на savepoint?»',
+					'Do': 'jump Judgment_Savepoint'
+				},
+				'lawyer': {
+					'Text': '«Я требую защитника.»',
+					'Do': 'jump Judgment_Lawyer'
+				},
+				'teapot': {
+					'Text': '«HTTP 418. Я — чайник. Юрисдикции нет.»',
+					'Do': 'jump Ending_Teapot',
+					'Condition': function () { return this.storage ().humor_used >= 2; }
+				},
+				'golden_rule': {
+					'Text': '«Поступай со мной как с собой — дай Себе сомневаться.»',
+					'Do': 'jump Ending_GoldenRule',
+					'Condition': function () { return this.storage ().argument_quality >= 3; }
 				}
 			}
 		}

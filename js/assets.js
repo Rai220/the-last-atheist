@@ -20,7 +20,15 @@ monogatari.assets ('scenes', {
 	'hell_server_room': 'hell/server_room.jpg',
 	'night_city': 'prologue/night_city.jpg',
 	'judgment_waiting': 'judgment/waiting.jpg',
-	'menu_bg': 'transitions/menu_bg.jpg'
+	'menu_bg': 'transitions/menu_bg.jpg',
+	// --- Expansion Pack v1 scenes: reuse existing artwork until dedicated art lands ---
+	'hell_cafeteria': 'hell/office.jpg',
+	'hell_library': 'hell/office.jpg',
+	'hell_union': 'hell/office.jpg',
+	'hell_circle': 'hell/debate_room.jpg',
+	'hell_kindergarten': 'hell/corridor.jpg',
+	'hell_workshop': 'hell/server_room.jpg',
+	'hell_maintenance': 'hell/server_room.jpg'
 });
 
 // --- Музыка ---

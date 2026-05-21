@@ -99,7 +99,74 @@ const ENDINGS_FULL = [
 	['sisyphus',          'Ending_Sisyphus'],
 	['viktor_hack',       'Ending_ViktorHack'],
 	['viktor_freedom',    'Ending_ViktorFreedom'],
-	['i_am_the_bug',      'Ending_IAmTheBug']
+	['i_am_the_bug',      'Ending_IAmTheBug'],
+	// Expansion Pack v1
+	['hell_chef',              'Ending_HellChef'],
+	['cafeteria_leader',       'Ending_CafeteriaLeader'],
+	['library_read',           'Ending_Library_Read'],
+	['letter_to_sergey',       'Ending_LetterToSergey'],
+	['father_reply',           'Ending_FatherReply'],
+	['unspoken_prayers',       'Ending_UnspokenPrayers'],
+	['hell_strike',            'Ending_HellStrike'],
+	['demon_lawsuit',          'Ending_DemonLawsuit'],
+	['great_union',            'Ending_GreatUnion'],
+	['demon_pension',          'Ending_DemonPension'],
+	['hard_reset',             'Ending_HardReset'],
+	['logs_reader',            'Ending_LogsReader'],
+	['pull_request',           'Ending_PullRequest'],
+	['truth_group',            'Ending_TruthGroup'],
+	['atheist_therapist',      'Ending_AtheistTherapist'],
+	['atheist_stay',           'Ending_AtheistGroup_Stay'],
+	['child_keep',             'Ending_ChildKeep'],
+	['child_saved',            'Ending_ChildSaved'],
+	['family_hell',            'Ending_FamilyHell'],
+	['father_son',             'Ending_FatherSon'],
+	['father_escape',          'Ending_FatherEscape'],
+	['dev_maintenance',        'Ending_DevMaintenance'],
+	['eula_reader',            'Ending_EULAReader'],
+	['removed',                'Ending_Removed'],
+	['dev_colleague',          'Ending_DevColleague'],
+	['inna_romance',           'Ending_InnaRomance'],
+	['inna_forgive',           'Ending_InnaForgive'],
+	['inna_revolt',            'Ending_InnaRevolt'],
+	// Expansion Pack v2
+	['settlement_small',       'Ending_Settlement_Small'],
+	['settlement_large',       'Ending_Settlement_Large'],
+	['settlement_meta',        'Ending_Settlement_Meta'],
+	['witness_self',           'Ending_WitnessSelf'],
+	['savepoint',              'Ending_Savepoint'],
+	['father_defense',         'Ending_FatherDefense'],
+	['sergey_defense',         'Ending_SergeyDefense'],
+	['reddit_defense',         'Ending_RedditDefense'],
+	['past_self_defense',      'Ending_PastSelfDefense'],
+	['teapot',                 'Ending_Teapot'],
+	['soul_not_found',         'Ending_404'],
+	['stack_overflow',         'Ending_StackOverflow'],
+	['kernel_panic',           'Ending_KernelPanic'],
+	['golden_rule',            'Ending_GoldenRule'],
+	['out_of_memory',          'Ending_OutOfMemory'],
+	['git_blame',              'Ending_GitBlame'],
+	// Expansion Pack v3
+	['bar_guitar',             'Ending_Bar_Guitar'],
+	['bar_franchise2',         'Ending_BarFranchise2'],
+	['anya_forgiven',          'Ending_AnyaForgiven'],
+	['anya_love',              'Ending_AnyaLove'],
+	['anya_together',          'Ending_AnyaTogether'],
+	['loop_broken',            'Ending_LoopBroken'],
+	['accepted_loop',          'Ending_AcceptedLoop'],
+	['loop_complete',          'Ending_LoopComplete'],
+	['speedrun_master',        'Ending_SpeedrunMaster'],
+	// Expansion Pack v4
+	['sagan_guide',            'Ending_SaganGuide'],
+	['pale_blue_dot',          'Ending_PaleBlueDot'],
+	['cosmos_afterlife',       'Ending_CosmosAfterlife'],
+	['bog_premium',            'Ending_BogPremium'],
+	['free_user',              'Ending_FreeUser'],
+	['unsubscribe_preemptive', 'Ending_UnsubscribePreemptive'],
+	['programmer_rebel',       'Ending_ProgrammerRebel'],
+	['refactor_self',          'Ending_RefactorSelf'],
+	['v1_forever',             'Ending_V1Forever'],
+	['just_lilith_alt',        'Expansion_Just_Lilith_Alt']
 ];
 const _limit = parseInt (process.env.TLA_TEST_ENDINGS_LIMIT || '0', 10);
 const ENDINGS = _limit > 0 ? ENDINGS_FULL.slice (0, _limit) : ENDINGS_FULL;
@@ -535,6 +602,9 @@ export async function runRuntime () {
 	// Если Playwright скачал headless_shell в кеш — подсунуть его явно (иначе берётся стандартный chromium).
 	const cachedShell = path.join (process.env.HOME || '', '.cache/ms-playwright/chromium_headless_shell-1217/chrome-linux/headless_shell');
 	if (fs.existsSync (cachedShell)) launchOpts.executablePath = cachedShell;
+	// macOS: используем chromium-1208 если он есть
+	const macChrome = path.join (process.env.HOME || '', 'Library/Caches/ms-playwright/chromium-1208/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing');
+	if (!launchOpts.executablePath && fs.existsSync (macChrome)) launchOpts.executablePath = macChrome;
 
 	const launchBrowser = () => chromium.launch (launchOpts);
 	const results = [];

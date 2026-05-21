@@ -168,5 +168,62 @@ monogatari.characters ({
 			relieved: 'relieved.png',
 			determined: 'determined.png'
 		}
+	},
+	// --- Expansion Pack v1: новые спикеры ---
+	// Без отдельного арта переиспользуем спрайты семантически близких
+	// персонажей: шеф — демон (он буквально демон-повар), архивариус — это
+	// сама Мира из существующего арта, dev — Виктор (программист).
+	// Поля/Папа/Борис остаются голосовыми (без сцен-спрайтов): их сцены
+	// держатся на фоне + диалоге, новые спрайты не успеваем нарисовать.
+	'chef': {
+		name: 'Шеф',
+		color: '#ff6644',
+		directory: 'demon',
+		sprites: {
+			angry: 'angry.png',
+			happy: 'smile.png'
+		}
+	},
+	'child': {
+		name: 'Поля',
+		color: '#ffd5e0',
+		directory: 'child',
+		sprites: {
+			sad: 'sad.png',
+			normal: 'normal.png'
+		}
+	},
+	'dev': {
+		name: 'Разработчик',
+		color: '#aaffaa',
+		directory: 'viktor',
+		sprites: {
+			normal: 'friendly.png'
+		}
+	},
+	'father': {
+		name: 'Папа',
+		color: '#88aaff',
+		directory: 'father',
+		sprites: {
+			normal: 'normal.png'
+		}
+	},
+	'archivist': {
+		name: 'Архивариус',
+		color: '#cccccc',
+		directory: 'mira',
+		sprites: {
+			tired: 'sad.png',
+			normal: 'gentle.png'
+		}
+	},
+	'boris': {
+		name: 'Борис',
+		color: '#ddbb88',
+		directory: 'boris',
+		sprites: {
+			normal: 'normal.png'
+		}
 	}
 });

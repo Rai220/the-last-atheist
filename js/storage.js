@@ -70,5 +70,39 @@ monogatari.storage ({
 	ending_reached: '',
 
 	// --- Мини-игры ---
-	qte_escapes: 0
+	qte_escapes: 0,
+
+	// --- Expansion Pack v1 ---
+	mother_marked: false,            // оставили закладку в томе матери
+	sergey_witness_seen: false,      // прочитали том Серёжи
+	father_letters_read: false,      // прочитали тома непроизнесённых молитв отца
+	father_letters_acknowledged: false, // подтвердили отцу, что читали
+	father_resolved: false,          // встретили и помирились с отцом
+	father_joined_escape: false,     // отец присоединился к побегу
+	inna_in_hell: false,             // встретили Инну в аду
+	inna_verified: false,            // спросили Инну, не Лилит ли она
+	helpdesk_passed: false,          // прошли через IT-поддержку ада
+	logs_seen: false,                // читали серверные логи
+	child_met: false,                // встретили ребёнка в аду
+	child_escape_attempt: false,     // пробовали увести ребёнка
+	unspoken_prayers_read: false,    // открыли свой собственный том непроизнесённого
+
+	// --- Expansion Pack v3 ---
+	loop_count: 0,                   // сколько раз игрок прошёл цикл коридора
+	loop_complete: false,            // открыл все двери в цикле
+	speedrun_attempted: false,       // запустил speedrun-ветку
+	critic_impressed: false,         // критик-демон выдал положительный отзыв
+	anya_met: false,                 // встретили Аню в случайной встрече
+	anya_resolved: false,            // довели сюжет с Аней до примирения/любви
+
+	// --- Expansion Pack v4 ---
+	boss_refused: false,             // отказали боссу
+	boss_agreed: false,              // согласились задержаться
+	boss_quit: false,                // уволились
+	quiz_passed: false,              // прошли викторину в баре
+	sagan_met: false,                // встретили Сагана
+	sagan_offer: false,              // приняли предложение продюсировать
+	programmer_met: false,           // встретили программиста-создателя
+	kind_refactored: false,          // изменили kind: rarely → sometimes
+	version_acceptance: false        // остались V1
 });

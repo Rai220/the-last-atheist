@@ -54,7 +54,41 @@ function resetStoryStateForNewGame (game) {
 		lilith_trust: 0,
 		pigidij_pulled: false,
 		ending_reached: '',
-		qte_escapes: 0
+		qte_escapes: 0,
+
+		// Expansion Pack v1
+		mother_marked: false,
+		sergey_witness_seen: false,
+		father_letters_read: false,
+		father_letters_acknowledged: false,
+		father_resolved: false,
+		father_joined_escape: false,
+		inna_in_hell: false,
+		inna_verified: false,
+		helpdesk_passed: false,
+		logs_seen: false,
+		child_met: false,
+		child_escape_attempt: false,
+		unspoken_prayers_read: false,
+
+		// Expansion Pack v3
+		loop_count: 0,
+		loop_complete: false,
+		speedrun_attempted: false,
+		critic_impressed: false,
+		anya_met: false,
+		anya_resolved: false,
+
+		// Expansion Pack v4
+		boss_refused: false,
+		boss_agreed: false,
+		boss_quit: false,
+		quiz_passed: false,
+		sagan_met: false,
+		sagan_offer: false,
+		programmer_met: false,
+		kind_refactored: false,
+		version_acceptance: false
 	});
 }
 
@@ -67,7 +101,7 @@ monogatari.action ('message').messages ({
 			<p>Кликайте или нажимайте пробел, чтобы продвигать текст.</p>
 			<p>Делайте выборы — они влияют на сюжет и концовку.</p>
 			<p>Сохраняйтесь через меню внизу экрана.</p>
-			<p>В игре 40 концовок.</p>
+			<p>В игре около сотни концовок и более пятисот сюжетных веток.</p>
 			<p><b>⏩ Перемотка</b> — пропускает только <i>уже прочитанный</i> текст.</p>
 			<p><b>← Назад</b> — возвращает к предыдущей реплике.</p>
 		`

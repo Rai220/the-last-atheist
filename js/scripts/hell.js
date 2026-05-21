@@ -2280,6 +2280,10 @@ monogatari.script ({
 					'onChosen': function () {
 						this.storage ({ acceptance_score: this.storage ().acceptance_score + 3 });
 					}
+				},
+				'expansion_doors': {
+					'Text': 'Открыть боковую дверь — в коридоре их много',
+					'Do': 'jump Expansion_Breakdown_Entry'
 				}
 			}
 		}

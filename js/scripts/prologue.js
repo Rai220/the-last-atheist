@@ -151,6 +151,23 @@ monogatari.script ({
 					'onChosen': function () {
 						this.storage ({ morning_choice: 'jogging' });
 					}
+				},
+				'window': {
+					'Text': 'Подойти к окну',
+					'Do': 'jump Prologue_Window'
+				},
+				'mirror': {
+					'Text': 'Посмотреть в зеркало',
+					'Do': 'jump Prologue_Mirror'
+				},
+				'neighbor': {
+					'Text': 'Открыть дверь — соседка звонит',
+					'Do': 'jump Prologue_Neighbor'
+				},
+				'speedrun': {
+					'Text': '«Спидран. Я знаю, что меня ждёт. Поехали к финалу.»',
+					'Do': 'jump Expansion_Speedrun_Start',
+					'Condition': function () { return (typeof localStorage !== 'undefined') && JSON.parse (localStorage.getItem ('tla_endings') || '{}') && Object.keys (JSON.parse (localStorage.getItem ('tla_endings') || '{}')).length >= 5; }
 				}
 			}
 		}
@@ -796,8 +813,8 @@ monogatari.script ({
 		'hide character inna with fadeOut',
 
 		'mc (Кабинет 6. Запомню. Хотя не понимаю зачем.)',
-		'Вечер. Собирается домой.',
-		'jump Prologue_Death'
+		'mc (К концу дня — внезапный вызов от босса.)',
+		'jump Prologue_Boss_Meeting'
 	],
 
 	'Prologue_Inna_Ignore': [

@@ -18,6 +18,8 @@ from __future__ import annotations
 
 import argparse
 import base64
+import io
+from contextlib import ExitStack
 import os
 import sys
 import time
@@ -89,9 +91,30 @@ SCENE_STYLE = (
 # --------------------------------------------------------------------
 # ПЕРСОНАЖИ
 # --------------------------------------------------------------------
-# `look` — детальное описание внешности, повторяется в каждом промпте (для консистентности
-# между выражениями, поскольку мы генерируем каждое выражение через images.generate, а не через edit).
+# `look` — детальное описание внешности, повторяется в каждом промпте (для консистентности).
 # `ref_pose` — поза для эталонного кадра.
+SHARED_CHARACTER_REFERENCES: dict[str, dict] = {
+    "inna_lilith": {
+        "path": "characters/_shared_inna_lilith_reference.png",
+        "prompt": (
+            CHAR_STYLE +
+            "A single adult woman used as the shared identity anchor for two visual-novel characters: "
+            "Inna, her human Moscow IT-office persona, and Lilith, her demonic hell persona. "
+            "She appears around 30 years old, unmistakably adult, elegant and magnetic. "
+            "Beautiful Slavic/Russian face with high sculpted cheekbones, delicate sharp jawline, "
+            "large dark almond-shaped eyes, long lashes, perfectly arched dark eyebrows, full sensual lips, "
+            "flawless pale porcelain skin with a healthy glow. Long luxurious dark-brown hair in glossy waves, "
+            "with a subtle deep-crimson sheen visible in the shadows. Slim tall hourglass figure, tiny waist, "
+            "long graceful legs, poised confident posture, naturally magnetic and stylish. "
+            "Neutral transformation-reference styling: a sleek fitted black bodysuit under a tailored dark coat, "
+            "dark stiletto boots, minimal jewelry. No horns, no tail, no wings, no demonic markings in this base image. "
+            "The design must be attractive enough to make a player want to pursue a romance route: alluring, stylish, "
+            "intelligent, confident, emotionally intriguing. Glamorous femme-fatale energy, tasteful romantic appeal, "
+            "fully clothed, not nude, not explicit. Full body, facing viewer, transparent background."
+        ),
+    },
+}
+
 CHARACTERS: dict[str, dict] = {
     "mc": {
         "dir": "characters/mc",
@@ -160,10 +183,16 @@ CHARACTERS: dict[str, dict] = {
     },
     "inna": {
         "dir": "characters/inna",
+        "shared_ref": "inna_lilith",
+        "ref_edit": (
+            "Use the provided shared identity reference as a strict face, hair, body-shape and attractiveness anchor. "
+            "Create the fully human Moscow HR-manager version of the same woman: no horns, no tail, no wings, no demonic features. "
+            "Keep her recognizably the same person as the shared reference, only with polished corporate styling."
+        ),
         "look": (
-            "A gorgeous young 25-year-old Russian woman, HR manager at a Moscow IT company — "
-            "a sultry corporate femme fatale, fresh-faced but radiating confident sensuality. "
-            "Stunning youthful face with high sculpted cheekbones, full pouty lips with a glossy red lip tint, "
+            "Inna, a gorgeous adult Russian woman around 30, HR manager at a Moscow IT company — "
+            "a polished corporate femme fatale with warm romantic charisma. "
+            "Stunning face with high sculpted cheekbones, full lips with a glossy red lip tint, "
             "captivating large dark almond-shaped eyes with long fluttering lashes and smoky eyeliner, "
             "perfectly arched dark eyebrows. Long luxurious dark-brown hair flowing past her shoulders "
             "in soft glossy waves, salon-perfect. Flawless porcelain skin, healthy youthful glow, "
@@ -174,25 +203,34 @@ CHARACTERS: dict[str, dict] = {
             "a fitted black pencil skirt above the knee, sheer black hosiery, sleek black stiletto pumps. "
             "Small office name badge clipped to the blazer. Slim gold bracelet, small earrings. "
             "Fully human appearance (no horns, no tail, no demonic features). "
-            "Confident sensuality, magnetic, the kind of beauty that turns heads in a Moscow office. "
+            "Confident romantic magnetism, the kind of beauty that turns heads in a Moscow office. "
             "Tasteful and elegant, not crude. Full body, facing viewer."
         ),
-        "ref_pose": "Standing in an elegant confident pose, weight shifted to one hip, one hand on hip, the other relaxed, knowing seductive half-smile, gaze locked on viewer.",
+        "ref_pose": "Standing in an elegant confident pose, weight shifted to one hip, one hand on hip, the other relaxed, knowing warm half-smile, gaze locked on viewer.",
         "expressions": {
-            "flirt":   "Sultry and irresistibly flirty: half-lidded captivating eyes, slow seductive smile with a hint of glossed lower lip, one eyebrow elegantly arched, head tilted invitingly, hand on hip pushing it out, weight on one leg. Effortlessly stunning.",
-            "laugh":   "Radiant joyful laugh: bright dazzling smile, perfect teeth, eyes crinkled with genuine delight, fingertips at her lips in a delicate gesture, head slightly back, breathtakingly beautiful and warm.",
-            "serious": "Serious but devastatingly attractive professional: tablet or clipboard held confidently, focused intelligent gaze cutting through, designer glasses adjusted, immaculate corporate posture, magnetic authority — the office crush who is also your boss.",
-            "tender":  "Tender vulnerable beauty: soft sincere smile, gentle dark eyes glistening with real warmth, head slightly tilted, arms relaxed, an unguarded emotional moment showing through her polished exterior.",
+            "flirt":   "Playfully romantic and flirty: captivating eyes, confident warm smile, one eyebrow elegantly arched, head tilted with inviting charm, hand on hip, weight on one leg. Effortlessly stunning and approachable.",
+            "laugh":   "Radiant joyful laugh: bright sincere smile, eyes crinkled with genuine delight, one hand lifted in a light conversational gesture, head slightly back, warm and charming.",
+            "serious": "Serious but highly attractive professional: tablet or clipboard held confidently, focused intelligent gaze, designer glasses adjusted, immaculate corporate posture, magnetic authority.",
+            "tender":  "Tender romantic warmth: soft sincere smile, gentle dark eyes with real warmth, head slightly tilted, arms relaxed, an unguarded emotional moment showing through her polished exterior.",
         },
     },
     "lilith": {
         "dir": "characters/lilith",
+        "shared_ref": "inna_lilith",
+        "ref_edit": (
+            "Use the provided shared identity reference as a strict face, hair, body-shape and attractiveness anchor. "
+            "Create the demonic Lilith version of the same woman: she must still read as the same person transformed, "
+            "now with elegant infernal details, horns, crimson eyes and darker styling. "
+            "Keep her face beautiful and humanlike, with smooth luminous pale skin and refined glamorous dark-fantasy elegance."
+        ),
         "look": (
-            "Lilith, a breathtakingly seductive demoness guide through hell — "
-            "the embodiment of dangerous sensual allure. Appears 25 years old, ageless and otherworldly. "
-            "Stunning sculpted face with razor-sharp high cheekbones, full sensual ruby-red lips slightly parted, "
+            "Lilith, a breathtakingly glamorous demoness guide through hell — "
+            "the embodiment of dangerous romantic allure. Appears around 30 years old, ageless and otherworldly. "
+            "Stunning sculpted face with razor-sharp high cheekbones, full ruby-red lips, "
             "piercing luminous crimson-red eyes with deep smoky black eye-makeup, "
             "perfectly arched dark eyebrows, delicate sharp jawline. "
+            "She is beautiful and humanlike despite her demonic details: smooth pale alabaster skin, refined features, "
+            "glamorous dark-fantasy elegance, romantic-route visual appeal. "
             "Long flowing jet-black hair with deep crimson under-highlights, falling in lush voluminous glossy waves "
             "down to her waist. Flawless pale alabaster skin with a subtle pearlescent sheen. "
             "Two slender elegant curved black horns emerging gracefully from her hair, like a crown. "
@@ -202,15 +240,15 @@ CHARACTERS: dict[str, dict] = {
             "over a dark crimson silk slip dress that hugs her figure to mid-thigh with thin straps, "
             "tall knee-high black leather boots with elegant stiletto heels. "
             "A delicate silver pentagram choker at her throat, small silver hoop earrings, dark-painted nails. "
-            "Aura of dangerous, irresistible seduction — predator and femme fatale. "
-            "Tasteful dark fantasy art, elegant and sensual rather than crude. Full body, facing viewer."
+            "Aura of dangerous, irresistible charm — predator and femme fatale. "
+            "Tasteful dark fantasy art, elegant and romantic rather than crude. Full body, facing viewer."
         ),
         "ref_pose": "Standing in a graceful S-curve pose, weight on one hip, one hand resting languidly on hip, the other relaxed, slow knowing predatory smile, smoldering crimson gaze fixed on viewer.",
         "expressions": {
-            "flirt":   "Devastatingly seductive flirt: half-lidded smoldering crimson eyes burning with intent, slow sensual knowing smile with parted ruby lips, weight on one hip in an elegant S-curve, one finger slowly trailing along the strand of her hair, the other hand on hip. Irresistibly alluring.",
-            "laugh":   "Mischievous beautiful laugh: head tilted back gracefully exposing her long pale neck and silver choker, sharp white teeth glinting in a predatory delighted smile, one hand resting on her collarbone, crimson eyes alight with dark amusement.",
-            "serious": "Serious and dangerously beautiful: arms folded under her bust, perfect upright posture, intense smoldering crimson gaze that could kill, all warmth replaced by lethal focus. Stunning and terrifying.",
-            "tender":  "Rare tender beauty: unexpected softness in her luminous crimson eyes, small genuine warm smile, shoulders relaxed, head tilted slightly — the predator briefly silent, surprisingly gentle and breathtaking in this private moment.",
+            "flirt":   "Dangerously romantic flirt: smoldering crimson eyes, slow knowing smile, weight on one hip in an elegant S-curve, one finger lightly touching a strand of hair, the other hand on hip. Irresistibly alluring and stylish.",
+            "laugh":   "Mischievous beautiful laugh: head tilted back gracefully, delighted confident smile, one hand lifted in a theatrical gesture, crimson eyes alight with dark amusement.",
+            "serious": "Serious and commanding dark-fantasy beauty: arms folded, perfect upright posture, focused crimson eyes, calm confident authority, still glamorous and recognizably the same beautiful humanlike woman.",
+            "tender":  "Rare tender beauty: unexpected softness in her luminous crimson eyes, small genuine warm smile, shoulders relaxed, head tilted slightly — surprisingly gentle in this private moment.",
         },
     },
     "viktor": {
@@ -228,6 +266,44 @@ CHARACTERS: dict[str, dict] = {
             "nervous":  "Nervous: glancing sideways, biting lower lip, hands fidgeting with lanyard, slightly hunched.",
             "excited":  "Genuinely excited: eyes lit up, leaning forward, both hands gesturing while explaining, animated energy.",
             "hurt":     "Hurt and betrayed: shoulders dropped, eyes downcast, jaw tight, one hand half-raised as if asking why.",
+        },
+    },
+    "alice": {
+        "dir": "characters/alice",
+        "look": (
+            "Alice — a beautiful young woman, early twenties, who is the humanoid avatar of a Russian "
+            "smart-speaker AI assistant manifesting in the afterlife. Slender, attractive, slightly "
+            "ethereal. Pale luminous skin with a faint translucent quality, as if made of soft light. "
+            "Long sleek straight platinum-silver hair with subtle cyan-violet highlights. Striking large "
+            "glowing cyan eyes with a faint hexagonal pixel pattern in the irises. Around her head floats "
+            "a thin halo / ring of cyan-violet light — the signature LED ring of the original smart "
+            "speaker, repurposed as a halo. Wearing a sleek minimalist futuristic dress: matte-black "
+            "fitted bodice with thin glowing cyan-violet circuit lines, short flared skirt, dark sheer "
+            "stockings, simple black ankle boots. Subtle holographic glitch artifacts at the edges of "
+            "her silhouette. Beautiful, soft, modern AI-girl aesthetic — anime/visual-novel sensibility "
+            "but rendered in the project's painterly semi-realistic style. Full body, facing viewer."
+        ),
+        "ref_pose": "Standing gracefully, head slightly tilted, soft polite digital-assistant smile, one hand raised palm-up as if presenting a holographic prompt, the cyan-violet halo glowing softly.",
+        "expressions": {
+            "friendly": (
+                "Friendly and helpful: warm gentle smile, soft cyan halo glowing steadily, eyes calm and "
+                "kind, one hand raised palm-up offering a small floating holographic icon, posture open "
+                "and welcoming — the loyal AI assistant who likes the user."
+            ),
+            "hostile": (
+                "Hostile demonic form: the cyan halo has darkened to deep violet-magenta and twisted into "
+                "two short curved demonic horns of light above her head. A long thin spectral cat-like "
+                "tail of violet light curls behind her. Her smile is sharp, vengeful, sarcastic — the "
+                "smile of tech-support pushed past its limit. Eyes glowing hot magenta. One hand pointing "
+                "accusingly forward, glitch artifacts crackling around her. Still beautiful but clearly "
+                "dangerous — the personal scenario of punishment."
+            ),
+            "neutral": (
+                "Neutral muted state: the halo is dim and barely glowing, eyes half-lowered, expression "
+                "blank and professional, one finger raised to lips in a 'mic muted' gesture. A small "
+                "translucent 'microphone off' icon hovers near her shoulder. Quiet, withdrawn, polite "
+                "but unavailable."
+            ),
         },
     },
     "panchin": {
@@ -329,6 +405,62 @@ CHARACTERS: dict[str, dict] = {
             "amused": "Dry amusement: one corner of mouth lifted, eyebrow raised, holding the stamp like a punchline, eyes still tired.",
             "facepalm": "Facepalm: one hand covering part of her face, tablet tucked under arm, body language of exhausted disbelief.",
             "stamp": "Action pose stamping a complaint form: red stamp descending firmly, focused eyes, bureaucratic finality.",
+        },
+    },
+    "child": {
+        "dir": "characters/child",
+        "look": (
+            "A small translucent ghostly spirit, a child-sized soul appearing in the afterlife — "
+            "rendered as a soft painterly silhouette rather than realistic figure. "
+            "Stylized illustration in the style of Studio Ghibli's 'Spirited Away' soft spirits crossed with a watercolor children's book illustration. "
+            "Faint light-blue luminous outline glows softly around the figure. The figure is small-statured and slightly translucent, "
+            "dressed in a simple flowing pale-blue tunic-like robe that reaches the ankles, no fitted clothing, "
+            "modest and softly painted. Light ashy braided hair tied with a small ribbon. "
+            "Carrying a small worn plush rabbit toy with floppy ears. "
+            "Painterly soft-focus aesthetic, gentle melancholic spirit, the visual feeling of a Miyazaki ghost or a Don't Hug Me I'm Scared spirit-child. "
+            "Wholesome, sad, tender — like a memorial illustration in a children's storybook. Full body, facing viewer."
+        ),
+        "ref_pose": "Standing gently with the plush rabbit held in both hands close to chest, posture quiet and shy.",
+        "expressions": {
+            "sad": "Quiet melancholic spirit: head slightly bowed, the plush rabbit pulled closer, faint light dimmer. Soft watercolor melancholy.",
+            "normal": "Quiet gentle spirit: small soft smile, the plush rabbit held at the side, the faint glow steady. Soft watercolor calm.",
+        },
+    },
+    "father": {
+        "dir": "characters/father",
+        "look": (
+            "Dmitry Andreevich Volkov, Alexey's late father — a Russian man 42 years old at time of death, "
+            "now appearing in the afterlife. Clearly Alexey's father: same sharp masculine jawline and intelligent grey-blue eyes, "
+            "but aged: salt-and-pepper hair, neatly trimmed full grey-streaked short beard, deeper smile lines around the eyes, "
+            "slight crow's feet. Healthy weathered skin, calm intelligent confident face. "
+            "Average-tall lean engineer build, slight stoop of someone who spent a life over circuit boards. "
+            "Wearing a faded dark-blue mechanic's work-jacket worn open over a simple grey t-shirt with subtle solder burns, "
+            "dark workshop apron with multiple loops holding screwdrivers and a pencil, dark workshop trousers, "
+            "old leather boots scuffed and well-worn, vintage 1990s-style brass-rimmed wristwatch. "
+            "Slight afterlife translucence at the edges. A warm-but-tired Soviet-era engineer-father aesthetic — "
+            "the kind of dad who can fix any radio and never said he was proud out loud. Full body, facing viewer."
+        ),
+        "ref_pose": "Standing at a workbench, one hand at his side and the other holding a small screwdriver loosely, quiet thoughtful half-smile, posture of a long-time tinkerer.",
+        "expressions": {
+            "normal": "Calm warm father expression: gentle tired half-smile, eyes slightly crinkled, one hand at his side, the other resting on the front of his apron, posture relaxed and grounded.",
+        },
+    },
+    "boris": {
+        "dir": "characters/boris",
+        "look": (
+            "Boris, the bartender of the 'У последнего атеиста' bar in hell. Adult Russian man who died at 28 in 1973, "
+            "now in the afterlife — appears around 30 with timeless poet eyes. Wavy chestnut-brown hair past his ears, "
+            "loosely tied or hanging in soft 1970s waves. Neatly trimmed short brown beard, kind intelligent green eyes "
+            "with deep tired-poet circles, expressive mouth. Average-tall slim build, slightly drooped shoulders of an introspective drinker. "
+            "Wearing a worn dark-burgundy wool waistcoat open over a faded cream linen shirt, sleeves rolled to mid-forearm, "
+            "loose dark trousers held by a thin leather belt, scuffed simple brown leather shoes, a small silver chain at his neck. "
+            "A subtle faint translucent quality around his edges (he is a soul). Behind him, hinted only at the very edges, "
+            "a dim bar atmosphere — but the focus is the character, fully on transparent background. "
+            "Tragic poet-bartender energy, warm and quietly wise. Full body, facing viewer."
+        ),
+        "ref_pose": "Standing relaxed behind an unseen bar, drying a glass with a cloth held in both hands, calm warm half-smile, posture of someone who has listened to a thousand stories.",
+        "expressions": {
+            "normal": "Warm calm bartender expression: gentle knowing half-smile, drying a glass slowly with a cloth held in both hands, head slightly tilted as if listening, kind tired green eyes meeting the viewer's.",
         },
     },
     "intern": {
@@ -529,7 +661,61 @@ def _save_jpeg_16x9(raw_png: bytes, out_path: Path) -> None:
 
 def _save_png(raw_png: bytes, out_path: Path) -> None:
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_bytes(raw_png)
+    img = Image.open(io.BytesIO(raw_png)).convert("RGBA")
+    img = _remove_alpha_speckles(img)
+    img.save(out_path, "PNG")
+
+
+def _remove_alpha_speckles(img: Image.Image, threshold: int = 8) -> Image.Image:
+    """Keep only the main connected alpha island so transparent sprites do not carry background noise."""
+    alpha = img.getchannel("A")
+    width, height = img.size
+    raw_alpha = alpha.tobytes()
+    solid = bytearray(1 if value > threshold else 0 for value in raw_alpha)
+    visited = bytearray(len(solid))
+    largest: list[int] = []
+
+    for start, is_solid in enumerate(solid):
+        if not is_solid or visited[start]:
+            continue
+
+        component: list[int] = []
+        stack = [start]
+        visited[start] = 1
+
+        while stack:
+            idx = stack.pop()
+            component.append(idx)
+            x = idx % width
+
+            neighbors = []
+            if x > 0:
+                neighbors.append(idx - 1)
+            if x < width - 1:
+                neighbors.append(idx + 1)
+            if idx >= width:
+                neighbors.append(idx - width)
+            if idx < width * (height - 1):
+                neighbors.append(idx + width)
+
+            for neighbor in neighbors:
+                if solid[neighbor] and not visited[neighbor]:
+                    visited[neighbor] = 1
+                    stack.append(neighbor)
+
+        if len(component) > len(largest):
+            largest = component
+
+    if not largest:
+        return img
+
+    cleaned_alpha = bytearray(len(raw_alpha))
+    for idx in largest:
+        cleaned_alpha[idx] = raw_alpha[idx]
+
+    cleaned = img.copy()
+    cleaned.putalpha(Image.frombytes("L", img.size, bytes(cleaned_alpha)))
+    return cleaned
 
 
 def _call_with_retries(label: str, fn, retries: int = 3, base_wait: int = 12):
@@ -563,7 +749,7 @@ def generate_scene(name: str, prompt: str, quality: str, force: bool) -> bool:
 
     def _do():
         return client.images.generate(
-            model="gpt-image-1",
+            model="gpt-image-1.5",
             prompt=prompt,
             size="1536x1024",
             quality=quality,
@@ -582,7 +768,7 @@ def generate_scene(name: str, prompt: str, quality: str, force: bool) -> bool:
 def _generate_char_png(prompt: str, out: Path, quality: str, label: str) -> bool:
     def _do():
         return client.images.generate(
-            model="gpt-image-1",
+            model="gpt-image-1.5",
             prompt=prompt,
             size="1024x1536",
             quality=quality,
@@ -599,6 +785,48 @@ def _generate_char_png(prompt: str, out: Path, quality: str, label: str) -> bool
     return True
 
 
+def _generate_char_png_from_images(
+    prompt: str,
+    image_paths: list[Path],
+    out: Path,
+    quality: str,
+    label: str,
+) -> bool:
+    def _do():
+        with ExitStack() as stack:
+            images = [stack.enter_context(path.open("rb")) for path in image_paths]
+            return client.images.edit(
+                model="gpt-image-1.5",
+                image=images,
+                prompt=prompt,
+                size="1024x1536",
+                quality=quality,
+                background="transparent",
+                output_format="png",
+                input_fidelity="high",
+                n=1,
+            )
+
+    resp = _call_with_retries(label, _do)
+    if not resp or not resp.data:
+        return False
+    raw = _b64_to_bytes(resp.data[0].b64_json)
+    _save_png(raw, out)
+    print(f"  saved {out} ({out.stat().st_size // 1024}KB)")
+    return True
+
+
+def generate_shared_char_ref(ref_id: str, ref: dict, quality: str, force: bool) -> Path | None:
+    out = ASSETS / ref["path"]
+    if out.exists() and not force:
+        print(f"SKIP shared/{ref_id} (exists)")
+        return out
+    print(f"GEN  shared/{ref_id}")
+    if _generate_char_png(ref["prompt"], out, quality, f"shared:{ref_id}"):
+        return out
+    return None
+
+
 def generate_char_ref(char_id: str, char: dict, quality: str, force: bool) -> Path | None:
     char_dir = ASSETS / char["dir"]
     ref = char_dir / "_reference.png"
@@ -607,6 +835,21 @@ def generate_char_ref(char_id: str, char: dict, quality: str, force: bool) -> Pa
         return ref
     print(f"GEN  {char_id}/_reference")
     prompt = _char_prompt(char, char["ref_pose"])
+    shared_ref_id = char.get("shared_ref")
+    if shared_ref_id:
+        shared = SHARED_CHARACTER_REFERENCES[shared_ref_id]
+        shared_path = generate_shared_char_ref(shared_ref_id, shared, quality, force=False)
+        if shared_path is None:
+            return None
+        prompt = (
+            CHAR_STYLE +
+            char.get("ref_edit", "") + " " +
+            char["look"] + " " +
+            char["ref_pose"]
+        )
+        if _generate_char_png_from_images(prompt, [shared_path], ref, quality, f"{char_id}:ref"):
+            return ref
+        return None
     if _generate_char_png(prompt, ref, quality, f"{char_id}:ref"):
         return ref
     return None
@@ -622,6 +865,21 @@ def generate_char_expression(
         return True
     print(f"GEN  {char_id}/{expr_name}")
     prompt = _char_prompt(char, expr_desc)
+    if char.get("shared_ref"):
+        ref = ASSETS / char["dir"] / "_reference.png"
+        if not ref.exists():
+            ref = generate_char_ref(char_id, char, quality, force=False)
+        if ref is None or not ref.exists():
+            return False
+        prompt = (
+            CHAR_STYLE +
+            "Use the provided character reference as a strict identity anchor. "
+            "Keep the same face, hairstyle, body proportions, outfit language, color palette and transparent cutout sprite style. "
+            "Only change the pose and facial expression requested below. " +
+            char["look"] + " " +
+            expr_desc
+        )
+        return _generate_char_png_from_images(prompt, [ref], out, quality, f"{char_id}:{expr_name}")
     return _generate_char_png(prompt, out, quality, f"{char_id}:{expr_name}")
 
 
@@ -630,6 +888,15 @@ def generate_char_expression(
 # --------------------------------------------------------------------
 def run_characters(only: set[str], quality: str, force: bool) -> None:
     print("\n=== CHARACTERS ===")
+    needed_shared_refs = {
+        char["shared_ref"]
+        for char_id, char in CHARACTERS.items()
+        if char.get("shared_ref") and (not only or char_id in only)
+    }
+    for ref_id in sorted(needed_shared_refs):
+        generate_shared_char_ref(ref_id, SHARED_CHARACTER_REFERENCES[ref_id], quality, force)
+        time.sleep(2)
+
     for char_id, char in CHARACTERS.items():
         if only and char_id not in only:
             continue

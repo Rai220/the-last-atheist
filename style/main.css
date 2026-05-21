@@ -279,15 +279,36 @@ button {
 [data-screen="game"] img[data-character] {
 	top: auto !important;
 	bottom: 0 !important;
-	left: auto !important;
-	right: auto !important;
-	transform: none !important;
 	height: 100% !important;
 	max-height: 100% !important;
 	width: auto !important;
-	max-width: min(100vw, 72rem) !important;
+	max-width: min(45vw, 36rem) !important;
 	object-fit: contain;
 	object-position: bottom center;
+}
+
+/*
+ * Уважаем «show character X at left/center/right» из Monogatari:
+ * движок ставит классы .left/.center/.right на img, но без !important —
+ * поэтому даём этим классам максимальную специфичность с !important,
+ * чтобы наши общие overrides не схлопывали всех персонажей в центр.
+ */
+[data-screen="game"] img[data-character].left {
+	left: 4vw !important;
+	right: auto !important;
+	transform: none !important;
+}
+
+[data-screen="game"] img[data-character].right {
+	left: auto !important;
+	right: 4vw !important;
+	transform: none !important;
+}
+
+[data-screen="game"] img[data-character].center {
+	left: 50% !important;
+	right: auto !important;
+	transform: translateX(-50%) !important;
 }
 
 /* --- WTF-метр --- */
@@ -678,14 +699,20 @@ dialog-log [data-content="log"] {
 	}
 
 	[data-screen="game"] img[data-character] {
-		left: auto !important;
-		right: auto !important;
 		top: auto !important;
 		bottom: 0 !important;
-		transform: none !important;
 		height: 100% !important;
 		max-width: 56vw !important;
 		max-height: 100% !important;
+	}
+	[data-screen="game"] img[data-character].left {
+		left: 2vw !important; right: auto !important; transform: none !important;
+	}
+	[data-screen="game"] img[data-character].right {
+		right: 2vw !important; left: auto !important; transform: none !important;
+	}
+	[data-screen="game"] img[data-character].center {
+		left: 50% !important; right: auto !important; transform: translateX(-50%) !important;
 	}
 
 	[data-component="quick-menu"] {
@@ -733,9 +760,17 @@ dialog-log [data-content="log"] {
 	[data-screen="game"] img[data-character] {
 		top: auto !important;
 		bottom: 0 !important;
-		right: auto !important;
 		height: 100% !important;
 		max-height: 100% !important;
+	}
+	[data-screen="game"] img[data-character].left {
+		left: 1vw !important; right: auto !important; transform: none !important;
+	}
+	[data-screen="game"] img[data-character].right {
+		right: 1vw !important; left: auto !important; transform: none !important;
+	}
+	[data-screen="game"] img[data-character].center {
+		left: 50% !important; right: auto !important; transform: translateX(-50%) !important;
 	}
 
 	[data-component="choice-container"] {
