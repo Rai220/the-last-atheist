@@ -148,6 +148,10 @@ monogatari.script ({
 				'giant_archipelago': {
 					'Text': 'Дверь «ГИГАНТСКИЙ АРХИПЕЛАГ» — сюрприз из 141 концовки',
 					'Do': 'jump Expansion_GiantArchipelago'
+				},
+				'mass2': {
+					'Text': 'Дверь «ФИНАЛЬНЫЙ МАССИВ» — ещё 154 сюрприза',
+					'Do': 'jump Expansion_Mass2'
 				}
 			}
 		}
