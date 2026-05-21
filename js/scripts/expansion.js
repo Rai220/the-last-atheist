@@ -128,6 +128,10 @@ monogatari.script ({
 					'Text': 'Дверь, у которой пахнет газетой и чернилами',
 					'Do': 'jump Expansion_AtheistManifesto',
 					'Condition': function () { var s = this.storage (); return (s.matrix_suspicion || 0) >= 8 && (s.argument_quality || 0) >= 5; }
+				},
+				'archipelago': {
+					'Text': 'Дверь с надписью «АРХИПЕЛАГ» — за ней десять островов',
+					'Do': 'jump Expansion_Archipelago'
 				}
 			}
 		}

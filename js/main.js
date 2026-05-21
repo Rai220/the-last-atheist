@@ -185,7 +185,44 @@ const ALL_ENDINGS = {
 	'bug_collector': 'Bug Bounty',
 	'lore_master': '★ Lore-мастер',
 	'no_reset': 'Без сброса',
-	'all_skipped': 'Skip All'
+	'all_skipped': 'Skip All',
+
+	// Expansion Pack v7 — Архипелаг (10 островов × 6-10 концовок)
+	// Мемы
+	'meme_rickroll': 'Рикролл', 'meme_doge': 'Much Wow', 'meme_pepe': 'Feels Bad',
+	'meme_fine': 'This Is Fine', 'meme_distracted': 'Отвлёкся',
+	'meme_galaxy_brain': 'Galaxy Brain', 'meme_wojak': 'Feels Guy', 'meme_preved': 'Превед-2007',
+	// Профессии
+	'pro_sysadmin': 'Hell Engine v2', 'pro_manager': 'Middle Manager', 'pro_cashier': 'Касса 7',
+	'pro_teacher': 'Учитель', 'pro_doctor': 'Терапевт', 'pro_cop': 'Гаишник',
+	'pro_janitor': 'Уборщик', 'pro_judge': 'Секретарь', 'pro_streamer': 'Стример', 'pro_philosopher': 'PhD',
+	// Мифы
+	'myth_orpheus': '★ Орфей', 'myth_prometheus': 'Прометей IT', 'myth_narcissus': 'Нарцисс-38',
+	'myth_tantalus': 'Пирог Тантала', 'myth_icarus': 'Икар', 'myth_minotaur': 'Минотавр',
+	'myth_persephone': 'Персефона 6/6', 'myth_ouroboros': 'Уроборос',
+	// Еда
+	'food_borsch': 'Борщ', 'food_pelmeni': '★ Пельмени с мамой', 'food_pirog': '★ Субботний пирог',
+	'food_doshik': 'Доширак', 'food_olivier': 'Оливье', 'food_tea': 'Чай', 'food_vodka': 'Водка', 'food_kvass': 'Квас-91',
+	// Математика
+	'math_liar': 'Лжец', 'math_russell': 'Russell', 'math_sorites': 'Куча',
+	'math_monty': 'Monty Hall', 'math_zeno': 'Зенон', 'math_godel': 'Гёдель',
+	'math_cantor': 'Cantor', 'math_turing': '★ Turing Test',
+	// Предметы
+	'thing_spoon': 'Ложка', 'thing_lamp': 'Лампа', 'thing_door': 'Дверь 47',
+	'thing_mirror': 'Зеркало', 'thing_usb': 'USB', 'thing_clock': 'Часы',
+	'thing_book': 'Книга', 'thing_pencil': 'Карандаш',
+	// Литература
+	'lit_dosto': 'Достоевский', 'lit_tolstoy': 'Толстой', 'lit_chekhov': 'Чехов',
+	'lit_bulgakov': 'Булгаков', 'lit_kafka': 'Кафка', 'lit_borges': '★ Борхес',
+	// Музыка
+	'music_classic': 'Шостакович', 'music_jazz': 'Джаз', 'music_rock': '★ Семь хрипов',
+	'music_rap': 'Баттл', 'music_silence': '4\'33\'\'', 'music_morse': 'Морзе',
+	// Погода
+	'weather_rain': 'Дождь', 'weather_snow': 'Снег', 'weather_fog': 'Туман',
+	'weather_sun': 'Солнце', 'weather_wind': 'Ветер', 'weather_storm': '★ Гроза 2003',
+	// Мета
+	'meta_4thwall': '★ 4-я стена', 'meta_menu': 'Main Menu', 'meta_save': 'Save File',
+	'meta_cheat': 'IDDQD', 'meta_dev_mode': 'Dev Mode', 'meta_unlock': '★ Unlock All'
 };
 
 // ============================================================
