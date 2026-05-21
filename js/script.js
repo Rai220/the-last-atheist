@@ -88,7 +88,25 @@ function resetStoryStateForNewGame (game) {
 		sagan_offer: false,
 		programmer_met: false,
 		kind_refactored: false,
-		version_acceptance: false
+		version_acceptance: false,
+
+		// Expansion Pack v5
+		neighbor_met: false,
+		neighbor_interest: 0,
+		neighbor_trust: 0,
+		neighbor_remembered: false,
+		neighbor_ignored: false,
+		neighbor_curse_known: false,
+		neighbor_eternal: false,
+		yulia_door_open: false,
+		yulia_branches_seen: false,
+		yulia_maps_seen: false,
+		granny_met: false,
+		granny_arc_started: false,
+		granny_lead: false,
+		granny_docs_seen: false,
+		granny_refused: false,
+		granny_prophecy_heard: false
 	});
 }
 

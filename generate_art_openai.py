@@ -407,6 +407,50 @@ CHARACTERS: dict[str, dict] = {
             "stamp": "Action pose stamping a complaint form: red stamp descending firmly, focused eyes, bureaucratic finality.",
         },
     },
+    "neighbor": {
+        "dir": "characters/neighbor",
+        "look": (
+            "Yulia, the woman who lives in the apartment next door to Alexey. Adult Russian woman around 31 years old, "
+            "magnetic and stylish in a deliberately understated way — the kind of beautiful that you only notice on the third meeting. "
+            "Long honey-chestnut hair tied in a slightly imperfect low ponytail with stray strands framing her face, "
+            "porcelain skin with subtle freckles across her nose, large warm hazel-green eyes with long lashes and a curious intelligent gaze, "
+            "high cheekbones and a delicate jawline, full natural lips with a small playful smirk. "
+            "Tall slim hourglass figure with elegant proportions, graceful posture of someone who used to dance. "
+            "Wearing a soft oversized cream knit sweater that slips slightly off one shoulder revealing a thin black tank-top strap, "
+            "dark slim well-fitted jeans, simple beige slippers, a delicate gold chain at her neck with a tiny key pendant, "
+            "small hoop earrings. Holding a paperback book (Strugatsky brothers cover visible) tucked under one arm. "
+            "Visual energy: late-night insomniac neighbor who knocks on your door at 2 am 'just to borrow sugar' but stays for an hour. "
+            "Tasteful, classy, beautiful but emotionally guarded — the kind of beauty that hides a secret. Full body, facing viewer."
+        ),
+        "ref_pose": "Standing relaxed in a doorway pose, one shoulder leaning slightly against an unseen frame, book held loosely under one arm, the other hand at her side, soft knowing half-smile.",
+        "expressions": {
+            "smile": "Warm welcoming smile: kind hazel-green eyes, soft natural lips lifted in a small genuine smile, head slightly tilted, book held with both hands in front. Approachable beauty.",
+            "flirt": "Playful flirty look: one eyebrow slightly arched, lips quirked in a knowing half-smile, weight shifted onto one hip, sweater slipping a bit further off the shoulder, eyes locked on viewer with quiet challenge.",
+            "sad": "Quiet sadness held tight: small tense smile that doesn't reach the eyes, arms wrapped around the book pressed to her chest, gaze drifted slightly down and to the side, vulnerable but composed.",
+            "serious": "Intelligent serious focus: brows slightly knit, lips pressed together, book lowered, head tilted forward in concentration, eyes searching directly — the look of someone working out what you actually mean.",
+        },
+    },
+    "granny": {
+        "dir": "characters/granny",
+        "look": (
+            "A wild paranoid grandmother, in her late 70s, witness-of-everything energy. Tiny stooped frame, lined weathered face "
+            "with sharp luminous pale-blue eyes that see too much, wild grey-white hair partly escaping a faded floral headscarf, "
+            "thin lips set in an unsettling knowing half-smile. Liver spots on the backs of her hands. "
+            "Wearing layered Soviet-style clothes that have clearly seen decades: a heavy dark wool overcoat too warm for the season, "
+            "draped over a faded pink-and-grey floral cotton housedress, dark wool stockings, worn black galoshes. "
+            "A scuffed brown leather handbag clutched in both hands at the front, overstuffed with rolled-up newspapers, "
+            "small icons wrapped in cloth, a few prescription bottles, a kitchen knife (handle visible at the top — she will tell you it is for bread). "
+            "A small silver cross over her clothes, several plastic shopping bags hanging from her wrists. "
+            "Visual energy: the conspiracy-theory babushka at the bus stop who has seen the system and is the only one telling you. "
+            "Slightly unhinged but not malicious — comic-tragic prophet figure. Full body, facing viewer."
+        ),
+        "ref_pose": "Standing crouched-forward, both hands clutching the bulging handbag in front, leaning into the viewer conspiratorially, eyes wide and bright.",
+        "expressions": {
+            "warn": "Conspiratorial warning: leaning in, one bony finger raised near her lips, eyes wide and alight, mouth slightly open as she whispers a prophecy — comic but unnerving.",
+            "rant": "Full rant mode: both hands flying up, handbag swinging, mouth open mid-sentence, eyes blazing, gesturing at invisible enemies, headscarf askew.",
+            "calm": "Surprisingly calm clarity: handbag held quietly, face suddenly composed and lucid, sharp eyes locked on viewer — the moment her madness becomes uncomfortably correct.",
+        },
+    },
     "child": {
         "dir": "characters/child",
         "look": (

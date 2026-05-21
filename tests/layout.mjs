@@ -115,7 +115,13 @@ const SCENES = [
 	// --- Свежесгенерированные спрайты ---
 	{ name: 'new_child',             label: 'Expansion_Child_Intro' },
 	{ name: 'new_father',            label: 'Expansion_Father_Intro' },
-	{ name: 'new_boris',             label: 'Expansion_Bar_Entry' }
+	{ name: 'new_boris',             label: 'Expansion_Bar_Entry' },
+
+	// --- v5/v6: Юля, бабка, RNG ---
+	{ name: 'v5_yulia_door',         label: 'Expansion_Yulia_Door',  preset: { neighbor_met: true } },
+	{ name: 'v5_yulia_flirt',        label: 'Prologue_Neighbor_Flirt' },
+	{ name: 'v5_granny_arc',         label: 'Expansion_Granny_Arc',  preset: { granny_met: true } },
+	{ name: 'v6_wheel',              label: 'Expansion_RNG_Wheel' }
 ];
 
 const VIEWPORT = { width: 1280, height: 800 };

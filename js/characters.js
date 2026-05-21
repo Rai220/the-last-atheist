@@ -169,6 +169,27 @@ monogatari.characters ({
 			determined: 'determined.png'
 		}
 	},
+	'neighbor': {
+		name: 'Юля',
+		color: '#ffcfb0',
+		directory: 'neighbor',
+		sprites: {
+			smile: 'smile.png',
+			flirt: 'flirt.png',
+			sad: 'sad.png',
+			serious: 'serious.png'
+		}
+	},
+	'granny': {
+		name: 'Бабка',
+		color: '#cccc44',
+		directory: 'granny',
+		sprites: {
+			warn: 'warn.png',
+			rant: 'rant.png',
+			calm: 'calm.png'
+		}
+	},
 	// --- Expansion Pack v1: новые спикеры ---
 	// Без отдельного арта переиспользуем спрайты семантически близких
 	// персонажей: шеф — демон (он буквально демон-повар), архивариус — это

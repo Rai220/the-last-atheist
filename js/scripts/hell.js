@@ -2282,6 +2282,10 @@ monogatari.script ({
 				'expansion_doors': {
 					'Text': 'Открыть боковую дверь — в коридоре их много',
 					'Do': 'jump Expansion_Breakdown_Entry'
+				},
+				'stat_gate': {
+					'Text': 'Посмотреть, кем я стал в цифрах',
+					'Do': 'jump Expansion_StatGate'
 				}
 			}
 		}

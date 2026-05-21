@@ -108,6 +108,26 @@ monogatari.script ({
 					'Text': 'Дверь, на которой написано только «Лилит»',
 					'Do': 'jump Expansion_Just_Lilith_Alt',
 					'Condition': function () { return (this.storage ().lilith_interest || 0) >= 8 && (this.storage ().lilith_trust || 0) >= 3; }
+				},
+				'yulia_door': {
+					'Text': 'Дверь с номером 47 — почему она тут?',
+					'Do': 'jump Expansion_Yulia_Door',
+					'Condition': function () { return this.storage ().neighbor_met; }
+				},
+				'granny_door': {
+					'Text': 'Дверь, у которой стоит бабка с пакетами',
+					'Do': 'jump Expansion_Granny_Arc',
+					'Condition': function () { return this.storage ().granny_met; }
+				},
+				'sisterhood_door': {
+					'Text': 'Дверь с табличкой «ЦЕНТР ПОСМЕРТНОЙ ВЗАИМОПОМОЩИ»',
+					'Do': 'jump Expansion_TripleAlliance',
+					'Condition': function () { var s = this.storage (); return s.neighbor_met && s.granny_met && s.anya_met; }
+				},
+				'manifesto_door': {
+					'Text': 'Дверь, у которой пахнет газетой и чернилами',
+					'Do': 'jump Expansion_AtheistManifesto',
+					'Condition': function () { var s = this.storage (); return (s.matrix_suspicion || 0) >= 8 && (s.argument_quality || 0) >= 5; }
 				}
 			}
 		}

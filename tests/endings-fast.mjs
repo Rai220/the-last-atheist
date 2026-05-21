@@ -89,7 +89,42 @@ const ENDINGS = [
 	['cosmos_afterlife', 'Ending_CosmosAfterlife'], ['bog_premium', 'Ending_BogPremium'],
 	['free_user', 'Ending_FreeUser'], ['unsubscribe_preemptive', 'Ending_UnsubscribePreemptive'],
 	['programmer_rebel', 'Ending_ProgrammerRebel'], ['refactor_self', 'Ending_RefactorSelf'],
-	['v1_forever', 'Ending_V1Forever'], ['just_lilith_alt', 'Expansion_Just_Lilith_Alt']
+	['v1_forever', 'Ending_V1Forever'], ['just_lilith_alt', 'Expansion_Just_Lilith_Alt'],
+	// v5
+	['yulia_together', 'Ending_YuliaTogether'], ['yulia_forget', 'Ending_YuliaForget'],
+	['yulia_47', 'Ending_Yulia47'], ['yulia_48', 'Ending_Yulia48'], ['yulia_zero', 'Ending_YuliaZero'],
+	['yulia_kitchen', 'Ending_YuliaKitchen'], ['yulia_quiet', 'Ending_YuliaQuietKindness'],
+	['yulia_forgive', 'Ending_YuliaForgive'], ['yulia_blame', 'Ending_YuliaBlame'],
+	['yulia_infinite', 'Ending_YuliaInfinite'], ['neighbor_curse_breaker', 'Ending_NeighborCurseBreaker'],
+	['neighbor_hell_romance', 'Ending_NeighborHellRomance'],
+	['granny_leader', 'Ending_GrannyLeader'], ['granny_archive', 'Ending_GrannyArchive'],
+	['granny_missed', 'Ending_GrannyMissed'], ['granny_oracle', 'Ending_GrannyOracle'],
+	['granny_takeover', 'Ending_GrannyTakeover'],
+	['sisterhood', 'Ending_Sisterhood'], ['manifesto', 'Ending_Manifesto'],
+	['max_empathy', 'Ending_MaxEmpathy'], ['max_cruelty', 'Ending_MaxCruelty'],
+	['max_humor', 'Ending_MaxHumor'], ['max_rebellion', 'Ending_MaxRebellion'],
+	['max_acceptance', 'Ending_MaxAcceptance'], ['low_life', 'Ending_LowLife'],
+	['max_lilith_trust', 'Ending_MaxLilithTrust'], ['all_stats', 'Ending_AllStats'],
+	['low_all', 'Ending_LowAll'], ['double_agent', 'Ending_DoubleAgent'],
+	['no_verdict', 'Ending_NoVerdict'],
+	// v6
+	['wheel_fish_tank', 'Ending_Wheel_FishTank'], ['wheel_cosplayer', 'Ending_Wheel_Cosplayer'],
+	['wheel_crypto', 'Ending_Wheel_Crypto'], ['wheel_yoga', 'Ending_Wheel_Yoga'],
+	['wheel_drone_swarm', 'Ending_Wheel_DroneSwarm'], ['wheel_bookshop', 'Ending_Wheel_Bookshop'],
+	['wheel_garage', 'Ending_Wheel_Garage'], ['wheel_taxi', 'Ending_Wheel_Taxi'],
+	['wheel_post_office', 'Ending_Wheel_PostOffice'], ['wheel_bakery', 'Ending_Wheel_Bakery'],
+	['wheel_subway', 'Ending_Wheel_Subway'], ['wheel_helpline', 'Ending_Wheel_Helpline'],
+	['wheel_lighthouse', 'Ending_Wheel_Lighthouse'], ['wheel_night_owl', 'Ending_Wheel_NightOwl'],
+	['wheel_time_keeper', 'Ending_Wheel_TimeKeeper'], ['wheel_cartographer', 'Ending_Wheel_Cartographer'],
+	['wheel_beekeeper', 'Ending_Wheel_Beekeeper'], ['wheel_curator', 'Ending_Wheel_Curator'],
+	['wheel_translator', 'Ending_Wheel_Translator'], ['wheel_watchman', 'Ending_Wheel_Watchman'],
+	['wheel_florist', 'Ending_Wheel_Florist'], ['wheel_mechanic', 'Ending_Wheel_Mechanic'],
+	['wheel_astronomer', 'Ending_Wheel_Astronomer'], ['wheel_conductor', 'Ending_Wheel_Conductor'],
+	['dark_path', 'Ending_DarkPath'], ['light_path', 'Ending_LightPath'],
+	['trickster', 'Ending_Trickster'], ['lonely_monk', 'Ending_LonelyMonk'],
+	['puzzle_solver', 'Ending_PuzzleSolver'], ['bug_collector', 'Ending_BugCollector'],
+	['lore_master', 'Ending_LoreMaster'], ['no_reset', 'Ending_NoReset'],
+	['all_skipped', 'Ending_AllSkipped']
 ];
 
 const { chromium } = await import ('playwright');

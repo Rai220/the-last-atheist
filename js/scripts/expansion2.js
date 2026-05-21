@@ -212,14 +212,23 @@ monogatari.script ({
 	// ==========================================
 	'Prologue_Neighbor': [
 		'show scene apartment with fadeIn',
-		'mc (Звонок в дверь. Соседка. Тамара Петровна. Каждый понедельник.)',
-		'mc (Я заранее знаю, чего она хочет. Соли. Или сахара. Или просто чтобы кто-то её выслушал десять минут.)',
+		'mc (Звонок в дверь. Не дверной, а тот, что в голове.)',
+		'mc (Юля. Соседка из 47-й. Я знаю, что это она, ещё до того, как смотрю в глазок.)',
+		'mc (Семь сорок четыре утра. Она опять не спала. Я тоже.)',
+
+		'show character neighbor smile at center with fadeIn',
+
+		'neighbor (через дверь) Алексей, я тебя слышу. У меня сахар закончился. Опять.',
+		'mc (У неё всегда закончился сахар. У меня всегда есть запас. Это наш ритуал.)',
 
 		{
 			'Function': {
 				'Apply': function () {
 					var s = this.storage ();
-					this.storage ({ morning_choice: 'neighbor' });
+					this.storage ({
+						morning_choice: 'neighbor',
+						neighbor_met: true
+					});
 				},
 				'Revert': function () {}
 			}
@@ -227,85 +236,141 @@ monogatari.script ({
 
 		{
 			'Choice': {
-				'Dialog': 'mc (Открыть?)',
+				'Dialog': 'mc (Что сделать?)',
+				'open_flirt': {
+					'Text': 'Открыть. «Заходи, у меня и кофе остался».',
+					'Do': 'jump Prologue_Neighbor_Flirt'
+				},
 				'open_kind': {
-					'Text': 'Открыть. Послушать. Это десять минут.',
+					'Text': 'Открыть. Спросить, как она.',
 					'Do': 'jump Prologue_Neighbor_Kind'
 				},
 				'open_quick': {
-					'Text': 'Открыть. Сказать, что опаздываю. Дать сахар.',
+					'Text': 'Приоткрыть. Сунуть пакет сахара. «Опаздываю».',
 					'Do': 'jump Prologue_Neighbor_Quick'
 				},
 				'ignore': {
-					'Text': 'Притвориться, что меня нет дома.',
+					'Text': 'Замереть. Сделать вид, что ушёл.',
 					'Do': 'jump Prologue_Neighbor_Ignore'
 				}
 			}
 		}
 	],
 
-	'Prologue_Neighbor_Kind': [
-		'mc Здравствуйте, Тамара Петровна. Что-то случилось?',
-		'soul Алёша. Прости, что рано. Я просто... никого нет дома. У сына уже сорок дней, как...',
-		'mc Я знаю. Заходите. Я заварю чай. У меня двадцать минут.',
-		'soul ...правда?',
-		'mc Правда. Сегодня важнее, чем работа.',
+	'Prologue_Neighbor_Flirt': [
+		'show character neighbor flirt at center',
+		'mc Заходи. У меня и кофе остался. Не очень, но остался.',
+		'neighbor (с улыбкой) Не очень — это про твой кофе или про твоё «заходи»?',
+		'mc И про то, и про то.',
+		'neighbor (заходит, ставит книгу на стол) Алексей. У тебя на кухне зеркало стоит так, что в нём отражается окно. Я заметила ещё три месяца назад.',
+		'mc И?',
+		'neighbor И ты каждое утро смотришь в это зеркало. Я это знаю — окно моей кухни напротив.',
+		'mc (Она замечала. Каждое утро. Три месяца.)',
+		'mc (Я думал, что это я живу один. А я живу — на виду.)',
 
 		{
 			'Function': {
 				'Apply': function () {
 					var s = this.storage ();
 					this.storage ({
-						empathy_shown: s.empathy_shown + 3,
-						acceptance_score: s.acceptance_score + 2,
-						prologue_was_kind: true
+						neighbor_interest: 3,
+						empathy_shown: s.empathy_shown + 1,
+						humor_used: s.humor_used + 1,
+						prologue_was_kind: true,
+						matrix_suspicion: Math.min (10, s.matrix_suspicion + 1)
 					});
 				},
 				'Revert': function () {}
 			}
 		},
 
-		'mc (Двадцать минут. Я опоздаю. И это будет лучшая поздняя смена в моей жизни.)',
+		'neighbor Я опаздываю. Ты тоже. Но если зеркало будет на том же месте завтра — я опять загляну.',
+		'mc Будет.',
+		'hide character neighbor with fadeOut',
+		'jump Prologue_Morning_Route_Choice'
+	],
+
+	'Prologue_Neighbor_Kind': [
+		'show character neighbor smile at center',
+		'mc Юля, заходи. У меня двадцать минут до офиса.',
+		'mc Что-то случилось?',
+		'neighbor (тихо) Не сегодня. Просто... в моей квартире никого нет, у тебя — никого нет, а 7:44 утра — самое тихое время в нашем подъезде.',
+		'mc (Она называет точное время. Семь сорок четыре. Когда у меня кофемашина хрипит ровно семь раз.)',
+		'neighbor У тебя на холодильнике магнит «In science we trust». Двадцать лет назад в магазине напротив их продавали за 47 рублей. Я знаю — я тогда работала кассиром.',
+		'mc Ты помнишь магнит за 47 рублей с двадцатилетней давности?',
+		'neighbor Я помню всё. Это моё проклятие.',
+
+		{
+			'Function': {
+				'Apply': function () {
+					var s = this.storage ();
+					this.storage ({
+						neighbor_interest: 2,
+						neighbor_remembered: true,
+						empathy_shown: s.empathy_shown + 2,
+						acceptance_score: s.acceptance_score + 1,
+						prologue_was_kind: true,
+						matrix_suspicion: Math.min (10, s.matrix_suspicion + 2)
+					});
+				},
+				'Revert': function () {}
+			}
+		},
+
+		'mc (Память без забывания. Это не дар.)',
+		'mc Юль, я приду сегодня вечером. С нормальным чаем.',
+		'neighbor Если успеешь.',
+		'mc Почему «если»?',
+		'neighbor (смотрит долго) Просто. У тебя сегодня лицо не такое.',
+		'hide character neighbor with fadeOut',
 		'jump Prologue_Morning_Route_Choice'
 	],
 
 	'Prologue_Neighbor_Quick': [
-		'mc Тамара Петровна, я опаздываю. Сахар? Соль?',
-		'soul Сахар. И... Алёша, ты как сам?',
-		'mc Нормально. Спасибо. Я пошёл.',
-		'mc (Я отвёл взгляд. Она кивнула. Дверь закрылась.)',
+		'show character neighbor sad at center',
+		'mc Юль, держи. Я опаздываю.',
+		'neighbor (пакет в руке, не уходит) Алексей.',
+		'mc М?',
+		'neighbor У тебя левая туфля шнурок завязан другим узлом. Ты их менял местами. Зачем?',
+		'mc ...я не помню, чтобы менял.',
+		'neighbor Менял. Вчера. Я видела через глазок.',
+		'mc (Она смотрит через глазок. На мои туфли.)',
+		'mc (Это странно. Или это интересно. Я ещё не решил.)',
 		{
 			'Function': {
 				'Apply': function () {
 					var s = this.storage ();
 					this.storage ({
-						acceptance_score: s.acceptance_score + 1,
-						empathy_shown: s.empathy_shown + 1
+						neighbor_interest: 1,
+						acceptance_score: s.acceptance_score + 1
 					});
 				},
 				'Revert': function () {}
 			}
 		},
+		'neighbor Иди. Я подожду до вечера.',
+		'hide character neighbor with fadeOut',
 		'jump Prologue_Morning_Route_Choice'
 	],
 
 	'Prologue_Neighbor_Ignore': [
+		'hide character neighbor with fadeOut',
 		'mc (Я тихо. Шаги. Дверь молчит. Через минуту шаги уходят.)',
-		'mc (Это не моя вина. Я устал. У меня дедлайн.)',
-		'mc (Никто не обязан открывать в семь утра.)',
+		'mc (Юля не из тех, кто стучит дважды. Она просто запомнит. Она запоминает всё.)',
 		{
 			'Function': {
 				'Apply': function () {
 					var s = this.storage ();
 					this.storage ({
 						cruelty_score: s.cruelty_score + 1,
-						denial_count: s.denial_count + 1
+						denial_count: s.denial_count + 1,
+						neighbor_ignored: true
 					});
 				},
 				'Revert': function () {}
 			}
 		},
-		'mc (Только почему мне сейчас немного хуже, чем было.)',
+		'mc (И всё же — почему мне сейчас немного хуже, чем было.)',
 		'jump Prologue_Morning_Route_Choice'
 	],
 
